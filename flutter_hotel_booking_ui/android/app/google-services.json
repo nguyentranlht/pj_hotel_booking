@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "144157197167",
+    "project_id": "db-hotel-booking",
+    "storage_bucket": "db-hotel-booking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144157197167:android:aa467ba489f525195bde9a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_hotel_booking_ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA623JD9H1mnIPU6VEhQunZTDbVoyicGnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
