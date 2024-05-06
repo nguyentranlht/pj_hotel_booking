@@ -1,10 +1,10 @@
-
 class MyUser {
 	final String Userid;
 	final String email;
 	final String firstname;
   final String lastname;
 	String? picture;
+  final String role; //Them role
 
 	MyUser({
 		required this.Userid,
@@ -12,6 +12,7 @@ class MyUser {
 		required this.firstname,
     required this.lastname,
 		this.picture,
+    required this.role,
 	});
 
 	/// Empty user which represents an unauthenticated user.
@@ -20,7 +21,8 @@ class MyUser {
 			email: '',
 			firstname: '',
 			lastname: '',
-			picture: ''
+			picture: '',
+      role: '',
 	);
 
 	/// Modify MyUser parameters
@@ -36,6 +38,7 @@ class MyUser {
 			firstname: firstname ?? this.firstname,
 			lastname: lastname ?? this.lastname,
 			picture: picture ?? this.picture,
+      role: role ?? this.role,
 		);
 	}
 
@@ -52,6 +55,7 @@ class MyUser {
 			'firstname': firstname,
 			'lastname': lastname,
 			'picture': picture,
+      'role': role,
 		};
 	}
 
@@ -61,12 +65,13 @@ class MyUser {
 				email: doc['email'] as String,
 				firstname: doc['firstname'] as String,
 				lastname: doc['lastname'] as String,
-				picture: doc['picture'] as String?
+				picture: doc['picture'] as String?,
+        role: doc['role'] as String, // Lấy trường role từ dữ liệu Firestore
 		);
 	}
 
 	@override
-	List<Object?> get props => [Userid, email, firstname, lastname, picture];
+	List<Object?> get props => [Userid, email, firstname, lastname, picture, role];
 
 	@override
 	String toString() {
@@ -76,7 +81,7 @@ class MyUser {
       firstname: $firstname
       lastname: $lastname
       picture: $picture
+      role: $role
     }''';
 	}
-
 }

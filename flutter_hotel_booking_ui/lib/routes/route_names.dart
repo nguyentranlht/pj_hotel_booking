@@ -120,4 +120,6 @@ class NavigationServices {
   Future<dynamic> gotoHowDoScreen() async {
     return await _pushMaterialPageRoute(HowDoScreen());
   }
+
+  
 }
