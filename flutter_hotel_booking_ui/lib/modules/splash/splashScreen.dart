@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   height: 16,
                 ),
                 Text(
-                  "Motel",
+                  "Hotel",
                   textAlign: TextAlign.left,
                   style: TextStyles(context).getBoldStyle().copyWith(
                         fontSize: 24,
