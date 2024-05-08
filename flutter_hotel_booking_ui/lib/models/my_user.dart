@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MyUser {
   final String userId;
   final String email;
@@ -82,5 +83,4 @@ class MyUser {
       role: $role
     }''';
   }
-
 }
