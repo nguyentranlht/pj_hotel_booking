@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyUser {
@@ -28,7 +25,7 @@ class MyUser {
       firstname: data?["firstname"],
       lastname: data?["lastname"],
       picture: data!["picture"],
-      role: data?["role"],
+      role: data["role"],
     );
   }
 
@@ -38,10 +35,12 @@ class MyUser {
 
   /// Modify MyUser parameters
   MyUser copyWith({
-    String? id,
+    String? userId,
     String? email,
-    String? name,
+    String? firstname,
+    String? lastname,
     String? picture,
+    String? role,
   }) {
     return MyUser(
       userId: userId ?? this.userId,
