@@ -2,13 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 class MyUser {
   final String userId;
   final String email;
   final String firstname;
   final String lastname;
-  String? picture;
+	String? picture;
+  final String role; //Them role
 
   MyUser({
     required this.userId,
@@ -16,6 +16,7 @@ class MyUser {
     required this.firstname,
     required this.lastname,
     this.picture,
+    required this.role,
   });
 
   factory MyUser.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
@@ -25,14 +26,14 @@ class MyUser {
       email: data?["email"],
       firstname: data?["firstname"],
       lastname: data?["lastname"],
-      picture: data!["userpictureId"],
+      picture: data!["picture"],
+      role: data?["role"],
     );
   }
 
-
   // Empty user which represents an unauthenticated user.
   static final empty =
-      MyUser(userId: '', email: '', firstname: '', lastname: '', picture: '');
+      MyUser(userId: '', email: '', firstname: '', lastname: '', picture: '', role: '');
 
   /// Modify MyUser parameters
   MyUser copyWith({
@@ -47,6 +48,7 @@ class MyUser {
       firstname: firstname ?? this.firstname,
       lastname: lastname ?? this.lastname,
       picture: picture ?? this.picture,
+      role: role ?? this.role,
     );
   }
 
@@ -63,20 +65,11 @@ class MyUser {
       'firstname': firstname,
       'lastname': lastname,
       'picture': picture,
+      'role': role,
     };
   }
-
-  static MyUser fromDocument(Map<String, dynamic> doc) {
-    return MyUser(
-        userId: doc['userId'] as String,
-        email: doc['email'] as String,
-        firstname: doc['firstname'] as String,
-        lastname: doc['lastname'] as String,
-        picture: doc['picture'] as String?);
-  }
-
   @override
-  List<Object?> get props => [userId, email, firstname, lastname, picture];
+  List<Object?> get props => [userId, email, firstname, lastname, picture, role];
 
   @override
   String toString() {
@@ -86,6 +79,7 @@ class MyUser {
       firstname: $firstname
       lastname: $lastname
       picture: $picture
+      role: $role
     }''';
   }
 

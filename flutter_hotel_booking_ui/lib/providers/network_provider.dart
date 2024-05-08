@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/my_user.dart';
+
 abstract class NetworkProvider{
   Stream<User?> get user;
 
