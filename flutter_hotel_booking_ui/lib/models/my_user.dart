@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyUser {
@@ -32,6 +29,43 @@ class MyUser {
       role: data["role"],
     );
   }
+  // Empty user which represents an unauthenticated user.
+  static final empty =
+      MyUser(userId: '', email: '', firstname: '', lastname: '', picture: '', role: '');
 
-  
+  /// Modify MyUser parameters
+  MyUser copyWith({
+    String? userId,
+    String? email,
+    String? firstname,
+    String? lastname,
+    String? picture,
+    String? role,
+  }) {
+    return MyUser(
+      userId: userId ?? this.userId,
+      email: email ?? this.email,
+      firstname: firstname ?? this.firstname,
+      lastname: lastname ?? this.lastname,
+      picture: picture ?? this.picture,
+      role: role ?? this.role,
+    );
+  }
+
+  /// Convenience getter to determine whether the current user is empty.
+  bool get isEmpty => this == MyUser.empty;
+
+  /// Convenience getter to determine whether the current user is not empty.
+  bool get isNotEmpty => this != MyUser.empty;
+
+  Map<String, Object?> toDocument() {
+    return {
+      'userId': userId,
+      'email': email,
+      'firstname': firstname,
+      'lastname': lastname,
+      'picture': picture,
+      'role': role,
+    };
+  }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_text_field_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,8 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController = TextEditingController();
   String _errorPassword = '';
   TextEditingController _passwordController = TextEditingController();
-  final userNameController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                     ),
                     _forgotYourPasswordUI(),
+                    // Login button
                     CommonButton(
                       padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
                       buttonText: AppLocalizations(context).of("login"),
-                      onTap: () {
-                        if (_allValidation())
+                       onTap: () {
+                        if (_allValidation()) {
                           NavigationServices(context).gotoTabScreen();
+                        }
                       },
                     ),
                   ],
