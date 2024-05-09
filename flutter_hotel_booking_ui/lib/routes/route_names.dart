@@ -67,13 +67,10 @@ class NavigationServices {
     return await _pushMaterialPageRoute(BottomTabScreen());
   }
 
-  void gotoSignScreen() async {
-    BlocProvider<SignUpBloc>(
-      create: (context) => SignUpBloc(
-          userRepository: context.read<AuthenticationBloc>().userRepository),
-      child: const SignUpScreen(),
-    );
+  Future<dynamic> gotoSignScreen() async {
+    return await _pushMaterialPageRoute(const SignUpScreen());
   }
+
 
   Future<dynamic> gotoForgotPassword() async {
     return await _pushMaterialPageRoute(ForgotPasswordScreen());
