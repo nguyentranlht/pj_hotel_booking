@@ -53,9 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () async {
                         //setting screen view
                         if (index == 5) {
-                          NavigationServices(context).gotoSettingsScreen();
-
-                          //   setState(() {});
+                          context
+                              .read<SignInBloc>()
+                              .add(const SignOutRequired());
                         }
                         //help center screen view
 
@@ -73,19 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (index == 1) {
                           NavigationServices(context).gotoInviteFriend();
                         }
-                        if (index == 4) {
-                          IconButton(
-                              onPressed: () {
-                                context
-                                    .read<SignInBloc>()
-                                    .add(const SignOutRequired());
-                              },
-                              icon: Icon(
-                                CupertinoIcons.square_arrow_right,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                              ));
-                        }
+                        if (index == 4) {}
                       },
                       child: Column(
                         children: <Widget>[
