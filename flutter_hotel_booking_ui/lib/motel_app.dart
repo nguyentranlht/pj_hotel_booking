@@ -41,7 +41,7 @@ class _MotelAppState extends State<MotelApp> {
             const Locale('ar'), //Arebic
           ],
           navigatorKey: navigatorKey,
-          title: 'Motel',
+          title: 'GoG',
           debugShowCheckedModeBanner: false,
           theme: _theme,
           routes: _buildRoutes(),

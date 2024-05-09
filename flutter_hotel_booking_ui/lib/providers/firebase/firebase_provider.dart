@@ -1,114 +1,56 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_hotel_booking_ui/providers/firebase/firestore_db.dart';
 
 import '../../models/my_user.dart';
 import '../network_provider.dart';
+import 'firebase_authentication.dart';
 
 class FireBaseProvider extends NetworkProvider{
   FireBaseProvider._privateConstructor();
   static final FireBaseProvider instance = FireBaseProvider._privateConstructor();
-  @override
-  Stream<User?> get user {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user = firebaseUser;
-      return user;
-    });
-  }
 
   @override
-  Future<MyUser> signUp(MyUser myUser, String password) async {
-    try {
-      UserCredential user = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: myUser.email,
-          password: password
-      );
-
-      myUser = myUser.copyWith(
-          id: user.user!.uid
-      );
-
-      return myUser;
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<MyUser> getMyUserById(String myUserId) async {
+    final myuser = (await FireStoreDb.instance.getMyUserById(myUserId))
+    .docs
+    .map((e)=>MyUser.fromSnapshot(e))
+    .single;
+    return myuser;
   }
-
-  @override
-  Future<void> signIn(String email, String password) async {
-    try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email,
-          password: password
-      );
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
-  }
-
+  
   @override
   Future<void> logOut() async {
-    try {
-      await _firebaseAuth.signOut();
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+    FireBaseAuthentication.instance.logOut();
   }
-
+  
   @override
-  Future<void> resetPassword(String email) async {
-    try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<void> resetPassword(String email) {
+    // TODO: implement resetPassword
+    throw UnimplementedError();
   }
-
+  
   @override
-  Future<void> setUserData(MyUser user) async {
-    try {
-      await usersCollection.doc(user.id).set(user.toEntity().toDocument());
-    } catch(e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<void> setUserData(MyUser user) {
+    // TODO: implement setUserData
+    throw UnimplementedError();
   }
-
+  
   @override
-  Future<MyUser> getMyUser(String myUserId) async {
-    try {
-      return usersCollection.doc(myUserId).get().then((value) =>
-          MyUser.fromEntity(MyUserEntity.fromDocument(value.data()!))
-      );
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<void> signIn(String email, String password) {
+    // TODO: implement signIn
+    throw UnimplementedError();
   }
-
+  
   @override
-  Future<String> uploadPicture(String file, String userId) async {
-    try {
-      File imageFile = File(file);
-      Reference firebaseStoreRef = FirebaseStorage
-          .instance
-          .ref()
-          .child('$userId/PP/${userId}_lead');
-      await firebaseStoreRef.putFile(
-        imageFile,
-      );
-      String url = await firebaseStoreRef.getDownloadURL();
-      await usersCollection
-          .doc(userId)
-          .update({'picture': url});
-      return url;
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
+  Future<MyUser> signUp(MyUser myUser, String password) {
+    // TODO: implement signUp
+    throw UnimplementedError();
   }
+  
+  @override
+  // TODO: implement user
+  Stream<User?> get user => throw UnimplementedError();
+
 }

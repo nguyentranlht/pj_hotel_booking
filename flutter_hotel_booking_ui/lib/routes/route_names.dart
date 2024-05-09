@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
@@ -20,13 +21,17 @@ import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 
+import '../futures/authentication_bloc/authentication_bloc.dart';
+import '../futures/sign_in_bloc/sign_in_bloc.dart';
+import '../futures/sign_up_bloc/sign_up_bloc.dart';
+
 class NavigationServices {
   NavigationServices(this.context);
 
   final BuildContext context;
 
   Future<dynamic> _pushMaterialPageRoute(Widget widget,
-      {bool fullscreenDialog= false}) async {
+      {bool fullscreenDialog = false}) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
@@ -44,16 +49,24 @@ class NavigationServices {
         (Route<dynamic> route) => false);
   }
 
-  Future<dynamic> gotoLoginScreen() async {
-    return await _pushMaterialPageRoute(LoginScreen());
+  void gotoLoginScreen() async {
+    BlocProvider<SignInBloc>(
+      create: (context) => SignInBloc(
+          userRepository: context.read<AuthenticationBloc>().userRepository),
+      child: LoginScreen(),
+    );
   }
 
   Future<dynamic> gotoTabScreen() async {
     return await _pushMaterialPageRoute(BottomTabScreen());
   }
 
-  Future<dynamic> gotoSignScreen() async {
-    return await _pushMaterialPageRoute(SignUpScreen());
+  void gotoSignScreen() async {
+    BlocProvider<SignUpBloc>(
+      create: (context) => SignUpBloc(
+          userRepository: context.read<AuthenticationBloc>().userRepository),
+      child: SignUpScreen(),
+    );
   }
 
   Future<dynamic> gotoForgotPassword() async {
@@ -120,6 +133,4 @@ class NavigationServices {
   Future<dynamic> gotoHowDoScreen() async {
     return await _pushMaterialPageRoute(HowDoScreen());
   }
-
-  
 }

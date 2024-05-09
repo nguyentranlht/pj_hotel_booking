@@ -15,7 +15,5 @@ abstract class NetworkProvider{
 
   Future<void> setUserData(MyUser user);
 
-  Future<MyUser> getMyUser(String myuserId);
-
-  Future<String> uploadPicture(String file, String userId);
+  Future<MyUser> getMyUserById(String myuserId);
 }
