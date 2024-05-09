@@ -1,5 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/authentication_bloc/authentication_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/sign_up_bloc/sign_up_bloc.dart';
+import 'package:flutter_hotel_booking_ui/modules/login/sign_up_Screen.dart';
 import 'package:flutter_hotel_booking_ui/utils/localfiles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
@@ -100,7 +104,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 const EdgeInsets.only(left: 48, right: 48, bottom: 8, top: 32),
             buttonText: AppLocalizations(context).of("login"),
             onTap: () {
-              NavigationServices(context).gotoLoginScreen();
+              NavigationServices(context).gotoLoginApp();
             },
           ),
           CommonButton(
@@ -110,7 +114,12 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             backgroundColor: AppTheme.backgroundColor,
             textColor: AppTheme.primaryTextColor,
             onTap: () {
-              NavigationServices(context).gotoSignScreen();
+              BlocProvider<SignUpBloc>(
+                create: (context) => SignUpBloc(
+                    userRepository:
+                        context.read<AuthenticationBloc>().userRepository),
+                child: const SignUpScreen(),
+              );
             },
           ),
           SizedBox(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
@@ -70,6 +72,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         if (index == 1) {
                           NavigationServices(context).gotoInviteFriend();
+                        }
+                        if (index == 4) {
+                          IconButton(
+                              onPressed: () {
+                                context
+                                    .read<SignInBloc>()
+                                    .add(const SignOutRequired());
+                              },
+                              icon: Icon(
+                                CupertinoIcons.square_arrow_right,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ));
                         }
                       },
                       child: Column(

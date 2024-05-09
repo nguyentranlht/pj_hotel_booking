@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hotel_booking_ui/login_app.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
+import 'package:user_repository/user_repository.dart';
 
 import '../futures/authentication_bloc/authentication_bloc.dart';
 import '../futures/sign_in_bloc/sign_in_bloc.dart';
@@ -49,11 +51,15 @@ class NavigationServices {
         (Route<dynamic> route) => false);
   }
 
+   void gotoLoginApp() async {
+    return await _pushMaterialPageRoute(LoginApp(FirebaseUserRepository()));
+  }
+
   void gotoLoginScreen() async {
     BlocProvider<SignInBloc>(
       create: (context) => SignInBloc(
           userRepository: context.read<AuthenticationBloc>().userRepository),
-      child: LoginScreen(),
+      child: const LoginScreen(),
     );
   }
 
@@ -65,7 +71,7 @@ class NavigationServices {
     BlocProvider<SignUpBloc>(
       create: (context) => SignUpBloc(
           userRepository: context.read<AuthenticationBloc>().userRepository),
-      child: SignUpScreen(),
+      child: const SignUpScreen(),
     );
   }
 

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_user_info_bloc/update_user_info_bloc.dart';
+import 'package:flutter_hotel_booking_ui/modules/login/login_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/login/welcome_screen.dart';
 
 import 'futures/authentication_bloc/authentication_bloc.dart';
 import 'modules/bottom_tab/bottom_tab_screen.dart';
@@ -55,7 +57,7 @@ class LoginAppView extends StatelessWidget {
             child: BottomTabScreen(),
           );
         } else {
-          return IntroductionScreen();
+          return const WelcomeScreen();
         }
       }),
     );
