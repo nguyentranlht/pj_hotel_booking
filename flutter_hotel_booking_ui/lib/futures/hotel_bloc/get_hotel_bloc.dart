@@ -5,7 +5,7 @@ import 'package:hotel_repository/hotel_repository.dart';
 part 'get_hotel_event.dart';
 part 'get_hotel_state.dart';
 
-class GetHotelBloc extends Bloc<GetHotelevent, GetHotelState> {
+class GetHotelBloc extends Bloc<GetHotelEvent, GetHotelState> {
   final HotelRepo _hotelRepo;
 
   GetHotelBloc(this._hotelRepo) : super(GetHotelInitial()) {

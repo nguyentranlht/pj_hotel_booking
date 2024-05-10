@@ -1,10 +1,10 @@
 part of 'get_hotel_bloc.dart';
 
-sealed class GetHotelevent extends Equatable {
-  const GetHotelevent();
+sealed class GetHotelEvent extends Equatable {
+  const GetHotelEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class GetHotel extends GetHotelevent{}
+class GetHotel extends GetHotelEvent{}
