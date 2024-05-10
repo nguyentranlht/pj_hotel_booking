@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyUser {
@@ -5,7 +8,7 @@ class MyUser {
   final String email;
   final String firstname;
   final String lastname;
-  String? picture;
+	String? picture;
   final String role; //Them role
 
   MyUser({
@@ -17,8 +20,7 @@ class MyUser {
     required this.role,
   });
 
-  factory MyUser.fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> document) {
+  factory MyUser.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data();
     return MyUser(
       userId: data?["userId"],
@@ -26,21 +28,20 @@ class MyUser {
       firstname: data?["firstname"],
       lastname: data?["lastname"],
       picture: data!["picture"],
-      role: data["role"],
+      role: data?["role"],
     );
   }
+
   // Empty user which represents an unauthenticated user.
   static final empty =
       MyUser(userId: '', email: '', firstname: '', lastname: '', picture: '', role: '');
 
   /// Modify MyUser parameters
   MyUser copyWith({
-    String? userId,
+    String? id,
     String? email,
-    String? firstname,
-    String? lastname,
+    String? name,
     String? picture,
-    String? role,
   }) {
     return MyUser(
       userId: userId ?? this.userId,
@@ -67,5 +68,19 @@ class MyUser {
       'picture': picture,
       'role': role,
     };
+  }
+  @override
+  List<Object?> get props => [userId, email, firstname, lastname, picture, role];
+
+  @override
+  String toString() {
+    return '''UserEntity: {
+      userId: $userId
+      email: $email
+      firstname: $firstname
+      lastname: $lastname
+      picture: $picture
+      role: $role
+    }''';
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_hotel_booking_ui/models/room_data.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Hotel{
+  
   final String imagePath;
   final String titleTxt;
   final String subTxt;
@@ -41,27 +42,26 @@ class Hotel{
     required this.screenMapPin,
   });
 
-  factory Hotel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
-    final data = document.data();
-    return Hotel(
-      imagePath: data?["imagePath"],
-      titleTxt: data?["titleTxt"],
-      subTxt: data?["subTxt"],
-      date: data?["date"],
-      dateTxt: data?["dateTxt"],
-      roomSizeTxt: data?["roomSizeTxt"],
-      roomData: data?["roomData"],
-      dist: data?["dist"],
-      rating: data?["rating"],
-      reviews: data?["reviews"],
-      perNight: data?["perNight"],
-      isSelected: data?["isSelected"],
-      peopleSleeps: data?["peopleSleeps"],
-      location: data?["location"],
-      screenMapPin: data?["screenMapPin"],
-    );
-  }
-
+  factory Hotel.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> document) {
+  final data = document.data();
+  return Hotel(
+    imagePath: data?["imagePath"],
+    titleTxt: data?["titleTxt"],
+    subTxt: data?["subTxt"],
+    date: data?["date"],
+    dateTxt: data?["dateTxt"],
+    roomSizeTxt: data?["roomSizeTxt"],
+    roomData: data?["roomData"],
+    dist: data?["dist"],
+    rating: data?["rating"],
+    reviews: data?["reviews"],
+    perNight: data?["perNight"],
+    isSelected: data?["isSelected"],
+    peopleSleeps: data?["peopleSleeps"],
+    location: data?["location"],
+    screenMapPin: data?["screenMapPin"],
+  );
+}
   // Empty hotel which represents an uninitialized hotel.
   static final empty = Hotel(
     imagePath: '',

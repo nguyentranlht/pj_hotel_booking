@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
+import 'package:flutter_hotel_booking_ui/models/constants.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
+import 'package:one_context/one_context.dart';
 class RoomeBookView extends StatefulWidget {
   final HotelListData roomData;
   final AnimationController animationController;
@@ -93,6 +94,11 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                           SizedBox(
                             height: 38,
                             child: CommonButton(
+                              //them o day ne NGUYEN
+                              onTap: () {
+                                OnePlatform.app = () => MyApp();
+                              },
+                              //
                               buttonTextWidget: Padding(
                                 padding: const EdgeInsets.only(
                                     left: 16.0, right: 16.0, top: 4, bottom: 4),
@@ -100,6 +106,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                   AppLocalizations(context).of("book_now"),
                                   textAlign: TextAlign.center,
                                   style: TextStyles(context).getRegularStyle(),
+                                 // onClick: 
                                 ),
                               ),
                             ),

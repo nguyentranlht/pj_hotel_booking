@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< Updated upstream
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
+=======
+>>>>>>> Stashed changes
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
@@ -53,9 +56,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () async {
                         //setting screen view
                         if (index == 5) {
-                          context
-                              .read<SignInBloc>()
-                              .add(const SignOutRequired());
+                          NavigationServices(context).gotoSettingsScreen();
+
+                          //   setState(() {});
                         }
                         //help center screen view
 
@@ -73,7 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (index == 1) {
                           NavigationServices(context).gotoInviteFriend();
                         }
-                        if (index == 4) {}
                       },
                       child: Column(
                         children: <Widget>[

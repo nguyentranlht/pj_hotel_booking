@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/login_app.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
@@ -21,11 +19,6 @@ import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
-import 'package:user_repository/user_repository.dart';
-
-import '../futures/authentication_bloc/authentication_bloc.dart';
-import '../futures/sign_in_bloc/sign_in_bloc.dart';
-import '../futures/sign_up_bloc/sign_up_bloc.dart';
 
 class NavigationServices {
   NavigationServices(this.context);
@@ -33,7 +26,7 @@ class NavigationServices {
   final BuildContext context;
 
   Future<dynamic> _pushMaterialPageRoute(Widget widget,
-      {bool fullscreenDialog = false}) async {
+      {bool fullscreenDialog= false}) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
@@ -51,16 +44,8 @@ class NavigationServices {
         (Route<dynamic> route) => false);
   }
 
-   void gotoLoginApp() async {
-    return await _pushMaterialPageRoute(LoginApp(FirebaseUserRepository()));
-  }
-
-  void gotoLoginScreen() async {
-    BlocProvider<SignInBloc>(
-      create: (context) => SignInBloc(
-          userRepository: context.read<AuthenticationBloc>().userRepository),
-      child: const LoginScreen(),
-    );
+  Future<dynamic> gotoLoginScreen() async {
+    return await _pushMaterialPageRoute(LoginScreen());
   }
 
   Future<dynamic> gotoTabScreen() async {
@@ -68,9 +53,8 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoSignScreen() async {
-    return await _pushMaterialPageRoute(const SignUpScreen());
+    return await _pushMaterialPageRoute(SignUpScreen());
   }
-
 
   Future<dynamic> gotoForgotPassword() async {
     return await _pushMaterialPageRoute(ForgotPasswordScreen());
@@ -136,4 +120,6 @@ class NavigationServices {
   Future<dynamic> gotoHowDoScreen() async {
     return await _pushMaterialPageRoute(HowDoScreen());
   }
+
+  
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsListData {
@@ -55,9 +54,9 @@ class SettingsListData {
       iconData: FontAwesomeIcons.wallet,
     ),
     SettingsListData(
-      titleTxt: "Log out",
+      titleTxt: 'setting_text',
       isSelected: false,
-      iconData: CupertinoIcons.square_arrow_right,
+      iconData: FontAwesomeIcons.cog,
     )
   ];
   static List<SettingsListData> settingsList = [

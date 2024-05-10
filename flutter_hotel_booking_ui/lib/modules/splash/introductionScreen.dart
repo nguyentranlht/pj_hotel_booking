@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/sign_up_bloc/sign_up_bloc.dart';
 import 'package:flutter_hotel_booking_ui/utils/localfiles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
@@ -102,7 +100,17 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 const EdgeInsets.only(left: 48, right: 48, bottom: 8, top: 32),
             buttonText: AppLocalizations(context).of("login"),
             onTap: () {
-              NavigationServices(context).gotoLoginApp();
+              NavigationServices(context).gotoLoginScreen();
+            },
+          ),
+          CommonButton(
+            padding:
+                const EdgeInsets.only(left: 48, right: 48, bottom: 32, top: 8),
+            buttonText: AppLocalizations(context).of("create_account"),
+            backgroundColor: AppTheme.backgroundColor,
+            textColor: AppTheme.primaryTextColor,
+            onTap: () {
+              NavigationServices(context).gotoSignScreen();
             },
           ),
           SizedBox(
