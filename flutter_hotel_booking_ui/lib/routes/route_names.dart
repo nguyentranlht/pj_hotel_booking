@@ -22,7 +22,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 import 'package:user_repository/user_repository.dart';
-
+import 'package:flutter_hotel_booking_ui/modules/profile/create_hotel_screen.dart';
 import '../futures/authentication_bloc/authentication_bloc.dart';
 import '../futures/sign_in_bloc/sign_in_bloc.dart';
 import '../futures/sign_up_bloc/sign_up_bloc.dart';
@@ -135,5 +135,9 @@ class NavigationServices {
 
   Future<dynamic> gotoHowDoScreen() async {
     return await _pushMaterialPageRoute(HowDoScreen());
+  }
+
+  Future<dynamic> gotoCreateHotelScreen() async {
+    return await _pushMaterialPageRoute(CreateHotelScreen());
   }
 }
