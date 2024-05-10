@@ -83,6 +83,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                     ? MapAndListView(
                         hotelList: hotelList,
                         searchBarUI: _getSearchBarUI(),
+                        
                       )
                     : Expanded(
                         child: Stack(
@@ -288,3 +289,5 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
     );
   }
 }
+
+
