@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/utils/localfiles.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
+import '../../futures/my_user_bloc/my_user_bloc.dart';
 import '../../models/setting_list_data.dart';
 
 class EditProfile extends StatefulWidget {
@@ -25,88 +27,102 @@ class _EditProfileState extends State<EditProfile> {
           onClick: () {
             FocusScope.of(context).requestFocus(FocusNode());
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CommonAppbarView(
-                iconData: Icons.arrow_back,
-                titleText: AppLocalizations(context).of("edit_profile"),
-                onBackClick: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(
-                      bottom: 16 + MediaQuery.of(context).padding.bottom),
-                  itemCount: userInfoList.length,
-                  itemBuilder: (context, index) {
-                    return index == 0
-                        ? getProfileUI()
-                        : InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 16),
-                                  child: Row(
+          child: BlocBuilder<MyUserBloc, MyUserState>(
+            builder: (context, state) {
+              if (state.status == MyUserStatus.success) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    CommonAppbarView(
+                      iconData: Icons.arrow_back,
+                      titleText: AppLocalizations(context).of("edit_profile"),
+                      onBackClick: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: EdgeInsets.only(
+                            bottom: 16 + MediaQuery.of(context).padding.bottom),
+                        itemCount: userInfoList.length,
+                        itemBuilder: (context, index) {
+                          return index == 0
+                              ? getProfileUI(state.user!.picture!)
+                              : InkWell(
+                                  onTap: () {},
+                                  child: Column(
                                     children: <Widget>[
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 16.0, bottom: 16, top: 16),
-                                          child: Text(
-                                            AppLocalizations(context).of(
-                                                userInfoList[index].titleTxt),
-                                            style: TextStyles(context)
-                                                .getDescriptionStyle()
-                                                .copyWith(
-                                                  fontSize: 16,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8, right: 16),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 16.0,
+                                                    bottom: 16,
+                                                    top: 16),
+                                                child: Text(
+                                                  AppLocalizations(context).of(
+                                                      userInfoList[index]
+                                                          .titleTxt),
+                                                  style: TextStyles(context)
+                                                      .getDescriptionStyle()
+                                                      .copyWith(
+                                                        fontSize: 16,
+                                                      ),
                                                 ),
-                                          ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 16.0,
+                                                  bottom: 16,
+                                                  top: 16),
+                                              child: Container(
+                                                child: Text(
+                                                  userInfoList[index].subTxt,
+                                                  style: TextStyles(context)
+                                                      .getRegularStyle()
+                                                      .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 16,
+                                                      ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            right: 16.0, bottom: 16, top: 16),
-                                        child: Container(
-                                          child: Text(
-                                            userInfoList[index].subTxt,
-                                            style: TextStyles(context)
-                                                .getRegularStyle()
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                ),
-                                          ),
+                                            left: 16, right: 16),
+                                        child: Divider(
+                                          height: 1,
                                         ),
                                       )
                                     ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(
-                                    height: 1,
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                  },
-                ),
-              )
-            ],
+                                );
+                        },
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return Container();
+              }
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget getProfileUI() {
+  Widget getProfileUI(String picture) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -135,7 +151,9 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(60.0)),
-                    child: Image.asset(Localfiles.userImage),
+                    child: Image.network(
+                              picture,
+                            ),
                   ),
                 ),
                 Positioned(

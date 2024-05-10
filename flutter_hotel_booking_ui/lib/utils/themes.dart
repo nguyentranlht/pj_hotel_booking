@@ -20,7 +20,7 @@ class AppTheme {
 
     return getColor(_colortypedata);
   }
-
+  static const Color grey = Color(0xFF3A5160);
   static Color get scaffoldBackgroundColor =>
       isLightMode ? Color(0xFFF7F7F7) : Color(0xFF1A1A1A);
 
