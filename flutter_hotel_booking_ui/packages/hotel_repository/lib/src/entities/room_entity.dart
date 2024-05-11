@@ -1,39 +1,23 @@
 class RoomEntity {
-  String roomId;
-  String roomName;
-  String hotelId;
-  double price;
-  int numberOfBeds;
-  bool isAvailable;
+  int numberRoom;
+  int people;
 
   RoomEntity({
-    required this.roomId,
-    required this.roomName,
-    required this.hotelId,
-    required this.price,
-    required this.numberOfBeds,
-    required this.isAvailable,
+    required this.numberRoom,
+    required this.people,
   });
 
   Map<String, Object?> toDocument() {
     return {
-      'roomId': roomId,
-      'roomName': roomName,
-      'hotelId': hotelId,
-      'price': price,
-      'numberOfBeds': numberOfBeds,
-      'isAvailable': isAvailable,
+      'numberRoom': numberRoom,
+      'people': people,
     };
   }
 
   static RoomEntity fromDocument(Map<String, dynamic> doc) {
     return RoomEntity(
-      roomId: doc['roomId'],
-      roomName: doc['roomName'],
-      hotelId: doc['hotelId'],
-      price: doc['price'],
-      numberOfBeds: doc['numberOfBeds'],
-      isAvailable: doc['isAvailable'],
+      numberRoom: doc['numberRoom'],
+      people: doc['people'],
     );
   }
 }

@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
+import 'package:hotel_repository/src/entities/peoplesleeps_entity.dart';
 import '../models/models.dart';
 
 class HotelEntity {
@@ -10,15 +13,13 @@ class HotelEntity {
   DateTime? date;
   String dateTxt;
   String roomSizeTxt;
+  Room? room;
   double dist;
   double rating;
   int reviews;
   int perNight;
   bool isSelected;
-  // PeopleSleeps? peopleSleeps;
-  // LatLng? location;
-  // Offset? screenMapPin;
-  // RoomEntity roomEntity;
+  PeopleSleeps? peopleSleeps;
 
   HotelEntity({
     required this.hotelId,
@@ -28,16 +29,13 @@ class HotelEntity {
     this.date,
     required this.dateTxt,
     required this.roomSizeTxt,
-    // this.roomData,
+    this.room,
     required this.dist,
     required this.rating,
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    // this.peopleSleeps,
-    // this.location,
-    // this.screenMapPin,
-    // required this.roomEntity,
+    this.peopleSleeps,
   });
 
   Map<String, Object?> toDocument() {
@@ -49,16 +47,13 @@ class HotelEntity {
       'date': date,
       'dateTxt': dateTxt,
       'roomSizeTxt': roomSizeTxt,
-      // 'roomData': roomData?.toEntity().toDocument(),
+      'room': room?.toEntity().toDocument(),
       'dist': dist,
       'rating': rating,
       'reviews': reviews,
       'perNight': perNight,
       'isSelected': isSelected,
-      // 'peopleSleeps': peopleSleeps?.toDocument(),
-      // 'location': location?.toJson(),
-      // 'screenMapPin': screenMapPin?.toJson(),
-      // 'roomEntity': roomEntity.toEntity().toDocument(),
+      'peopleSleeps': peopleSleeps?.toEntity().toDocument(),
     };
   }
 
@@ -71,15 +66,13 @@ class HotelEntity {
       date: doc['date'],
       dateTxt: doc['dateTxt'],
       roomSizeTxt: doc['roomSizeTxt'],
-      // roomData: RoomData.fromEntity(RoomDataEntity.fromDocument(doc['roomData'])),
+      room: Room.fromEntity(RoomEntity.fromDocument(doc['room'])),
       dist: doc['dist'],
       rating: doc['rating'],
       reviews: doc['reviews'],
       perNight: doc['perNight'],
       isSelected: doc['isSelected'],
-      // peopleSleeps: PeopleSleeps.fromDocument(doc['peopleSleeps']),
-      // location: LatLng.fromJson(doc['location']),
-      // screenMapPin: Offset.fromJson(doc['screenMapPin']),
+      peopleSleeps: PeopleSleeps.fromEntity(PeopleSleepsEntity.fromDocument(doc['room'])),
       
     );
   }

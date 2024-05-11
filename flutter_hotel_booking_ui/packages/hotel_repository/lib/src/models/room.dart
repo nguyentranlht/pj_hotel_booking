@@ -1,41 +1,26 @@
 import '../entities/room_entity.dart';
 
 class Room {
-  String roomId;
-  String roomName;
-  String hotelId;
-  double price;
-  int numberOfBeds;
-  bool isAvailable;
+  int numberRoom;
+
+  int people;
 
   Room({
-    required this.roomId,
-    required this.roomName,
-    required this.hotelId,
-    required this.price,
-    required this.numberOfBeds,
-    required this.isAvailable,
+    required this.numberRoom,
+    required this.people,
   });
 
   RoomEntity toEntity() {
     return RoomEntity(
-      roomId: roomId,
-      roomName: roomName,
-      hotelId: hotelId,
-      price: price,
-      numberOfBeds: numberOfBeds,
-      isAvailable: isAvailable,
+      numberRoom: numberRoom,
+      people: people,
     );
   }
 
   static Room fromEntity(RoomEntity entity) {
     return Room(
-      roomId: entity.roomId,
-      roomName: entity.roomName,
-      hotelId: entity.hotelId,
-      price: entity.price,
-      numberOfBeds: entity.numberOfBeds,
-      isAvailable: entity.isAvailable,
+      numberRoom: entity.numberRoom,
+      people: entity.people,
     );
   }
 }

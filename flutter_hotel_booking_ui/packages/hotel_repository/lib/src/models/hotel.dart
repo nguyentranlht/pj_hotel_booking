@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
 import 'package:uuid/uuid.dart';
 import '../entities/entities.dart';
@@ -11,16 +13,14 @@ class Hotel {
   DateTime? date;
   String dateTxt;
   String roomSizeTxt;
-  // RoomData? roomData;
+  Room? room;
   double dist;
   double rating;
   int reviews;
   int perNight;
   bool isSelected;
-  // PeopleSleeps? peopleSleeps;
-  // LatLng? location;
-  // Offset? screenMapPin;
-  // RoomEntity roomEntity;
+  PeopleSleeps? peopleSleeps;
+  
 
   Hotel({
     required this.hotelId,
@@ -30,16 +30,14 @@ class Hotel {
     this.date,
     required this.dateTxt,
     required this.roomSizeTxt,
-    // this.roomData,
+    this.room,
     required this.dist,
     required this.rating,
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    // this.peopleSleeps,
-    // this.location,
-    // this.screenMapPin,
-    // required this.roomEntity,
+    this.peopleSleeps,
+    
   });
 
    static var empty = Hotel(
@@ -65,16 +63,13 @@ class Hotel {
       date: date,
       dateTxt: dateTxt,
       roomSizeTxt: roomSizeTxt,
-      // roomData: roomData,
+      room: room,
       dist: dist,
       rating: rating,
       reviews: reviews,
       perNight: perNight,
       isSelected: isSelected,
-      // peopleSleeps: peopleSleeps,
-      // location: location,
-      // screenMapPin: screenMapPin,
-      // roomEntity: roomEntity,
+      peopleSleeps: peopleSleeps,
     );
   }
 
@@ -87,16 +82,13 @@ class Hotel {
       date: entity.date,
       dateTxt: entity.dateTxt,
       roomSizeTxt: entity.roomSizeTxt,
-      // roomData: entity.roomData,
+      room: entity.room,
       dist: entity.dist,
       rating: entity.rating,
       reviews: entity.reviews,
       perNight: entity.perNight,
       isSelected: entity.isSelected,
-      // peopleSleeps: entity.peopleSleeps,
-      // location: entity.location,
-      // screenMapPin: entity.screenMapPin,
-      // roomEntity: entity.roomEntity,
+      peopleSleeps: entity.peopleSleeps,
     );
   }
 }
