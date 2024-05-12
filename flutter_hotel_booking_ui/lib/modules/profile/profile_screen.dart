@@ -2,22 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/update_user_info_bloc/update_user_info_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
-import 'package:flutter_hotel_booking_ui/utils/localfiles.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/bottom_top_move_animation_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../futures/my_user_bloc/my_user_bloc.dart';
-import 'package:flutter_hotel_booking_ui/modules/profile/create_hotel_screen.dart';
 import '../../models/setting_list_data.dart';
-
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   final AnimationController animationController;
@@ -40,14 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        // Add onPressed functionality here
-        NavigationServices(context).gotoCreateHotelScreen();
-      },
-      child: Icon(Icons.add), // Change the icon as per your requirement
-    ),
-    body: BottomTopMoveAnimationView(
+      body: BottomTopMoveAnimationView(
         animationController: widget.animationController,
         child: Consumer<ThemeProvider>(
           builder: (context, provider, child) => Column(
@@ -109,36 +96,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .copyWith(
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16),
-
                                     ),
                                   ),
                                 ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Container(
-                                  child: Icon(userSettingsList[index].iconData, color: AppTheme.secondaryTextColor.withOpacity(0.7)),
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Container(
+                                    child: Icon(
+                                        userSettingsList[index].iconData,
+                                        color: AppTheme.secondaryTextColor
+                                            .withOpacity(0.7)),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Divider(height: 1,),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 16),
+                            child: Divider(
+                              height: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget appBar() {
     return InkWell(

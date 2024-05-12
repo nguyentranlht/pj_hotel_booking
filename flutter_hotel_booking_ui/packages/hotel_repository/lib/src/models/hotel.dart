@@ -18,7 +18,7 @@ class Hotel {
   int reviews;
   int perNight;
   bool isSelected;
-  PeopleSleeps? peopleSleeps;
+  PeopleSleeps peopleSleeps;
   
 
   Hotel({
@@ -35,7 +35,7 @@ class Hotel {
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    this.peopleSleeps,
+    required this.peopleSleeps,
     
   });
 
@@ -47,6 +47,7 @@ class Hotel {
     date: DateTime.now(),
     dateTxt: '',
     room: Room.empty,
+    peopleSleeps: PeopleSleeps.empty,
     roomSizeTxt: '',
     perNight: 0,
     reviews: 0,
