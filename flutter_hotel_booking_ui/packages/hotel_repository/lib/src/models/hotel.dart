@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
 import 'package:uuid/uuid.dart';
 import '../entities/entities.dart';
@@ -10,10 +9,10 @@ class Hotel {
   String imagePath;
   String titleTxt;
   String subTxt;
-  DateTime? date;
-  String dateTxt;
-  String roomSizeTxt;
-  Room? room;
+  DateTime date;
+  String? dateTxt;
+  String? roomSizeTxt;
+  Room room;
   double dist;
   double rating;
   int reviews;
@@ -27,10 +26,10 @@ class Hotel {
     required this.imagePath,
     required this.titleTxt,
     required this.subTxt,
-    this.date,
-    required this.dateTxt,
-    required this.roomSizeTxt,
-    this.room,
+    required this.date,
+    this.dateTxt,
+    this.roomSizeTxt,
+    required this.room,
     required this.dist,
     required this.rating,
     required this.reviews,
@@ -45,7 +44,9 @@ class Hotel {
     imagePath: '',
     titleTxt: '',
     subTxt: '',
+    date: DateTime.now(),
     dateTxt: '',
+    room: Room.empty,
     roomSizeTxt: '',
     perNight: 0,
     reviews: 0,
@@ -90,5 +91,25 @@ class Hotel {
       isSelected: entity.isSelected,
       peopleSleeps: entity.peopleSleeps,
     );
+  }
+
+  @override
+  String toString() {
+    return '''
+    hotelId: $hotelId,
+    imagePath: $imagePath,
+    titleTxt: $titleTxt,
+    subTxt: $subTxt,
+    date: $date,
+    dateTxt: $dateTxt,
+    roomSizeTxt: $roomSizeTxt,
+    room: $room,
+    dist: $dist,
+    rating: $rating,
+    reviews: $reviews,
+    perNight: $perNight,
+    isSelected: $isSelected,
+    peopleSleeps: $peopleSleeps,
+    ''';
   }
 }

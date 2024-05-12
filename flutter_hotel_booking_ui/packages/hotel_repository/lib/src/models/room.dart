@@ -9,7 +9,10 @@ class Room {
     required this.numberRoom,
     required this.people,
   });
-
+  static final empty = Room(
+    numberRoom: 0,
+    people: 0,
+  );
   RoomEntity toEntity() {
     return RoomEntity(
       numberRoom: numberRoom,

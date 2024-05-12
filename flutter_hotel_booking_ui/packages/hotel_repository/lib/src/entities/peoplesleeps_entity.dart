@@ -1,6 +1,6 @@
 class PeopleSleepsEntity {
-  late int startDate;
-  late int endDate;
+  int startDate;
+  int endDate;
 
   PeopleSleepsEntity({
     required this.startDate,

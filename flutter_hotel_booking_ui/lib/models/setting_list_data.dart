@@ -293,16 +293,16 @@ class SettingsListData {
       subTxt: "amanda@gmail.com",
     ),
     SettingsListData(
+      titleTxt: 'address_text',
+      subTxt: "123 Royal Street, New York",
+    ),
+    SettingsListData(
       titleTxt: 'phone',
       subTxt: "+65 1122334455",
     ),
     SettingsListData(
       titleTxt: 'date_of_birth',
       subTxt: "20, Aug, 1990",
-    ),
-    SettingsListData(
-      titleTxt: 'address_text',
-      subTxt: "123 Royal Street, New York",
     ),
   ];
 }

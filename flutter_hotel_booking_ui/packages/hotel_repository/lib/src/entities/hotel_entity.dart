@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
 import 'package:hotel_repository/src/entities/peoplesleeps_entity.dart';
@@ -10,32 +9,32 @@ class HotelEntity {
   String imagePath;
   String titleTxt;
   String subTxt;
-  DateTime? date;
-  String dateTxt;
-  String roomSizeTxt;
-  Room? room;
+  DateTime date;
+  String? dateTxt;
+  String? roomSizeTxt;
+  Room room;
   double dist;
   double rating;
   int reviews;
   int perNight;
   bool isSelected;
-  PeopleSleeps? peopleSleeps;
+  PeopleSleeps peopleSleeps;
 
   HotelEntity({
     required this.hotelId,
     required this.imagePath,
     required this.titleTxt,
     required this.subTxt,
-    this.date,
-    required this.dateTxt,
-    required this.roomSizeTxt,
-    this.room,
+    required this.date,
+    this.dateTxt,
+    this.roomSizeTxt,
+    required this.room,
     required this.dist,
     required this.rating,
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    this.peopleSleeps,
+    required this.peopleSleeps,
   });
 
   Map<String, Object?> toDocument() {
@@ -47,13 +46,13 @@ class HotelEntity {
       'date': date,
       'dateTxt': dateTxt,
       'roomSizeTxt': roomSizeTxt,
-      'room': room?.toEntity().toDocument(),
+      'room': room.toEntity().toDocument(),
       'dist': dist,
       'rating': rating,
       'reviews': reviews,
       'perNight': perNight,
       'isSelected': isSelected,
-      'peopleSleeps': peopleSleeps?.toEntity().toDocument(),
+      'peopleSleeps': peopleSleeps.toEntity().toDocument(),
     };
   }
 
@@ -72,7 +71,7 @@ class HotelEntity {
       reviews: doc['reviews'],
       perNight: doc['perNight'],
       isSelected: doc['isSelected'],
-      peopleSleeps: PeopleSleeps.fromEntity(PeopleSleepsEntity.fromDocument(doc['room'])),
+      peopleSleeps: PeopleSleeps.fromEntity(PeopleSleepsEntity.fromDocument(doc['peopleSleeps'])),
       
     );
   }

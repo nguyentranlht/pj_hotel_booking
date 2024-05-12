@@ -6,7 +6,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 class FirebaseHotelRepo implements HotelRepo {
-  final hotelCollection = FirebaseFirestore.instance.collection('hotel');
+  final hotelCollection = FirebaseFirestore.instance.collection('hotels');
 
   @override
   Future<List<Hotel>> getHotels() async {

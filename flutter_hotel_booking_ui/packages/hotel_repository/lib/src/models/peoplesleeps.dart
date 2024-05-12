@@ -1,14 +1,17 @@
 import '../entities/peoplesleeps_entity.dart';
 
 class PeopleSleeps {
-  late int startDate;
-  late int endDate;
+  int startDate;
+  int endDate;
 
   PeopleSleeps({
     required this.startDate,
     required this.endDate,
   });
-
+  static final empty = PeopleSleeps(
+    startDate: 0,
+    endDate: 0,
+  );
   PeopleSleepsEntity toEntity() {
     return PeopleSleepsEntity(
       startDate: startDate,
