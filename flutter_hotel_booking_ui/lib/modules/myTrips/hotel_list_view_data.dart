@@ -157,7 +157,7 @@ class HotelListViewData extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Helper.ratingStar(),
+                      Helper.ratingStar(hotelData.rating),
                       Row(
                         mainAxisAlignment: isShowDate
                             ? MainAxisAlignment.end

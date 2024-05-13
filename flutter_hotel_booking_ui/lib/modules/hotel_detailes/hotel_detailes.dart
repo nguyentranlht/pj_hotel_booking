@@ -11,12 +11,13 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import '../../models/hotel_list_data.dart';
 import 'hotel_roome_list.dart';
 import 'rating_view.dart';
 
 class HotelDetailes extends StatefulWidget {
-  final HotelListData hotelData;
+  final Hotel hotelData;
 
   const HotelDetailes({Key? key, required this.hotelData}) : super(key: key);
   @override
@@ -343,7 +344,7 @@ class _HotelDetailesState extends State<HotelDetailes>
     );
   }
 
-  Widget _backgraoundImageUI(HotelListData hotelData) {
+  Widget _backgraoundImageUI(Hotel hotelData) {
     return Positioned(
       top: 0,
       left: 0,
@@ -371,7 +372,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                           top: 0,
                           child: Container(
                             width: MediaQuery.of(context).size.width,
-                            child: Image.asset(
+                            child: Image.network(
                               hotelData.imagePath,
                               fit: BoxFit.cover,
                             ),
@@ -585,7 +586,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
                         children: <Widget>[
-                          Helper.ratingStar(),
+                          Helper.ratingStar(widget.hotelData.rating),
                           Text(
                             " ${widget.hotelData.reviews}",
                             style:

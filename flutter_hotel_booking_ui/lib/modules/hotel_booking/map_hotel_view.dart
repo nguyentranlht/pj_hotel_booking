@@ -6,10 +6,11 @@ import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 
 class MapHotelListView extends StatelessWidget {
   final VoidCallback callback;
-  final HotelListData hotelData;
+  final Hotel hotelData;
 
   const MapHotelListView(
       {Key? key, required this.hotelData, required this.callback})
@@ -32,7 +33,7 @@ class MapHotelListView extends StatelessWidget {
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: 0.90,
-                      child: Image.asset(
+                      child: Image.network(
                         hotelData.imagePath,
                         fit: BoxFit.cover,
                       ),
@@ -108,7 +109,7 @@ class MapHotelListView extends StatelessWidget {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 4),
-                                        child: Helper.ratingStar(),
+                                        child: Helper.ratingStar(hotelData.rating),
                                       ),
                                     ],
                                   ),

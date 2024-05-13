@@ -21,6 +21,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../futures/authentication_bloc/authentication_bloc.dart';
 import '../futures/sign_in_bloc/sign_in_bloc.dart';
@@ -92,7 +93,7 @@ class NavigationServices {
         RoomBookingScreen(hotelName: hotelname));
   }
 
-  Future<dynamic> gotoHotelDetailes(HotelListData hotelData) async {
+  Future<dynamic> gotoHotelDetailes(Hotel hotelData) async {
     return await _pushMaterialPageRoute(HotelDetailes(
       hotelData: hotelData,
     ));

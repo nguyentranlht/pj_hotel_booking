@@ -35,7 +35,7 @@ class Helper {
     return "${AppLocalizations(applicationcontext!).of("sleeps")} ${roomData.numberRoom} ${AppLocalizations(applicationcontext!).of("people_data")} + ${roomData.numberRoom} ${AppLocalizations(applicationcontext!).of("children")} ";
   }
 
-  static Widget ratingStar({double rating = 4.5}) {
+  static Widget ratingStar(double rating) {
     return RatingBarIndicator(
       rating: rating,
       itemBuilder: (context, index) => Icon(

@@ -3,11 +3,12 @@ import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import '../../models/hotel_list_data.dart';
 // import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class RatingView extends StatelessWidget {
-  final HotelListData hotelData;
+  final Hotel hotelData;
 
   const RatingView({Key? key, required this.hotelData}) : super(key: key);
 

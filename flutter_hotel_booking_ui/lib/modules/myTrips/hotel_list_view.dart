@@ -139,7 +139,7 @@ class HotelListView extends StatelessWidget {
                                         padding: const EdgeInsets.only(top: 4),
                                         child: Row(
                                           children: <Widget>[
-                                            Helper.ratingStar(),
+                                            Helper.ratingStar(hotelData.rating),
                                             Text(
                                               " ${hotelData.reviews}",
                                               style: TextStyles(context)

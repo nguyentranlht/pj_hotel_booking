@@ -14,8 +14,8 @@ class HotelEntity {
   Timestamp date;
   // DateText dateTxt;
   // RoomData roomData;
-  int dist;
-  int rating;
+  double dist;
+  double rating;
   int reviews;
   int perNight;
   bool isSelected;

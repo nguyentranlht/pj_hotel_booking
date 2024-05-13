@@ -9,12 +9,13 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:flutter_hotel_booking_ui/widgets/list_cell_animation_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:provider/provider.dart';
 
 class HotelListViewPage extends StatelessWidget {
   final bool isShowDate;
   final VoidCallback callback;
-  final HotelListData hotelData;
+  final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
 
@@ -46,7 +47,7 @@ class HotelListViewPage extends StatelessWidget {
                     children: <Widget>[
                       AspectRatio(
                         aspectRatio: 0.90,
-                        child: Image.asset(
+                        child: Image.network(
                           hotelData.imagePath,
                           fit: BoxFit.cover,
                         ),
@@ -124,7 +125,7 @@ class HotelListViewPage extends StatelessWidget {
                                               ),
                                             ],
                                           ),
-                                          Helper.ratingStar(),
+                                          Helper.ratingStar(hotelData.rating),
                                         ],
                                       ),
                                     ),
