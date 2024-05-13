@@ -1,8 +1,8 @@
-class RoomEntity {
+class RoomDataEntity {
   int numberRoom;
   int people;
 
-  RoomEntity({
+  RoomDataEntity({
     required this.numberRoom,
     required this.people,
   });
@@ -14,8 +14,8 @@ class RoomEntity {
     };
   }
 
-  static RoomEntity fromDocument(Map<String, dynamic> doc) {
-    return RoomEntity(
+  static RoomDataEntity fromDocument(Map<String, dynamic> doc) {
+    return RoomDataEntity(
       numberRoom: doc['numberRoom'],
       people: doc['people'],
     );

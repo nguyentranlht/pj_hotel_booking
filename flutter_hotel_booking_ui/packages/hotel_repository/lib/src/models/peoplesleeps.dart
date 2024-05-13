@@ -1,28 +1,23 @@
 import '../entities/peoplesleeps_entity.dart';
 
 class PeopleSleeps {
-  int startDate;
-  int endDate;
+  int peopleNumber;
 
   PeopleSleeps({
-    required this.startDate,
-    required this.endDate,
+    required this.peopleNumber,
   });
   static final empty = PeopleSleeps(
-    startDate: 0,
-    endDate: 0,
+    peopleNumber: 1,
   );
   PeopleSleepsEntity toEntity() {
     return PeopleSleepsEntity(
-      startDate: startDate,
-      endDate: endDate,
+      peopleNumber: peopleNumber,
     );
   }
 
   static PeopleSleeps fromEntity(PeopleSleepsEntity entity) {
     return PeopleSleeps(
-      startDate: entity.startDate,
-      endDate: entity.endDate,
+      peopleNumber: entity.peopleNumber,
     );
   }
 }

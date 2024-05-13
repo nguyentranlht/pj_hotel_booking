@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
 import 'package:uuid/uuid.dart';
@@ -9,16 +10,15 @@ class Hotel {
   String imagePath;
   String titleTxt;
   String subTxt;
-  DateTime date;
-  String? dateTxt;
-  String? roomSizeTxt;
-  Room room;
-  double dist;
-  double rating;
+  Timestamp date;
+  //DateText dateTxt;
+  //RoomData roomData;
+  int dist;
+  int rating;
   int reviews;
   int perNight;
   bool isSelected;
-  PeopleSleeps peopleSleeps;
+  // PeopleSleeps peopleSleeps;
   
 
   Hotel({
@@ -27,15 +27,14 @@ class Hotel {
     required this.titleTxt,
     required this.subTxt,
     required this.date,
-    this.dateTxt,
-    this.roomSizeTxt,
-    required this.room,
+    //required this.dateTxt,
+    //required this.roomData,
     required this.dist,
     required this.rating,
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    required this.peopleSleeps,
+    // required this.peopleSleeps,
     
   });
 
@@ -44,11 +43,10 @@ class Hotel {
     imagePath: '',
     titleTxt: '',
     subTxt: '',
-    date: DateTime.now(),
-    dateTxt: '',
-    room: Room.empty,
-    peopleSleeps: PeopleSleeps.empty,
-    roomSizeTxt: '',
+    date: Timestamp.now(),
+    //dateTxt: DateText.empty,
+    //roomData: RoomData.empty,
+    // peopleSleeps: PeopleSleeps.empty,
     perNight: 0,
     reviews: 0,
     dist: 0,
@@ -63,15 +61,14 @@ class Hotel {
       titleTxt: titleTxt,
       subTxt: subTxt,
       date: date,
-      dateTxt: dateTxt,
-      roomSizeTxt: roomSizeTxt,
-      room: room,
+      //dateTxt: dateTxt,
+      //roomData: roomData,
       dist: dist,
       rating: rating,
       reviews: reviews,
       perNight: perNight,
       isSelected: isSelected,
-      peopleSleeps: peopleSleeps,
+      // peopleSleeps: peopleSleeps,
     );
   }
 
@@ -82,18 +79,20 @@ class Hotel {
       titleTxt: entity.titleTxt,
       subTxt: entity.subTxt,
       date: entity.date,
-      dateTxt: entity.dateTxt,
-      roomSizeTxt: entity.roomSizeTxt,
-      room: entity.room,
+      //dateTxt: entity.dateTxt,
+      //roomData: entity.roomData,
       dist: entity.dist,
       rating: entity.rating,
       reviews: entity.reviews,
       perNight: entity.perNight,
       isSelected: entity.isSelected,
-      peopleSleeps: entity.peopleSleeps,
+      // peopleSleeps: entity.peopleSleeps,
     );
   }
 
+    // dateTxt: $dateTxt,
+    // roomData: $roomData,
+    // peopleSleeps: $peopleSleeps,
   @override
   String toString() {
     return '''
@@ -102,15 +101,12 @@ class Hotel {
     titleTxt: $titleTxt,
     subTxt: $subTxt,
     date: $date,
-    dateTxt: $dateTxt,
-    roomSizeTxt: $roomSizeTxt,
-    room: $room,
     dist: $dist,
     rating: $rating,
     reviews: $reviews,
     perNight: $perNight,
     isSelected: $isSelected,
-    peopleSleeps: $peopleSleeps,
+    
     ''';
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/utils/enum.dart';
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
@@ -9,12 +8,13 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:flutter_hotel_booking_ui/widgets/list_cell_animation_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:provider/provider.dart';
 
 class HotelListViewData extends StatelessWidget {
   final bool isShowDate;
   final VoidCallback callback;
-  final HotelListData hotelData;
+  final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
 
@@ -53,7 +53,7 @@ class HotelListViewData extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(16.0)),
                     child: AspectRatio(
                       aspectRatio: 1.0,
-                      child: Image.asset(
+                      child: Image.network(
                         hotelData.imagePath,
                         fit: BoxFit.cover,
                       ),
@@ -98,24 +98,24 @@ class HotelListViewData extends StatelessWidget {
                     fontSize: 14,
                   ),
             ),
-            Text(
-              Helper.getDateText(hotelData.date!),
-              maxLines: 2,
-              textAlign: isShowDate ? TextAlign.right : TextAlign.left,
-              style: TextStyles(context).getRegularStyle().copyWith(
-                    fontSize: 12,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              Helper.getRoomText(hotelData.roomData!),
-              maxLines: 2,
-              textAlign: isShowDate ? TextAlign.right : TextAlign.left,
-              style: TextStyles(context).getRegularStyle().copyWith(
-                    fontSize: 12,
-                  ),
-              overflow: TextOverflow.ellipsis,
-            ),
+            // Text(
+            //   Helper.getDateText(hotelData.dateTxt!),
+            //   maxLines: 2,
+            //   textAlign: isShowDate ? TextAlign.right : TextAlign.left,
+            //   style: TextStyles(context).getRegularStyle().copyWith(
+            //         fontSize: 12,
+            //       ),
+            //   overflow: TextOverflow.ellipsis,
+            // ),
+            // Text(
+            //   Helper.getRoomText(hotelData.roomData),
+            //   maxLines: 2,
+            //   textAlign: isShowDate ? TextAlign.right : TextAlign.left,
+            //   style: TextStyles(context).getRegularStyle().copyWith(
+            //         fontSize: 12,
+            //       ),
+            //   overflow: TextOverflow.ellipsis,
+            // ),
             Expanded(
               child: FittedBox(
                 child: SizedBox(

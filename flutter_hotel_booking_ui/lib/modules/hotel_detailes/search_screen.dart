@@ -151,7 +151,7 @@ class _SearchScreenState extends State<SearchScreen>
       List<Widget> listUI = [];
       for (var i = 0; i < columCount; i++) {
         try {
-          final date = custList[cout];
+          final dateText = custList[cout];
           var animation = Tween(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animationController,
@@ -160,13 +160,13 @@ class _SearchScreenState extends State<SearchScreen>
             ),
           );
           animationController.forward();
-          listUI.add(Expanded(
-            child: SerchView(
-              hotelInfo: date,
-              animation: animation,
-              animationController: animationController,
-            ),
-          ));
+          // listUI.add(Expanded(
+          //   child: SerchView(
+          //     hotelInfo: dateText,
+          //     animation: animation,
+          //     animationController: animationController,
+          //   ),
+          // ));
           cout += 1;
         } catch (e) {}
       }

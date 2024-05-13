@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/utils/enum.dart';
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
@@ -9,12 +8,13 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:flutter_hotel_booking_ui/widgets/list_cell_animation_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:provider/provider.dart';
 
 class HotelListView extends StatelessWidget {
   final bool isShowDate;
   final VoidCallback callback;
-  final HotelListData hotelData;
+  final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
 
@@ -42,20 +42,20 @@ class HotelListView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          Helper.getDateText(hotelData.date!) + ', ',
-                          style: TextStyles(context)
-                              .getRegularStyle()
-                              .copyWith(fontSize: 14),
-                        ),
+                        // Text(
+                        //   Helper.getDateText(hotelData.dateTxt) + ', ',
+                        //   style: TextStyles(context)
+                        //       .getRegularStyle()
+                        //       .copyWith(fontSize: 14),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
-                          child: Text(
-                            Helper.getRoomText(hotelData.roomData!),
-                            style: TextStyles(context)
-                                .getRegularStyle()
-                                .copyWith(fontSize: 14),
-                          ),
+                          // child: Text(
+                          //   Helper.getRoomText(hotelData.roomData),
+                          //   style: TextStyles(context)
+                          //       .getRegularStyle()
+                          //       .copyWith(fontSize: 14),
+                          // ),
                         ),
                       ],
                     ),
@@ -72,7 +72,7 @@ class HotelListView extends StatelessWidget {
                       children: <Widget>[
                         AspectRatio(
                           aspectRatio: 2,
-                          child: Image.asset(
+                          child: Image.network(
                             hotelData.imagePath,
                             fit: BoxFit.cover,
                           ),

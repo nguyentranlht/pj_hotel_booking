@@ -1,23 +1,19 @@
 class PeopleSleepsEntity {
-  int startDate;
-  int endDate;
+  int peopleNumber;
 
   PeopleSleepsEntity({
-    required this.startDate,
-    required this.endDate,
+    required this.peopleNumber,
   });
 
   Map<String, Object?> toDocument() {
     return {
-      'startDate': startDate,
-      'endDate': endDate,
+      'peopleNumber': peopleNumber,
     };
   }
 
   static PeopleSleepsEntity fromDocument(Map<String, dynamic> doc) {
     return PeopleSleepsEntity(
-      startDate: doc['startDate'],
-      endDate: doc['endDate'],
+      peopleNumber: doc['peopleNumber'],
     );
   }
 }

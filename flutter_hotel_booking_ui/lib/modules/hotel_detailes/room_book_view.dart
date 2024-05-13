@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/models/constants.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
+
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:one_context/one_context.dart';
 class RoomeBookView extends StatefulWidget {
@@ -138,13 +140,13 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            Helper.getPeopleandChildren(
-                                widget.roomData.roomData!),
-                            // "${widget.roomData.dateTxt}",
-                            textAlign: TextAlign.left,
-                            style: TextStyles(context).getDescriptionStyle(),
-                          ),
+                          // Text(
+                          //   // Helper.getPeopleandChildren(
+                          //       // widget.roomData.roomData!),
+                          //   // "${widget.roomData.dateTxt}",
+                          //   // textAlign: TextAlign.left,
+                          //   // style: TextStyles(context).getDescriptionStyle(),
+                          // ),
                           InkWell(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(4.0)),

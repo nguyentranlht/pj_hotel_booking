@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/models/room_data.dart';
+
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/calendar_pop_up_view.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/room_pop_up_view.dart';
 import 'package:flutter_hotel_booking_ui/motel_app.dart';
@@ -8,6 +8,7 @@ import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
 import 'package:flutter_hotel_booking_ui/utils/enum.dart';
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class TimeDateView extends StatefulWidget {
 }
 
 class _TimeDateViewState extends State<TimeDateView> {
-  RoomData _roomData = RoomData(1, 2);
+  //RoomData _roomData;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(Duration(days: 5));
   LanguageType _languageType = applicationcontext == null
@@ -40,10 +41,10 @@ class _TimeDateViewState extends State<TimeDateView> {
             height: 42,
             color: Colors.grey.withOpacity(0.8),
           ),
-          _getDateRoomUi(AppLocalizations(context).of("number_room"),
-              Helper.getRoomText(_roomData), () {
-            _showPopUp();
-          }),
+          // _getDateRoomUi(AppLocalizations(context).of("number_room"),
+          //     Helper.getRoomText(_roomData), () {
+          //   _showPopUp();
+          // }),
         ],
       ),
     );
@@ -115,17 +116,17 @@ class _TimeDateViewState extends State<TimeDateView> {
   }
 
   void _showPopUp() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => RoomPopupView(
-        roomData: _roomData,
-        barrierDismissible: true,
-        onChnage: (data) {
-          setState(() {
-            _roomData = data;
-          });
-        },
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) => RoomPopupView(
+    //     roomData: _roomData,
+    //     barrierDismissible: true,
+    //     onChnage: (data) {
+    //       setState(() {
+    //         _roomData = data;
+    //       });
+    //     },
+    //   ),
+    // );
   }
 }

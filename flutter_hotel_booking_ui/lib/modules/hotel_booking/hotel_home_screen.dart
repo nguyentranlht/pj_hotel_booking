@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/hotel_bloc/get_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/filter_bar_UI.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/map_and_list_view.dart';
@@ -25,7 +27,6 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   late AnimationController _animationController;
-  var hotelList = HotelListData.hotelList;
   ScrollController scrollController = new ScrollController();
   int room = 1;
   int ad = 2;
@@ -69,95 +70,112 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          RemoveFocuse(
-            onClick: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            child: Column(
+    return BlocBuilder<GetHotelBloc, GetHotelState>(
+      builder: (context, state) {
+        if (state is GetHotelSuccess) {
+          return Scaffold(
+            body: Stack(
               children: <Widget>[
-                _getAppBarUI(),
-                _isShowMap
-                    ? MapAndListView(
-                        hotelList: hotelList,
-                        searchBarUI: _getSearchBarUI(),
-                        
-                      )
-                    : Expanded(
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              color: AppTheme.scaffoldBackgroundColor,
-                              child: ListView.builder(
-                                controller: scrollController,
-                                itemCount: hotelList.length,
-                                padding: EdgeInsets.only(
-                                  top: 8 + 158 + 52.0,
-                                ),
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context, index) {
-                                  var count = hotelList.length > 10
-                                      ? 10
-                                      : hotelList.length;
-                                  var animation = Tween(begin: 0.0, end: 1.0)
-                                      .animate(CurvedAnimation(
-                                          parent: animationController,
-                                          curve: Interval(
-                                              (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn)));
-                                  animationController.forward();
-                                  return HotelListView(
-                                    callback: () {
-                                      NavigationServices(context)
-                                          .gotoRoomBookingScreen(
-                                              hotelList[index].titleTxt);
-                                    },
-                                    hotelData: hotelList[index],
-                                    animation: animation,
-                                    animationController: animationController,
-                                  );
-                                },
-                              ),
-                            ),
-                            AnimatedBuilder(
-                              animation: _animationController,
-                              builder: (BuildContext context, Widget? child) {
-                                return Positioned(
-                                  top: -searchBarHieght *
-                                      (_animationController.value),
-                                  left: 0,
-                                  right: 0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Container(
-                                        color: Theme.of(context)
-                                            .scaffoldBackgroundColor,
+                RemoveFocuse(
+                  onClick: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      _getAppBarUI(),
+                      _isShowMap
+                          ? MapAndListView(
+                              hotelList: state.hotels,
+                              searchBarUI: _getSearchBarUI(),
+                            )
+                          : Expanded(
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    // color: AppTheme.scaffoldBackgroundColor,
+                                    // child: ListView.builder(
+                                    //   controller: scrollController,
+                                    //   itemCount: hotelList.length,
+                                    //   padding: EdgeInsets.only(
+                                    //     top: 8 + 158 + 52.0,
+                                    //   ),
+                                    //   scrollDirection: Axis.vertical,
+                                    //   itemBuilder: (context, index) {
+                                    //     var count = hotelList.length > 10
+                                    //         ? 10
+                                    //         : hotelList.length;
+                                    //     var animation = Tween(
+                                    //             begin: 0.0, end: 1.0)
+                                    //         .animate(CurvedAnimation(
+                                    //             parent: animationController,
+                                    //             curve: Interval(
+                                    //                 (1 / count) * index, 1.0,
+                                    //                 curve:
+                                    //                     Curves.fastOutSlowIn)));
+                                    //     animationController.forward();
+                                    //     return HotelListView(
+                                    //       callback: () {
+                                    //         NavigationServices(context)
+                                    //             .gotoRoomBookingScreen(
+                                    //                 hotelList[index].titleTxt);
+                                    //       },
+                                    //       hotelData: hotelList[index],
+                                    //       animation: animation,
+                                    //       animationController:
+                                    //           animationController,
+                                    //     );
+                                    //   },
+                                    // ),
+                                  ),
+                                  AnimatedBuilder(
+                                    animation: _animationController,
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      return Positioned(
+                                        top: -searchBarHieght *
+                                            (_animationController.value),
+                                        left: 0,
+                                        right: 0,
                                         child: Column(
                                           children: <Widget>[
-                                            //hotel search view
-                                            _getSearchBarUI(),
-                                            // time date and number of rooms view
-                                            TimeDateView(),
+                                            Container(
+                                              color: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
+                                              child: Column(
+                                                children: <Widget>[
+                                                  //hotel search view
+                                                  _getSearchBarUI(),
+                                                  // time date and number of rooms view
+                                                  TimeDateView(),
+                                                ],
+                                              ),
+                                            ),
+                                            //hotel price & facilitate  & distance
+                                            FilterBarUI(),
                                           ],
                                         ),
-                                      ),
-                                      //hotel price & facilitate  & distance
-                                      FilterBarUI(),
-                                    ],
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      )
+                                ],
+                              ),
+                            )
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
+          );
+        } else if (state is GetHotelLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return const Center(
+            child: Text("An error has occured"),
+          );
+        }
+      },
     );
   }
 
@@ -289,5 +307,3 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
     );
   }
 }
-
-

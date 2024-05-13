@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:hotel_repository/src/entities/data_text_entity.dart';
 import 'package:hotel_repository/src/entities/room_entity.dart';
 import 'package:hotel_repository/src/entities/peoplesleeps_entity.dart';
 import '../models/models.dart';
@@ -9,16 +11,15 @@ class HotelEntity {
   String imagePath;
   String titleTxt;
   String subTxt;
-  DateTime date;
-  String? dateTxt;
-  String? roomSizeTxt;
-  Room room;
-  double dist;
-  double rating;
+  Timestamp date;
+  // DateText dateTxt;
+  // RoomData roomData;
+  int dist;
+  int rating;
   int reviews;
   int perNight;
   bool isSelected;
-  PeopleSleeps peopleSleeps;
+  // PeopleSleeps peopleSleeps;
 
   HotelEntity({
     required this.hotelId,
@@ -26,15 +27,14 @@ class HotelEntity {
     required this.titleTxt,
     required this.subTxt,
     required this.date,
-    this.dateTxt,
-    this.roomSizeTxt,
-    required this.room,
+    // required this.dateTxt,
+    // required this.roomData,
     required this.dist,
     required this.rating,
     required this.reviews,
     required this.perNight,
     required this.isSelected,
-    required this.peopleSleeps,
+    // required this.peopleSleeps,
   });
 
   Map<String, Object?> toDocument() {
@@ -44,15 +44,14 @@ class HotelEntity {
       'titleTxt': titleTxt,
       'subTxt': subTxt,
       'date': date,
-      'dateTxt': dateTxt,
-      'roomSizeTxt': roomSizeTxt,
-      'room': room.toEntity().toDocument(),
+      // 'dateTxt': dateTxt.toEntity().toDocument(),
+      // 'roomData': roomData.toEntity().toDocument(),
       'dist': dist,
       'rating': rating,
       'reviews': reviews,
       'perNight': perNight,
       'isSelected': isSelected,
-      'peopleSleeps': peopleSleeps.toEntity().toDocument(),
+      // 'peopleSleeps': peopleSleeps.toEntity().toDocument(),
     };
   }
 
@@ -63,16 +62,17 @@ class HotelEntity {
       titleTxt: doc['titleTxt'],
       subTxt: doc['subTxt'],
       date: doc['date'],
-      dateTxt: doc['dateTxt'],
-      roomSizeTxt: doc['roomSizeTxt'],
-      room: Room.fromEntity(RoomEntity.fromDocument(doc['room'])),
+      // dateTxt:
+      //     DateText.fromEntity(DateTextEntity.fromDocument(doc['dateText'])),
+      // roomData:
+      //     RoomData.fromEntity(RoomDataEntity.fromDocument(doc['roomData'])),
       dist: doc['dist'],
       rating: doc['rating'],
       reviews: doc['reviews'],
       perNight: doc['perNight'],
       isSelected: doc['isSelected'],
-      peopleSleeps: PeopleSleeps.fromEntity(PeopleSleepsEntity.fromDocument(doc['peopleSleeps'])),
-      
+      // peopleSleeps: PeopleSleeps.fromEntity(
+      //     PeopleSleepsEntity.fromDocument(doc['peopleSleeps'])),
     );
   }
 }

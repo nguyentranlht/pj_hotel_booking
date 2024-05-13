@@ -4,9 +4,10 @@ import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/google
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/time_date_view.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/map_hotel_view.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
+import 'package:hotel_repository/hotel_repository.dart';
 
 class MapAndListView extends StatelessWidget {
-  final List<HotelListData> hotelList;
+  final List<Hotel> hotelList;
   final Widget searchBarUI;
 
   const MapAndListView(
@@ -25,9 +26,9 @@ class MapAndListView extends StatelessWidget {
               Expanded(
                 child: Stack(
                   children: <Widget>[
-                    GoogleMapUIView(
-                      hotelList: hotelList,
-                    ),
+                    // GoogleMapUIView(
+                    //   hotelList: hotelList,
+                    // ),
                     IgnorePointer(
                       child: Container(
                         height: 80,
@@ -57,22 +58,22 @@ class MapAndListView extends StatelessWidget {
                       child: Container(
                         height: 156,
                         // color: Colors.green,
-                        child: ListView.builder(
-                          itemCount: hotelList.length,
-                          padding:
-                              EdgeInsets.only(top: 8, bottom: 8, right: 16),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return MapHotelListView(
-                              callback: () {
-                                NavigationServices(context)
-                                    .gotoRoomBookingScreen(
-                                        hotelList[index].titleTxt);
-                              },
-                              hotelData: hotelList[index],
-                            );
-                          },
-                        ),
+                        // child: ListView.builder(
+                        //   itemCount: hotelList.length,
+                        //   padding:
+                        //       EdgeInsets.only(top: 8, bottom: 8, right: 16),
+                        //   scrollDirection: Axis.horizontal,
+                        //   itemBuilder: (context, index) {
+                        //     return MapHotelListView(
+                        //       callback: () {
+                        //         NavigationServices(context)
+                        //             .gotoRoomBookingScreen(
+                        //                 hotelList[index].titleTxt);
+                        //       },
+                        //       hotelData: hotelList[index],
+                        //     );
+                        //   },
+                        // ),
                       ),
                     ),
                   ],
