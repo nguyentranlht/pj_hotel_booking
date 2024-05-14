@@ -1,4 +1,4 @@
-import '../entities/room_entity.dart';
+import '../entities/room_data_entity.dart';
 
 class RoomData {
   int numberRoom;
