@@ -19,7 +19,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:provider/provider.dart';
 
-import '../../futures/hotel_bloc/get_hotel_bloc.dart';
+import '../../futures/get_hotel_bloc/get_hotel_bloc.dart';
 
 class HomeExploreScreen extends StatefulWidget {
   final AnimationController animationController;

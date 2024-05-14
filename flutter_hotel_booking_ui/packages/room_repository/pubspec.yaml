@@ -1,4 +1,4 @@
-name: hotel_repository
+name: room_repository
 description: Dart package which manages the Hotel.
 publish_to: 'none'
 version: 0.1.0

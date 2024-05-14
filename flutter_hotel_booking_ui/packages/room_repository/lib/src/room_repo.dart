@@ -2,10 +2,10 @@ import 'models/models.dart';
 import 'dart:typed_data';
 import 'models/models.dart';
 
-abstract class HotelRepo {
-  Future<List<Hotel>> getHotels();
+abstract class RoomRepo {
+  Future<List<Room>> getRooms();
 
   Future<String> sendImage(Uint8List file, String name);
 
-  Future<void> createHotels(Hotel hotel);
+  Future<void> createRooms(Room room);
 }

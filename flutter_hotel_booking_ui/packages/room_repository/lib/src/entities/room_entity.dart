@@ -1,37 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hotel_repository/hotel_repository.dart';
-import 'package:hotel_repository/src/entities/data_text_entity.dart';
-import 'package:hotel_repository/src/entities/room_data_entity.dart';
-import 'package:hotel_repository/src/entities/peoplesleeps_entity.dart';
+import 'package:room_repository/room_repository.dart';
+import 'package:room_repository/src/entities/data_text_entity.dart';
+import 'package:room_repository/src/entities/room_data_entity.dart';
+import 'package:room_repository/src/entities/peoplesleeps_entity.dart';
 import '../models/models.dart';
 
-class HotelEntity {
+class RoomEntity {
+  String roomId;
   String hotelId;
   String imagePath;
   String titleTxt;
-  String subTxt;
   Timestamp date;
-  DateText dateTxt;
+  String dataTxt;
   RoomData roomData;
-  double dist;
-  double rating;
-  int reviews;
   int perNight;
   bool isSelected;
   // PeopleSleeps peopleSleeps;
 
-  HotelEntity({
+  RoomEntity({
+    required this.roomId,
     required this.hotelId,
     required this.imagePath,
     required this.titleTxt,
-    required this.subTxt,
     required this.date,
-    required this.dateTxt,
+    required this.dataTxt,
     required this.roomData,
-    required this.dist,
-    required this.rating,
-    required this.reviews,
     required this.perNight,
     required this.isSelected,
     // required this.peopleSleeps,
@@ -39,36 +33,29 @@ class HotelEntity {
 
   Map<String, Object?> toDocument() {
     return {
+      'roomId': roomId,
       'hotelId': hotelId,
       'imagePath': imagePath,
       'titleTxt': titleTxt,
-      'subTxt': subTxt,
       'date': date,
-      'dateTxt': dateTxt.toEntity().toDocument(),
+      'dataTxt': dataTxt,
       'roomData': roomData.toEntity().toDocument(),
-      'dist': dist,
-      'rating': rating,
-      'reviews': reviews,
       'perNight': perNight,
       'isSelected': isSelected,
       // 'peopleSleeps': peopleSleeps.toEntity().toDocument(),
     };
   }
 
-  static HotelEntity fromDocument(Map<String, dynamic> doc) {
-    return HotelEntity(
+  static RoomEntity fromDocument(Map<String, dynamic> doc) {
+    return RoomEntity(
+      roomId: doc['roomId'],
       hotelId: doc['hotelId'],
       imagePath: doc['imagePath'],
       titleTxt: doc['titleTxt'],
-      subTxt: doc['subTxt'],
       date: doc['date'],
-      dateTxt:
-          DateText.fromEntity(DateTextEntity.fromDocument(doc['dateTxt'])),
+      dataTxt: doc['dataTxt'],
       roomData:
           RoomData.fromEntity(RoomDataEntity.fromDocument(doc['roomData'])),
-      dist: doc['dist'],
-      rating: doc['rating'],
-      reviews: doc['reviews'],
       perNight: doc['perNight'],
       isSelected: doc['isSelected'],
       // peopleSleeps: PeopleSleeps.fromEntity(

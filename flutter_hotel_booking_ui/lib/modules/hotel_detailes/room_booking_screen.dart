@@ -5,8 +5,8 @@ import '../../models/hotel_list_data.dart';
 
 class RoomBookingScreen extends StatefulWidget {
   final String hotelName;
-
-  const RoomBookingScreen({Key? key, required this.hotelName})
+  final String hotelId;
+  const RoomBookingScreen({Key? key, required this.hotelName,required this.hotelId})
       : super(key: key);
   @override
   _RoomBookingScreenState createState() => _RoomBookingScreenState();

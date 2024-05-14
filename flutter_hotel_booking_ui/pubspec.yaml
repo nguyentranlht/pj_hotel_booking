@@ -2,7 +2,7 @@ name: flutter_hotel_booking_ui
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: ">=3.2.6 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,21 +31,22 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
-        sdk: flutter
-  cloud_firestore: ^4.15.8
+    sdk: flutter
+  cloud_firestore:
+    ^4.15.8
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.
   font_awesome_flutter: ^9.2.0
   smooth_page_indicator: ^1.0.0+2
   image_picker: ^1.0.4
-  image_cropper: ^5.0.0
+  image_cropper: ^4.0.1
   provider: ^6.0.1
   google_fonts: ^4.0.4
   shared_preferences: ^2.0.11
   google_maps_flutter: ^2.1.6
   flutter_rating_bar: ^4.0.0
   flutter_paypal: ^0.2.0
-  one_context: ^4.0.0 
+  one_context: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -53,7 +54,6 @@ dependencies:
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.8
   equatable: ^2.0.5
-<<<<<<< HEAD
   firebase_storage: ^11.6.9
 
   bloc: ^8.1.2
@@ -63,11 +63,11 @@ dependencies:
   #equatable: ^2.0.5
 
   user_repository:
-      path: packages/user_repository
+    path: packages/user_repository
   hotel_repository:
-      path: packages/hotel_repository
-=======
->>>>>>> 90a3c15032093754e11912f8f6aff69404507c58
+    path: packages/hotel_repository
+  room_repository:
+    path: packages/room_repository
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -84,7 +84,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

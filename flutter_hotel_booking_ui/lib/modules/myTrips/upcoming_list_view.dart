@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/hotel_bloc/get_hotel_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/get_hotel_bloc/get_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/hotel_list_view.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 
@@ -42,7 +42,7 @@ class _UpcomingListViewState extends State<UpcomingListView> {
                 return HotelListView(
                   callback: () {
                     NavigationServices(context)
-                        .gotoRoomBookingScreen(state.hotels[index].titleTxt);
+                        .gotoRoomBookingScreen(state.hotels[index].titleTxt, state.hotels[index].hotelId);
                   },
                   hotelData: state.hotels[index],
                   animation: animation,

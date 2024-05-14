@@ -12,7 +12,10 @@ final class GetHotelInitial extends GetHotelState {}
 final class GetHotelFailure extends GetHotelState {}
 final class GetHotelLoading extends GetHotelState {}
 final class GetHotelSuccess extends GetHotelState {
-	final List<Hotel> hotels;
+  final List<Hotel> hotels;
 
-	const GetHotelSuccess(this.hotels);
+  const GetHotelSuccess(this.hotels);
+
+  @override
+  List<Object> get props => [hotels];
 }

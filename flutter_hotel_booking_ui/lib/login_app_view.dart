@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/hotel_bloc/get_hotel_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/get_hotel_bloc/get_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_user_info_bloc/update_user_info_bloc.dart';

@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:hotel_repository/hotel_repository.dart';
-import 'package:hotel_repository/src/entities/entities.dart';
+import 'package:room_repository/room_repository.dart';
+import 'package:room_repository/src/entities/entities.dart';
 import 'dart:developer';
 import 'dart:typed_data';
 
-class FirebaseHotelRepo implements HotelRepo {
-  final hotelCollection = FirebaseFirestore.instance.collection('hotels');
+class FirebaseRoomRepo implements RoomRepo {
+  final roomCollection = FirebaseFirestore.instance.collection('rooms');
 
   @override
-  Future<List<Hotel>> getHotels() async {
+  Future<List<Room>> getRooms() async {
     try {
-      return await hotelCollection
+      return await roomCollection
         .get()
         .then((value) => value.docs.map((e) => 
-          Hotel.fromEntity(HotelEntity.fromDocument(e.data()))
+          Room.fromEntity(RoomEntity.fromDocument(e.data()))
         ).toList());
     } catch (e) {
       log(e.toString());
@@ -45,11 +45,11 @@ class FirebaseHotelRepo implements HotelRepo {
   }
 
   @override
-  Future<void> createHotels(Hotel hotel) async {
+  Future<void> createRooms(Room room) async {
     try {
-      return await hotelCollection
-        .doc(hotel.hotelId)
-        .set(hotel.toEntity().toDocument());
+      return await roomCollection
+        .doc(room.roomId)
+        .set(room.toEntity().toDocument());
     } catch (e) {
       log(e.toString());
       rethrow;

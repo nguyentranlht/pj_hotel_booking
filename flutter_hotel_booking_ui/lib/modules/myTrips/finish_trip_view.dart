@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/hotel_bloc/get_hotel_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/get_hotel_bloc/get_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/hotel_list_view_data.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import '../../models/hotel_list_data.dart';
@@ -44,7 +44,7 @@ class _FinishTripViewState extends State<FinishTripView> {
                 return HotelListViewData(
                   callback: () {
                     NavigationServices(context)
-                        .gotoRoomBookingScreen(state.hotels[index].titleTxt);
+                        .gotoRoomBookingScreen(state.hotels[index].titleTxt, state.hotels[index].hotelId);
                   },
                   hotelData: state.hotels[index],
                   animation: animation,

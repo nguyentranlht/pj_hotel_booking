@@ -7,6 +7,4 @@ sealed class GetHotelEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetHotels extends GetHotelEvent{
-
-}
+class GetHotel extends GetHotelEvent{}

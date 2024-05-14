@@ -6,17 +6,14 @@ part 'get_hotel_event.dart';
 part 'get_hotel_state.dart';
 
 class GetHotelBloc extends Bloc<GetHotelEvent, GetHotelState> {
-  HotelRepo _hotelRepository;
+  final HotelRepo _hotelRepo;
 
-  GetHotelBloc({
-		required HotelRepo hotelRepository
-	}) : _hotelRepository = hotelRepository,
-		super(GetHotelInitial()) {
-    on<GetHotels>((event, emit) async {
-			emit(GetHotelLoading());
+  GetHotelBloc(this._hotelRepo) : super(GetHotelInitial()) {
+    on<GetHotel>((event, emit) async {
+      emit(GetHotelLoading());
       try {
-				List<Hotel> posts = await _hotelRepository.getHotels();
-        emit(GetHotelSuccess(posts));
+        List<Hotel> hotels = await _hotelRepo.getHotels();
+        emit(GetHotelSuccess(hotels));
       } catch (e) {
         emit(GetHotelFailure());
       }

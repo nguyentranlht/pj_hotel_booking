@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/hotel_bloc/get_hotel_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/get_hotel_bloc/get_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/filter_bar_UI.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/components/map_and_list_view.dart';
@@ -92,40 +92,40 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                               child: Stack(
                                 children: <Widget>[
                                   Container(
-                                    // color: AppTheme.scaffoldBackgroundColor,
-                                    // child: ListView.builder(
-                                    //   controller: scrollController,
-                                    //   itemCount: hotelList.length,
-                                    //   padding: EdgeInsets.only(
-                                    //     top: 8 + 158 + 52.0,
-                                    //   ),
-                                    //   scrollDirection: Axis.vertical,
-                                    //   itemBuilder: (context, index) {
-                                    //     var count = hotelList.length > 10
-                                    //         ? 10
-                                    //         : hotelList.length;
-                                    //     var animation = Tween(
-                                    //             begin: 0.0, end: 1.0)
-                                    //         .animate(CurvedAnimation(
-                                    //             parent: animationController,
-                                    //             curve: Interval(
-                                    //                 (1 / count) * index, 1.0,
-                                    //                 curve:
-                                    //                     Curves.fastOutSlowIn)));
-                                    //     animationController.forward();
-                                    //     return HotelListView(
-                                    //       callback: () {
-                                    //         NavigationServices(context)
-                                    //             .gotoRoomBookingScreen(
-                                    //                 hotelList[index].titleTxt);
-                                    //       },
-                                    //       hotelData: hotelList[index],
-                                    //       animation: animation,
-                                    //       animationController:
-                                    //           animationController,
-                                    //     );
-                                    //   },
-                                    // ),
+                                    color: AppTheme.scaffoldBackgroundColor,
+                                    child: ListView.builder(
+                                      controller: scrollController,
+                                      itemCount: state.hotels.length,
+                                      padding: EdgeInsets.only(
+                                        top: 8 + 158 + 52.0,
+                                      ),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) {
+                                        var count = state.hotels.length > 10
+                                            ? 10
+                                            : state.hotels.length;
+                                        var animation = Tween(
+                                                begin: 0.0, end: 1.0)
+                                            .animate(CurvedAnimation(
+                                                parent: animationController,
+                                                curve: Interval(
+                                                    (1 / count) * index, 1.0,
+                                                    curve:
+                                                        Curves.fastOutSlowIn)));
+                                        animationController.forward();
+                                        return HotelListView(
+                                          callback: () {
+                                            NavigationServices(context)
+                                                .gotoRoomBookingScreen(
+                                                    state.hotels[index].titleTxt, state.hotels[index].hotelId);
+                                          },
+                                          hotelData: state.hotels[index],
+                                          animation: animation,
+                                          animationController:
+                                              animationController,
+                                        );
+                                      },
+                                    ),
                                   ),
                                   AnimatedBuilder(
                                     animation: _animationController,

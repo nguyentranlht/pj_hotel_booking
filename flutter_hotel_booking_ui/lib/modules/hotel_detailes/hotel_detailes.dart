@@ -210,7 +210,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                     buttonText: AppLocalizations(context).of("book_now"),
                     onTap: () {
                       NavigationServices(context)
-                          .gotoRoomBookingScreen(widget.hotelData.titleTxt);
+                          .gotoRoomBookingScreen(widget.hotelData.titleTxt, widget.hotelData.hotelId);
                     },
                   ),
                 ),
@@ -422,7 +422,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                                           onTap: () {
                                             NavigationServices(context)
                                                 .gotoRoomBookingScreen(
-                                                    widget.hotelData.titleTxt);
+                                                    widget.hotelData.titleTxt, widget.hotelData.hotelId);
                                           }),
                                     ),
                                   ],
