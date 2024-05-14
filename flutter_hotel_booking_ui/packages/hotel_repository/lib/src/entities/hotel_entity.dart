@@ -12,8 +12,8 @@ class HotelEntity {
   String titleTxt;
   String subTxt;
   Timestamp date;
-  // DateText dateTxt;
-  // RoomData roomData;
+  DateText dateTxt;
+  RoomData roomData;
   double dist;
   double rating;
   int reviews;
@@ -27,8 +27,8 @@ class HotelEntity {
     required this.titleTxt,
     required this.subTxt,
     required this.date,
-    // required this.dateTxt,
-    // required this.roomData,
+    required this.dateTxt,
+    required this.roomData,
     required this.dist,
     required this.rating,
     required this.reviews,
@@ -44,8 +44,8 @@ class HotelEntity {
       'titleTxt': titleTxt,
       'subTxt': subTxt,
       'date': date,
-      // 'dateTxt': dateTxt.toEntity().toDocument(),
-      // 'roomData': roomData.toEntity().toDocument(),
+      'dateTxt': dateTxt.toEntity().toDocument(),
+      'roomData': roomData.toEntity().toDocument(),
       'dist': dist,
       'rating': rating,
       'reviews': reviews,
@@ -62,10 +62,10 @@ class HotelEntity {
       titleTxt: doc['titleTxt'],
       subTxt: doc['subTxt'],
       date: doc['date'],
-      // dateTxt:
-      //     DateText.fromEntity(DateTextEntity.fromDocument(doc['dateText'])),
-      // roomData:
-      //     RoomData.fromEntity(RoomDataEntity.fromDocument(doc['roomData'])),
+      dateTxt:
+          DateText.fromEntity(DateTextEntity.fromDocument(doc['dateTxt'])),
+      roomData:
+          RoomData.fromEntity(RoomDataEntity.fromDocument(doc['roomData'])),
       dist: doc['dist'],
       rating: doc['rating'],
       reviews: doc['reviews'],

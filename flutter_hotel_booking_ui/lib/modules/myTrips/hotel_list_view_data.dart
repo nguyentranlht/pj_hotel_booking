@@ -98,24 +98,24 @@ class HotelListViewData extends StatelessWidget {
                     fontSize: 14,
                   ),
             ),
-            // Text(
-            //   Helper.getDateText(hotelData.dateTxt!),
-            //   maxLines: 2,
-            //   textAlign: isShowDate ? TextAlign.right : TextAlign.left,
-            //   style: TextStyles(context).getRegularStyle().copyWith(
-            //         fontSize: 12,
-            //       ),
-            //   overflow: TextOverflow.ellipsis,
-            // ),
-            // Text(
-            //   Helper.getRoomText(hotelData.roomData),
-            //   maxLines: 2,
-            //   textAlign: isShowDate ? TextAlign.right : TextAlign.left,
-            //   style: TextStyles(context).getRegularStyle().copyWith(
-            //         fontSize: 12,
-            //       ),
-            //   overflow: TextOverflow.ellipsis,
-            // ),
+            Text(
+              Helper.getDateText(hotelData.dateTxt),
+              maxLines: 2,
+              textAlign: isShowDate ? TextAlign.right : TextAlign.left,
+              style: TextStyles(context).getRegularStyle().copyWith(
+                    fontSize: 12,
+                  ),
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              Helper.getRoomText(hotelData.roomData),
+              maxLines: 2,
+              textAlign: isShowDate ? TextAlign.right : TextAlign.left,
+              style: TextStyles(context).getRegularStyle().copyWith(
+                    fontSize: 12,
+                  ),
+              overflow: TextOverflow.ellipsis,
+            ),
             Expanded(
               child: FittedBox(
                 child: SizedBox(

@@ -11,8 +11,8 @@ class Hotel {
   String titleTxt;
   String subTxt;
   Timestamp date;
-  //DateText dateTxt;
-  //RoomData roomData;
+  DateText dateTxt;
+  RoomData roomData;
   double dist;
   double rating;
   int reviews;
@@ -27,8 +27,8 @@ class Hotel {
     required this.titleTxt,
     required this.subTxt,
     required this.date,
-    //required this.dateTxt,
-    //required this.roomData,
+    required this.dateTxt,
+    required this.roomData,
     required this.dist,
     required this.rating,
     required this.reviews,
@@ -44,8 +44,8 @@ class Hotel {
     titleTxt: '',
     subTxt: '',
     date: Timestamp.now(),
-    //dateTxt: DateText.empty,
-    //roomData: RoomData.empty,
+    dateTxt: DateText.empty,
+    roomData: RoomData.empty,
     // peopleSleeps: PeopleSleeps.empty,
     perNight: 0,
     reviews: 0,
@@ -61,8 +61,8 @@ class Hotel {
       titleTxt: titleTxt,
       subTxt: subTxt,
       date: date,
-      //dateTxt: dateTxt,
-      //roomData: roomData,
+      dateTxt: dateTxt,
+      roomData: roomData,
       dist: dist,
       rating: rating,
       reviews: reviews,
@@ -79,8 +79,8 @@ class Hotel {
       titleTxt: entity.titleTxt,
       subTxt: entity.subTxt,
       date: entity.date,
-      //dateTxt: entity.dateTxt,
-      //roomData: entity.roomData,
+      dateTxt: entity.dateTxt,
+      roomData: entity.roomData,
       dist: entity.dist,
       rating: entity.rating,
       reviews: entity.reviews,
@@ -90,8 +90,7 @@ class Hotel {
     );
   }
 
-    // dateTxt: $dateTxt,
-    // roomData: $roomData,
+    
     // peopleSleeps: $peopleSleeps,
   @override
   String toString() {
@@ -106,7 +105,8 @@ class Hotel {
     reviews: $reviews,
     perNight: $perNight,
     isSelected: $isSelected,
-    
+    dateTxt: $dateTxt,
+    roomData: $roomData,
     ''';
   }
 }

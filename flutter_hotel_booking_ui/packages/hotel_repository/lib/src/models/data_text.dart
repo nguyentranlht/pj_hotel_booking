@@ -2,6 +2,7 @@ import '../entities/data_text_entity.dart';
 
 class DateText {
   int startDate;
+
   int endDate;
 
   DateText({

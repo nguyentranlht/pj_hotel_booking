@@ -42,20 +42,20 @@ class HotelListView extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Text(
-                        //   Helper.getDateText(hotelData.dateTxt) + ', ',
-                        //   style: TextStyles(context)
-                        //       .getRegularStyle()
-                        //       .copyWith(fontSize: 14),
-                        // ),
+                        Text(
+                          Helper.getDateText(hotelData.dateTxt) + ', ',
+                          style: TextStyles(context)
+                              .getRegularStyle()
+                              .copyWith(fontSize: 14),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
-                          // child: Text(
-                          //   Helper.getRoomText(hotelData.roomData),
-                          //   style: TextStyles(context)
-                          //       .getRegularStyle()
-                          //       .copyWith(fontSize: 14),
-                          // ),
+                          child: Text(
+                            Helper.getRoomText(hotelData.roomData),
+                            style: TextStyles(context)
+                                .getRegularStyle()
+                                .copyWith(fontSize: 14),
+                          ),
                         ),
                       ],
                     ),
