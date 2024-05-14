@@ -7,10 +7,11 @@ import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:one_context/one_context.dart';
 class RoomeBookView extends StatefulWidget {
-  final HotelListData roomData;
+  final Room roomData;
   final AnimationController animationController;
   final Animation<double> animation;
 
@@ -52,7 +53,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
                           for (var image in images)
-                            Image.asset(
+                            Image.network(
                               image,
                               fit: BoxFit.cover,
                             ),

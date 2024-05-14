@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/get_hotel_bloc/get_hotel_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/get_room_bloc/get_room_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_user_info_bloc/update_user_info_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/login/login_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/login/welcome_screen.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:room_repository/room_repository.dart';
 import 'futures/authentication_bloc/authentication_bloc.dart';
 import 'modules/bottom_tab/bottom_tab_screen.dart';
 import 'modules/splash/introductionScreen.dart';
@@ -58,6 +60,11 @@ class LoginAppView extends StatelessWidget {
 										create: (context) => GetHotelBloc(
 											FirebaseHotelRepo()
 										)..add(GetHotel())
+									),
+              BlocProvider(
+										create: (context) => GetRoomBloc(
+											FirebaseRoomRepo()
+										)..add(GetRooms())
 									)
             ],
             child: BottomTabScreen(),

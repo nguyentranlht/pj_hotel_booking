@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_detailes/room_book_view.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
+import 'package:room_repository/room_repository.dart';
+import '../../futures/get_room_bloc/get_room_bloc.dart';
 import '../../models/hotel_list_data.dart';
 
 class RoomBookingScreen extends StatefulWidget {
   final String hotelName;
   final String hotelId;
-  const RoomBookingScreen({Key? key, required this.hotelName,required this.hotelId})
+  const RoomBookingScreen(
+      {Key? key, required this.hotelName, required this.hotelId})
       : super(key: key);
   @override
   _RoomBookingScreenState createState() => _RoomBookingScreenState();
@@ -14,7 +18,6 @@ class RoomBookingScreen extends StatefulWidget {
 
 class _RoomBookingScreenState extends State<RoomBookingScreen>
     with TickerProviderStateMixin {
-  List<HotelListData> romeList = HotelListData.romeList;
   late AnimationController animationController;
 
   @override
@@ -32,32 +35,54 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          getAppBarUI(),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(0.0),
-              itemCount: romeList.length,
-              itemBuilder: (context, index) {
-                var count = romeList.length > 10 ? 10 : romeList.length;
-                var animation = Tween(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                        parent: animationController,
-                        curve: Interval((1 / count) * index, 1.0,
-                            curve: Curves.fastOutSlowIn)));
-                animationController.forward();
-                //room book view and room data
-                return RoomeBookView(
-                  roomData: romeList[index],
-                  animation: animation,
-                  animationController: animationController,
-                );
-              },
-            ),
-          ),
-        ],
+    return BlocProvider(
+      create: (context) => GetRoomBloc(
+											FirebaseRoomRepo()
+										)..add(GetRooms()),
+      child: BlocBuilder<GetRoomBloc, GetRoomState>(
+        builder: (context, state) {
+          if (state is GetRoomSuccess) {
+            return Scaffold(
+              body: Column(
+                children: <Widget>[
+                  getAppBarUI(),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(0.0),
+                      itemCount: state.rooms.length,
+                      itemBuilder: (context, index) {
+                        var count =
+                            state.rooms.length > 10 ? 10 : state.rooms.length;
+                        var animation = Tween(begin: 0.0, end: 1.0).animate(
+                            CurvedAnimation(
+                                parent: animationController,
+                                curve: Interval((1 / count) * index, 1.0,
+                                    curve: Curves.fastOutSlowIn)));
+                        animationController.forward();
+                        //room book view and room data
+                        if (state.rooms[index].hotelId == widget.hotelId) {
+                          return RoomeBookView(
+                            roomData: state.rooms[index],
+                            animation: animation,
+                            animationController: animationController,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (state is GetRoomLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return const Center(
+              child: Text("An error has occured"),
+            );
+          }
+        },
       ),
     );
   }
