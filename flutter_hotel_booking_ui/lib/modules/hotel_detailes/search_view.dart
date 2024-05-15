@@ -53,30 +53,30 @@ class SerchView extends StatelessWidget {
                             hotelInfo.titleTxt,
                             style: TextStyles(context).getBoldStyle(),
                           ),
-                          // Text(
-                          //   Helper.getRoomText(hotelInfo.roomData!),
-                          //   // Helper.getRoomText(hotelInfo.roomData!),
-                          //   style:
-                          //       TextStyles(context).getRegularStyle().copyWith(
-                          //             fontWeight: FontWeight.w100,
-                          //             fontSize: 12,
-                          //             color: Theme.of(context)
-                          //                 .disabledColor
-                          //                 .withOpacity(0.6),
-                          //           ),
-                          // ),
-                          // Text(
-                          //   Helper.getLastSearchDate(hotelInfo.dateTxt),
-                          //   // Helper.getRoomText(hotelInfo.roomData!),
-                          //   style:
-                          //       TextStyles(context).getRegularStyle().copyWith(
-                          //             fontWeight: FontWeight.w100,
-                          //             fontSize: 12,
-                          //             color: Theme.of(context)
-                          //                 .disabledColor
-                          //                 .withOpacity(0.6),
-                          //           ),
-                          // ),
+                          Text(
+                            Helper.getRoomText(hotelInfo.roomData),
+                            // Helper.getRoomText(hotelInfo.roomData!),
+                            style:
+                                TextStyles(context).getRegularStyle().copyWith(
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .disabledColor
+                                          .withOpacity(0.6),
+                                    ),
+                          ),
+                          Text(
+                            Helper.getLastSearchDate(hotelInfo.dateTxt),
+                            // Helper.getRoomText(hotelInfo.roomData!),
+                            style:
+                                TextStyles(context).getRegularStyle().copyWith(
+                                      fontWeight: FontWeight.w100,
+                                      fontSize: 12,
+                                      color: Theme.of(context)
+                                          .disabledColor
+                                          .withOpacity(0.6),
+                                    ),
+                          ),
                         ],
                       ),
                     ),
