@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/modules/login/facebook_twitter_button_view.dart';
+import 'package:flutter_hotel_booking_ui/modules/login/facebook_google_button_view.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/validator.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.only(top: 32),
-                        child: FacebookTwitterButtonView(),
+                        child: FacebookGoogleButtonView(),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),

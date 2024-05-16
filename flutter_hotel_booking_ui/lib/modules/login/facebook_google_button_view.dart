@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 
-class FacebookTwitterButtonView extends StatelessWidget {
+class FacebookGoogleButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _fTButtonUI();
@@ -28,7 +28,7 @@ class FacebookTwitterButtonView extends StatelessWidget {
           Expanded(
             child: CommonButton(
               padding: EdgeInsets.zero,
-              backgroundColor: Color(0x0FF05A9F0),
+              backgroundColor: Colors.blueGrey,
               buttonTextWidget: _buttonTextUI(isFacebook: false),
             ),
           ),
@@ -45,13 +45,13 @@ class FacebookTwitterButtonView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Icon(isFacebook ? FontAwesomeIcons.facebookF : FontAwesomeIcons.twitter,
+        Icon(isFacebook ? FontAwesomeIcons.facebookF : FontAwesomeIcons.google,
             size: 20, color: Colors.white),
         SizedBox(
           width: 4,
         ),
         Text(
-          isFacebook ? "Facebook" : "Twitter",
+          isFacebook ? "Facebook" : "Google",
           style: TextStyle(
               fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
         ),
