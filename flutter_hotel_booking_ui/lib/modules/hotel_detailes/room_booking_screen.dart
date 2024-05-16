@@ -61,13 +61,11 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
                                     curve: Curves.fastOutSlowIn)));
                         animationController.forward();
                         //room book view and room data
-                        if (state.rooms[index].hotelId == widget.hotelId) {
-                          return RoomeBookView(
-                            roomData: state.rooms[index],
-                            animation: animation,
-                            animationController: animationController,
-                          );
-                        }
+                        return RoomeBookView(
+                          roomData: state.rooms[index],
+                          animation: animation,
+                          animationController: animationController,
+                        );
                       },
                     ),
                   ),
