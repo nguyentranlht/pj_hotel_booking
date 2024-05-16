@@ -1,3 +1,5 @@
+import 'package:room_repository/room_repository.dart';
+
 import 'models/models.dart';
 import 'dart:typed_data';
 import 'models/models.dart';
@@ -8,4 +10,6 @@ abstract class RoomRepo {
   Future<String> sendImage(Uint8List file, String name);
 
   Future<void> createRooms(Room room);
+  
+  Future<List<Room>> getRoomsByHotelId(String hotelId);
 }

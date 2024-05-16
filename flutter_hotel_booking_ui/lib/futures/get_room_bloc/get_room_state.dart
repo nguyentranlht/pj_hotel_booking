@@ -11,8 +11,20 @@ final class GetRoomInitial extends GetRoomState {}
 
 final class GetRoomFailure extends GetRoomState {}
 final class GetRoomLoading extends GetRoomState {}
-final class GetRoomSuccess extends GetRoomState {
-	final List<Room> rooms;
+class RoomLoaded extends GetRoomState {
+  final List<Room> rooms;
 
-	const GetRoomSuccess(this.rooms);
+  RoomLoaded(this.rooms);
+
+  @override
+  List<Object> get props => [rooms];
+}
+
+class RoomError extends GetRoomState {
+  final String message;
+
+  RoomError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }

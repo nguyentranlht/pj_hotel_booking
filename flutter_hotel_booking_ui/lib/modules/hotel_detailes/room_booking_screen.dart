@@ -36,12 +36,13 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GetRoomBloc(
-											FirebaseRoomRepo()
-										)..add(GetRooms()),
+      create: (context) => GetRoomBloc(FirebaseRoomRepo())
+        ..add(FetchRoomsByHotelId(widget.hotelId)),
       child: BlocBuilder<GetRoomBloc, GetRoomState>(
         builder: (context, state) {
-          if (state is GetRoomSuccess) {
+          if (state is GetRoomLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is RoomLoaded) {
             return Scaffold(
               body: Column(
                 children: <Widget>[
@@ -73,14 +74,10 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
                 ],
               ),
             );
-          } else if (state is GetRoomLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+          } else if (state is RoomError) {
+            return Center(child: Text(state.message));
           } else {
-            return const Center(
-              child: Text("An error has occured"),
-            );
+            return Center(child: Text('Start Searching Rooms'));
           }
         },
       ),
