@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
+import 'package:flutter_hotel_booking_ui/providers/firebase/firebase_authentication.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 
 class FacebookGoogleButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _fTButtonUI();
+    return _fTButtonUI(context);
   }
 
-  Widget _fTButtonUI() {
+  Widget _fTButtonUI(BuildContext context) {
     return Container(
       child: Row(
         children: <Widget>[
@@ -30,6 +33,9 @@ class FacebookGoogleButtonView extends StatelessWidget {
               padding: EdgeInsets.zero,
               backgroundColor: Colors.blueGrey,
               buttonTextWidget: _buttonTextUI(isFacebook: false),
+              onTap: () {
+                context.read<SignInBloc>().add(SignInWithGoogleRequested());
+              },
             ),
           ),
           SizedBox(
@@ -40,7 +46,7 @@ class FacebookGoogleButtonView extends StatelessWidget {
     );
   }
 
-  Widget _buttonTextUI({bool isFacebook= true}) {
+  Widget _buttonTextUI({bool isFacebook = true}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
