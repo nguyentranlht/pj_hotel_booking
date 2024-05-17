@@ -26,6 +26,7 @@ import 'package:user_repository/user_repository.dart';
 import '../futures/authentication_bloc/authentication_bloc.dart';
 import '../futures/sign_in_bloc/sign_in_bloc.dart';
 import '../futures/sign_up_bloc/sign_up_bloc.dart';
+import '../modules/profile/wallet_screen.dart';
 
 class NavigationServices {
   NavigationServices(this.context);
@@ -86,6 +87,10 @@ class NavigationServices {
 
   Future<dynamic> gotoFiltersScreen() async {
     return await _pushMaterialPageRoute(FiltersScreen());
+  }
+
+  Future<dynamic> gotoWallet() async {
+    return await _pushMaterialPageRoute(WalletScreen());
   }
 
   Future<dynamic> gotoRoomBookingScreen(String hotelname, String hoteId) async {

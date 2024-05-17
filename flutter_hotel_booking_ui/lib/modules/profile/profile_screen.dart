@@ -76,7 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (index == 1) {
                           NavigationServices(context).gotoInviteFriend();
                         }
-                        if (index == 4) {}
+                        if (index == 4) {
+                          NavigationServices(context).gotoWallet();
+                        }
                       },
                       child: Column(
                         children: <Widget>[
