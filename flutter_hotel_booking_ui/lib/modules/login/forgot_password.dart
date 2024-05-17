@@ -1,98 +1,190 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
+import 'package:flutter_hotel_booking_ui/modules/login/sign_up_Screen.dart';
 import 'package:flutter_hotel_booking_ui/utils/validator.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_text_field_view.dart';
-import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
+
   @override
-  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordState extends State<ForgotPassword> {
+
+  TextEditingController mailcontroller = new TextEditingController();
+  String email = "";
+  final _formkey = GlobalKey<FormState>();
+
   String _errorEmail = '';
   TextEditingController _emailController = TextEditingController();
 
+  resetPassword() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        "Password Reset Email has been sent !",
+        style: TextStyle(fontSize: 18.0),
+      )));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+          "No user found for that email.",
+          style: TextStyle(fontSize: 18.0),
+        )));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: RemoveFocuse(
-          onClick: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              appBar(),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, bottom: 16.0, left: 24, right: 24),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                AppLocalizations(context)
-                                    .of("resend_email_link"),
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).disabledColor,
-                                ),
-                              ),
-                            ),
-                          ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        child: Column(
+          children:<Widget> [
+            appBar(),
+            SizedBox(
+              height: 70.0,
+            ),
+            Container(
+              alignment: Alignment.topCenter,
+              child: Text(
+                "Password Recovery",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              "Enter your mail",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+                child: Form(
+                  key: _formkey,
+                    child: Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: ListView(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 10.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black38, width: 2.0),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TextFormField(
+                      controller: mailcontroller,
+                      validator: (value) {                        
+                        if (value == null || value.isEmpty) {
+                            return AppLocalizations(context).of("enter_your_email");
+                        } 
+                        return null;
+                      },
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                          hintText: "Email",
+                          hintStyle:
+                              TextStyle(fontSize: 18.0, color: Color.fromARGB(255, 156, 153, 153)),
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Color.fromARGB(255, 121, 118, 118),
+                            size: 30.0,
+                          ),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                    if(_formkey.currentState!.validate()){
+                      setState(() {
+                        email= mailcontroller.text;
+                      });
+                      resetPassword();
+                    }
+                    },
+                    child: Container(
+                      width: 140,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.lightGreen.shade700,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Text("Send Email", style: TextStyle(color: Colors.white,fontSize: 18.0,fontWeight: FontWeight.bold),
                         ),
                       ),
-                      CommonTextFieldView(
-                        controller: _emailController,
-                        titleText: AppLocalizations(context).of("your_mail"),
-                        errorText: _errorEmail,
-                        padding:
-                            EdgeInsets.only(left: 24, right: 24, bottom: 24),
-                        hintText:
-                            AppLocalizations(context).of("enter_your_email"),
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (String txt) {},
-                      ),
-                      CommonButton(
-                        padding:
-                            EdgeInsets.only(left: 24, right: 24, bottom: 16),
-                        buttonText: AppLocalizations(context).of("send"),
-                        onTap: () {
-                          if (_allValidation()) Navigator.pop(context);
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
+                  SizedBox(
+                    height: 50.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account?",
+                        style: TextStyle(fontSize: 18.0, color: Colors.black),
+                      ),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Create",
+                          style: TextStyle(
+                              color: Color.fromARGB(223, 20, 66, 28),
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ))),
+          ],
         ),
       ),
     );
   }
 
   Widget appBar() {
-    return CommonAppbarView(
-      iconData: Icons.arrow_back,
-      titleText: AppLocalizations(context).of("forgot_your_Password"),
-      onBackClick: () {
-        Navigator.pop(context);
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CommonAppbarView(
+          iconData: Icons.arrow_back,
+          //titleText: AppLocalizations(context).of("Password Recovery"),
+          onBackClick: () {
+           
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 
-  bool _allValidation() {
+   bool _allValidation() {
     bool isValid = true;
     if (_emailController.text.trim().isEmpty) {
       _errorEmail = AppLocalizations(context).of('email_cannot_empty');
@@ -103,7 +195,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     } else {
       _errorEmail = '';
     }
-    setState(() {});
+      setState(() {});
     return isValid;
-  }
+ }
 }

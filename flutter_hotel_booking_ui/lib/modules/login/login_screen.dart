@@ -54,13 +54,13 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              CommonAppbarView(
-                iconData: Icons.arrow_back,
-                titleText: AppLocalizations(context).of("login"),
-                onBackClick: () {
-                  Navigator.pop(context);
-                },
-              ),
+              // CommonAppbarView(
+              //   iconData: Icons.arrow_back,
+              //   titleText: AppLocalizations(context).of("login"),
+              //   onBackClick: () {
+              //     Navigator.pop(context);
+              //   },
+              // ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -107,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       CommonButton(
                         padding:
                             EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                            backgroundColor: Colors.lightGreen.shade700,
                         buttonText: AppLocalizations(context).of("login"),
                         onTap: () {
                           if (_allValidation()) {

@@ -109,6 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: CommonButton(
                     padding: const EdgeInsets.only(
                         left: 48, right: 48, bottom: 8, top: 8),
+                    backgroundColor: Colors.lightGreen.shade700,
                     buttonText: AppLocalizations(context).of("get_started"),
                     onTap: () {
                       NavigationServices(context).gotoIntroductionScreen();

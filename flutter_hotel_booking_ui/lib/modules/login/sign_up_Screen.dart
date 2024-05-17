@@ -57,7 +57,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _appBar(),
+                //_appBar(),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
@@ -125,6 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CommonButton(
                           padding:
                               EdgeInsets.only(left: 24, right: 24, bottom: 8),
+                              backgroundColor: Colors.lightGreen.shade700,
                           buttonText: AppLocalizations(context).of("sign_up"),
                           onTap: () {
                             if (_allValidation()) {

@@ -99,7 +99,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             child: CommonButton(
                               //them o day ne NGUYEN
                               onTap: () {
-                                OnePlatform.app = () => MyApp();
+                                //OnePlatform.app = () => MyApp();
                               },
                               //
                               buttonTextWidget: Padding(

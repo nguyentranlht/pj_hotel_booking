@@ -25,9 +25,9 @@ class LoginAppView extends StatelessWidget {
         colorScheme: const ColorScheme.light(
             background: Color.fromARGB(255, 221, 220, 220),
             onBackground: Colors.black,
-            primary: Color.fromRGBO(206, 147, 216, 1),
+            primary: Color.fromARGB(255, 104, 159, 56),
             onPrimary: Colors.black,
-            secondary: Color.fromRGBO(244, 143, 177, 1),
+            secondary: Color.fromRGBO(26, 19, 27, 1),
             onSecondary: Colors.white,
             tertiary: Color.fromRGBO(255, 204, 128, 1),
             error: Colors.red,
@@ -57,15 +57,11 @@ class LoginAppView extends StatelessWidget {
                           context.read<AuthenticationBloc>().state.user!.uid)),
               ),
               BlocProvider(
-										create: (context) => GetHotelBloc(
-											FirebaseHotelRepo()
-										)..add(GetHotel())
-									),
+                  create: (context) =>
+                      GetHotelBloc(FirebaseHotelRepo())..add(GetHotel())),
               BlocProvider(
-										create: (context) => GetRoomBloc(
-											FirebaseRoomRepo()
-										)..add(GetRooms())
-									)
+                  create: (context) =>
+                      GetRoomBloc(FirebaseRoomRepo())..add(GetRooms()))
             ],
             child: BottomTabScreen(),
           );

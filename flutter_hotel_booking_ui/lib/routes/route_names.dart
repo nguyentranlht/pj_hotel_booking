@@ -73,7 +73,7 @@ class NavigationServices {
 
 
   Future<dynamic> gotoForgotPassword() async {
-    return await _pushMaterialPageRoute(ForgotPasswordScreen());
+    return await _pushMaterialPageRoute(ForgotPassword());
   }
 
   Future<dynamic> gotoSearchScreen() async {

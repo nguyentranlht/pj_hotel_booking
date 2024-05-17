@@ -100,6 +100,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
           CommonButton(
             padding:
                 const EdgeInsets.only(left: 48, right: 48, bottom: 8, top: 32),
+                backgroundColor: Colors.lightGreen.shade700,
             buttonText: AppLocalizations(context).of("login"),
             onTap: () {
               NavigationServices(context).gotoLoginApp();

@@ -47,8 +47,12 @@ dependencies:
   shared_preferences: ^2.0.11
   google_maps_flutter: ^2.1.6
   flutter_rating_bar: ^4.0.0
-  flutter_paypal: ^0.2.0
+  #flutter_paypal: ^0.2.0
   one_context: ^4.0.0
+  flutter_stripe: ^10.1.1
+  http: ^0.13.6
+  random_string: ^2.3.1
+  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
