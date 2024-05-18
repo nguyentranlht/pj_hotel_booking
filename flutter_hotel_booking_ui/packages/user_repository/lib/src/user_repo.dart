@@ -9,6 +9,8 @@ abstract class UserRepository {
 
   Future<void> signInGoogle();
 
+  Future<void> signInFacebook();
+
 	Future<void> logOut();
 
 	Future<MyUser> signUp(MyUser myUser, String password);

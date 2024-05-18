@@ -34,7 +34,7 @@ dependencies:
     sdk: flutter
   cloud_firestore:
     ^4.15.8
-  flutter_facebook_auth: ^3.5.0
+  flutter_login_facebook: ^2.0.0
   google_sign_in: ^6.2.1
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.

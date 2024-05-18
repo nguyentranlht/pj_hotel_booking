@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,10 +14,13 @@ class FirebaseUserRepository implements UserRepository {
   FirebaseUserRepository({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    FacebookLogin? facebookAuth,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+        _googleSignIn = googleSignIn ?? GoogleSignIn(),
+        _facebookAuth = facebookAuth ?? FacebookLogin();
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FacebookLogin _facebookAuth;
   final usersCollection = FirebaseFirestore.instance.collection('users');
 
   /// Stream of [MyUser] which will emit the current user when
@@ -77,10 +81,26 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
+  Future<void> signInFacebook() async {
+    try {
+      final FacebookLoginResult loginResult = await _facebookAuth.logIn();
+      if (loginResult.status == FacebookLoginStatus.success) {
+        final FacebookAccessToken accessToken = loginResult.accessToken!;
+        final credential = FacebookAuthProvider.credential(accessToken.token);
+        await _firebaseAuth.signInWithCredential(credential);
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> logOut() async {
     try {
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
+      await _facebookAuth.logOut();
     } catch (e) {
       log(e.toString());
       rethrow;

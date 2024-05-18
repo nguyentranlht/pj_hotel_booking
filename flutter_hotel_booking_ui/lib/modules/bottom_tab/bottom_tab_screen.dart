@@ -54,7 +54,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
       builder: (_, provider, child) => Container(
         child: Scaffold(
           bottomNavigationBar: Container(
-              height: 60 + MediaQuery.of(context).padding.bottom,
+              height: 68 + MediaQuery.of(context).padding.bottom,
               child: getBottomBarUI(bottomBarType)),
           body: _isFirstTime
               ? Center(
