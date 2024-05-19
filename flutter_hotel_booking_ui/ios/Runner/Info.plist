@@ -19,9 +19,16 @@
 		<key>FacebookAppID</key>
 		<string>370117512151998</string>
 		<key>FacebookClientToken</key>
-		<string>e1e45ec292d0ed9bf1ec4c3cc5887c76</string>
+		<string>e3b7dab98842902c435b3de653409fad</string>
 		<key>FacebookDisplayName</key>
 		<string>GoG</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>fbapi</string>
+			<string>fb-messenger-share-api</string>
+			<string>fbauth2</string>
+			<string>fbshareextension</string>
+		</array>
 		<key>NSCameraUsageDescription</key>
 		<string>Scan your card to add it automatically</string>
 		<key>NSCameraUsageDescription &lt;string&gt;To scan cards&lt;/string&gt;</key>
