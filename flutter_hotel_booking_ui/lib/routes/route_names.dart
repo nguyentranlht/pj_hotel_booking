@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/login_app.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/base/views/base_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/create_hotel/views/create_hotel_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/hotel_home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_detailes/hotel_detailes.dart';
@@ -72,6 +75,13 @@ class NavigationServices {
     return await _pushMaterialPageRoute(const SignUpScreen());
   }
 
+  Future<dynamic> gotoBaseScreen() async {
+    return await _pushMaterialPageRoute(BaseScreen());
+  }
+
+  Future<dynamic> gotoCreateHotelScreen() async {
+    return await _pushMaterialPageRoute(const CreateHotelScreen());
+  }
 
   Future<dynamic> gotoForgotPassword() async {
     return await _pushMaterialPageRoute(ForgotPassword());

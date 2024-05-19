@@ -35,7 +35,7 @@ class SettingsListData {
       iconData: FontAwesomeIcons.lock,
     ),
     SettingsListData(
-      titleTxt: 'invite_friend',
+      titleTxt: 'admin_page',
       isSelected: false,
       iconData: FontAwesomeIcons.userFriends,
     ),

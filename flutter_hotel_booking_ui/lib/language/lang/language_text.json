@@ -153,6 +153,15 @@
         "ar": "رحلات",
         "ja": "旅行"
     },
+
+    {
+        "text_id": "home_admin",
+        "en": "Home Admin",
+        "fr": "voyages",
+        "ar": "رحلات",
+        "ja": "旅行"
+    },
+
     {
         "text_id": "profile",
         "en": "Profile",
@@ -650,6 +659,15 @@
         "ar": "قم بدعوة صديق",
         "ja": "友達を呼ぶ"
     },
+
+    {
+        "text_id": "admin_page",
+        "en": "Admin Page",
+        "fr": "Inviter un ami",
+        "ar": "قم بدعوة صديق",
+        "ja": "友達を呼ぶ"
+    },
+
     {
         "text_id": "invite_your_friend",
         "en": "Invite your Friend",
