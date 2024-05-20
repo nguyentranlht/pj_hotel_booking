@@ -57,7 +57,7 @@ class _RoomPopupViewState extends State<RoomPopupView>
       child: Scaffold(
         backgroundColor: appTheme.isLightMode
             ? Colors.transparent
-            : Theme.of(context).backgroundColor.withOpacity(0.6),
+            : Theme.of(context).colorScheme.surface.withOpacity(0.6),
         body: AnimatedBuilder(
           animation: animationController,
           builder: (BuildContext context, Widget? child) {

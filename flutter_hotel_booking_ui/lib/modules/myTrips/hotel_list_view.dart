@@ -221,7 +221,7 @@ class HotelListView extends StatelessWidget {
                       right: 8,
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).backgroundColor,
+                            color: Theme.of(context).colorScheme.surface,
                             shape: BoxShape.circle),
                         child: Material(
                           color: Colors.transparent,

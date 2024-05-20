@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               foregroundDecoration: !appTheme.isLightMode
                   ? BoxDecoration(
-                      color: Theme.of(context).backgroundColor.withOpacity(0.4))
+                      color: Theme.of(context).colorScheme.surface.withOpacity(0.4))
                   : null,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,

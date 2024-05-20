@@ -147,8 +147,8 @@ class _HomeExploreScreenState extends State<HomeExploreScreen>
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).backgroundColor.withOpacity(0.4),
-                            Theme.of(context).backgroundColor.withOpacity(0.0),
+                            Theme.of(context).colorScheme.surface.withOpacity(0.4),
+                            Theme.of(context).colorScheme.surface.withOpacity(0.0),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,

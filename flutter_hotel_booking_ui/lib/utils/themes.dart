@@ -46,33 +46,33 @@ class AppTheme {
       isLightMode ? _buildLightTheme() : _buildDarkTheme();
 
   static TextTheme _buildTextTheme(TextTheme base) {
-    FontFamilyType _fontType = applicationcontext == null
+    FontFamilyType fontType = applicationcontext == null
         ? FontFamilyType.WorkSans
         : applicationcontext!.read<ThemeProvider>().fontType;
     return base.copyWith(
-      headline1: getTextStyle(_fontType, base.headline1!), //f-size 96
-      headline2: getTextStyle(_fontType, base.headline2!), //f-size 60
-      headline3: getTextStyle(_fontType, base.headline3!), //f-size 48
-      headline4: getTextStyle(_fontType, base.headline4!), //f-size 34
-      headline5: getTextStyle(_fontType, base.headline5!), //f-size 24
-      headline6: getTextStyle(
-        _fontType,
-        base.headline6!.copyWith(
+      displayLarge: getTextStyle(fontType, base.displayLarge!), //f-size 96
+      displayMedium: getTextStyle(fontType, base.displayMedium!), //f-size 60
+      displaySmall: getTextStyle(fontType, base.displaySmall!), //f-size 48
+      headlineMedium: getTextStyle(fontType, base.headlineMedium!), //f-size 34
+      headlineSmall: getTextStyle(fontType, base.headlineSmall!), //f-size 24
+      titleLarge: getTextStyle(
+        fontType,
+        base.titleLarge!.copyWith(
           fontWeight: FontWeight.bold,
         ),
       ), //f-size 20
-      button: getTextStyle(_fontType, base.button!), //f-size 14
-      caption: getTextStyle(_fontType, base.caption!), //f-size 12
-      bodyText1: getTextStyle(_fontType, base.bodyText1!), //f-size 16
-      bodyText2: getTextStyle(_fontType, base.bodyText2!), //f-size 14
-      subtitle1: getTextStyle(
-        _fontType,
-        base.subtitle1!.copyWith(
+      labelLarge: getTextStyle(fontType, base.labelLarge!), //f-size 14
+      bodySmall: getTextStyle(fontType, base.bodySmall!), //f-size 12
+      bodyLarge: getTextStyle(fontType, base.bodyLarge!), //f-size 16
+      bodyMedium: getTextStyle(fontType, base.bodyMedium!), //f-size 14
+      titleMedium: getTextStyle(
+        fontType,
+        base.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
         ),
       ), //f-size 16
-      subtitle2: getTextStyle(_fontType, base.subtitle2!), //f-size 14
-      overline: getTextStyle(_fontType, base.overline!), //f-size 10
+      titleSmall: getTextStyle(fontType, base.titleSmall!), //f-size 14
+      labelSmall: getTextStyle(fontType, base.labelSmall!), //f-size 10
     );
   }
 
@@ -121,7 +121,7 @@ class AppTheme {
       colorScheme: colorScheme,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      backgroundColor: backgroundColor,
+    //  backgroundColor: backgroundColor,
       canvasColor: scaffoldBackgroundColor,
       buttonTheme: _buttonThemeData(colorScheme),
       dialogTheme: _dialogTheme(),
@@ -144,7 +144,7 @@ class AppTheme {
       colorScheme: colorScheme,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      backgroundColor: backgroundColor,
+    //  backgroundColor: backgroundColor,
       canvasColor: scaffoldBackgroundColor,
       buttonTheme: _buttonThemeData(colorScheme),
       dialogTheme: _dialogTheme(),

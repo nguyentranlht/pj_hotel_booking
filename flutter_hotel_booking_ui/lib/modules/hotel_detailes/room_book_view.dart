@@ -67,7 +67,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         count: 3,
                         effect: WormEffect(
                             activeDotColor: Theme.of(context).primaryColor,
-                            dotColor: Theme.of(context).backgroundColor,
+                            dotColor: Theme.of(context).colorScheme.surface,
                             dotHeight: 10.0,
                             dotWidth: 10.0,
                             spacing: 5.0), // your preferred effect

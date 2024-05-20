@@ -195,7 +195,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                           padding: const EdgeInsets.all(12.0),
                           child: Icon(
                             FontAwesomeIcons.mapPin,
-                            color: Theme.of(context).backgroundColor,
+                            color: Theme.of(context).colorScheme.surface,
                             size: 28,
                           ),
                         ),
@@ -625,7 +625,7 @@ class _HotelDetailesState extends State<HotelDetailes>
               style: TextStyles(context).getBoldStyle().copyWith(
                     fontSize: 22,
                     color: isInList
-                        ? Theme.of(context).textTheme.bodyText1!.color
+                        ? Theme.of(context).textTheme.bodyLarge!.color
                         : Colors.white,
                   ),
             ),

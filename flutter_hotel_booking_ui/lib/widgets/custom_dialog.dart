@@ -241,7 +241,7 @@ class CustomDialogActionButton extends StatelessWidget {
         height: 48,
         child: Text(
           buttonText,
-          style: Theme.of(context).textTheme.button!.copyWith(
+          style: Theme.of(context).textTheme.labelLarge!.copyWith(
                 color: btnColor,
               ),
         ),
