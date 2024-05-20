@@ -1160,5 +1160,20 @@
         "fr": "Le nom de famille ne peut pas être vide",
         "ar": "لا يمكن أن يكون الاسم الأخير فارغًا",
         "ja": "姓を空にすることはできません"
+    },
+    {
+        "text_id": "new_personal_information",
+        "en": "New personal information NON",
+        "fr": "Nouvelles informations personnelles",
+        "ar": "معلومات شخصية جديدة",
+        "ja": "新しい個人情報"
+    },
+    {
+        "text_id": "enter_your_new_phone",
+        "en": "Enter your new phone"
+    },
+    {
+        "text_id": "enter_date_of_birth",
+        "en": "Enter your birthday"
     }
 ]

@@ -9,7 +9,8 @@ class FireBaseAuthentication {
   FireBaseAuthentication._privateConstructor();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  static final FireBaseAuthentication instance = FireBaseAuthentication._privateConstructor();
+  static final FireBaseAuthentication instance =
+      FireBaseAuthentication._privateConstructor();
 
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.

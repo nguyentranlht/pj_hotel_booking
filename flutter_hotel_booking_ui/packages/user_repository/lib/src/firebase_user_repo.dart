@@ -1,16 +1,23 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:user_repository/src/models/my_user.dart';
+import 'package:user_repository/src/models/session_manager.dart';
 import 'entities/entities.dart';
 import 'user_repo.dart';
+import 'models/input_textfield.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseUserRepository implements UserRepository {
+  TextEditingController _fnameController = TextEditingController();
+  TextEditingController _lnameController = TextEditingController();
+  final nameFocusNode = FocusNode();
   FirebaseUserRepository({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
@@ -22,6 +29,7 @@ class FirebaseUserRepository implements UserRepository {
   final GoogleSignIn _googleSignIn;
   final FacebookLogin _facebookAuth;
   final usersCollection = FirebaseFirestore.instance.collection('users');
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
 
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
@@ -154,5 +162,50 @@ class FirebaseUserRepository implements UserRepository {
       log(e.toString());
       rethrow;
     }
+  }
+
+  @override
+  Future<void> showUserNameDialogAlert(
+      BuildContext context, String name) async {
+    _fnameController.text = name;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(child: Text('Update User Name')),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputTextField(
+                    myController: _fnameController,
+                    focusNode: nameFocusNode,
+                    onFiledSubmittedValue: (value) {},
+                    keyBoardType: TextInputType.text,
+                    obscureText: false,
+                    hint: 'Enter Name',
+                    onValidator: (value) {},
+                  )
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    ref.child(SessionController().userId.toString()).update({
+                      'firstname': _fnameController.text.toString()
+                    }).then((value) {
+                      _fnameController.clear();
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
   }
 }
