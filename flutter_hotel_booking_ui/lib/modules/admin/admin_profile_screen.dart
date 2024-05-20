@@ -73,8 +73,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                               //help center screen view
 
                               if (index == 3) {
-                                NavigationServices(context)
-                                    .gotoHeplCenterScreen();
+                                // NavigationServices(context)
+                                //     .gotoHeplCenterScreen();
                               }
                               //Chage password  screen view
 
