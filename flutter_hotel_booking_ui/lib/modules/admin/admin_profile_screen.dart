@@ -10,20 +10,21 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/bottom_top_move_animation_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../futures/authentication_bloc/authentication_bloc.dart';
 import '../../futures/my_user_bloc/my_user_bloc.dart';
 import '../../models/setting_list_data.dart';
 
-class ProfileScreen extends StatefulWidget {
+class AdminProfileScreen extends StatefulWidget {
   final AnimationController animationController;
 
-  const ProfileScreen({Key? key, required this.animationController})
+  const AdminProfileScreen({Key? key, required this.animationController})
       : super(key: key);
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _AdminProfileScreenState createState() => _AdminProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  List<SettingsListData> userSettingsList = SettingsListData.userSettingsList;
+class _AdminProfileScreenState extends State<AdminProfileScreen> {
+  List<SettingsListData> adminSettingsList = SettingsListData.adminSettingsList;
 
   @override
   void initState() {
@@ -33,114 +34,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MyUserBloc, MyUserState>(
-      builder: (context, state) {
-        return Scaffold(
-          body: BottomTopMoveAnimationView(
-            animationController: widget.animationController,
-            child: Consumer<ThemeProvider>(
-              builder: (context, provider, child) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top),
-                    child: Container(child: appBar()),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      padding: EdgeInsets.all(0.0),
-                      itemCount: userSettingsList.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () async {
-                            //setting screen view
-                            if (index == 5) {
-                              context
-                                  .read<SignInBloc>()
-                                  .add(const SignOutRequired());
-                            }
-                            //help center screen view
-
-                            if (index == 3) {
-                              NavigationServices(context)
-                                  .gotoHeplCenterScreen();
-                            }
-                            //Chage password  screen view
-
-                            if (index == 0) {
-                              NavigationServices(context)
-                                  .gotoChangepasswordScreen();
-                            }
-                            //Invite friend  screen view
-
-                            if (index == 1) {
-                              if (state.user?.role == 'admin') {
-                                NavigationServices(context)
-                                  .gotoBaseScreen();
-                              } else {
-                                openEdit();
+    return BlocProvider(
+      create: (context) => MyUserBloc(
+                    myUserRepository:
+                        context.read<AuthenticationBloc>().userRepository)
+                  ..add(GetMyUser(
+                      myUserId:
+                          context.read<AuthenticationBloc>().state.user!.uid)),
+      child: BlocBuilder<MyUserBloc, MyUserState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: BottomTopMoveAnimationView(
+              animationController: widget.animationController,
+              child: Consumer<ThemeProvider>(
+                builder: (context, provider, child) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top),
+                      child: Container(child: appBar()),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.all(0.0),
+                        itemCount: adminSettingsList.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () async {
+                              //setting screen view
+                              if (index == 5) {
+                                context
+                                    .read<SignInBloc>()
+                                    .add(const SignOutRequired());
                               }
-                            }
-                            if (index == 4) {
-                              NavigationServices(context).gotoWallet();
-                            }
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8, right: 16),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(
-                                          AppLocalizations(context).of(
-                                            userSettingsList[index].titleTxt,
+                              //help center screen view
+
+                              if (index == 3) {
+                                NavigationServices(context)
+                                    .gotoHeplCenterScreen();
+                              }
+                              //Chage password  screen view
+
+                              if (index == 0) {
+                                NavigationServices(context)
+                                    .gotoChangepasswordScreen();
+                              }
+                              //Invite friend  screen view
+
+                              if (index == 1) {
+                                NavigationServices(context)
+                                    .gotoTabScreen();
+                              }
+                              if (index == 4) {
+                                NavigationServices(context).gotoWallet();
+                              }
+                            },
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 8, right: 16),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            AppLocalizations(context).of(
+                                              adminSettingsList[index].titleTxt,
+                                            ),
+                                            style: TextStyles(context)
+                                                .getRegularStyle()
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 16),
                                           ),
-                                          style: TextStyles(context)
-                                              .getRegularStyle()
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Container(
-                                        child: Icon(
-                                            userSettingsList[index].iconData,
-                                            color: AppTheme.secondaryTextColor
-                                                .withOpacity(0.7)),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Container(
+                                          child: Icon(
+                                              adminSettingsList[index].iconData,
+                                              color: AppTheme.secondaryTextColor
+                                                  .withOpacity(0.7)),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 16, right: 16),
-                                child: Divider(
-                                  height: 1,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 16, right: 16),
+                                  child: Divider(
+                                    height: 1,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -273,6 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
   Future openEdit() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -344,5 +350,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ));
 }
-
-

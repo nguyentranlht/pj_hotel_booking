@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/admin_profile_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/explore/home_explore_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/my_trips_screen.dart';
@@ -84,11 +85,11 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
             //   animationController: _animationController,
             // );
           });
-        } else if (tabType == BottomBarType.Profile) {
+        } else if (tabType == BottomBarType.Setting) {
           setState(() {
-            // _indexView = ProfileScreen(
-            //   animationController: _animationController,
-            // );
+            _indexView = AdminProfileScreen(
+              animationController: _animationController,
+            );
           });
         }
       });
@@ -112,19 +113,19 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
                 },
               ),
               TabButtonUI(
-                icon: Icons.search,
+                icon: Icons.local_hotel,
                 isSelected: tabType == BottomBarType.HomeAdmin,
-                text: AppLocalizations(context).of("home_admin"),
+                text: AppLocalizations(context).of("hotel"),
                 onTap: () {
                   tabClick(BottomBarType.HomeAdmin);
                 },
               ),
               TabButtonUI(
-                icon: FontAwesomeIcons.user,
-                isSelected: tabType == BottomBarType.Profile,
-                text: AppLocalizations(context).of("profile"),
+                icon: Icons.settings,
+                isSelected: tabType == BottomBarType.Setting,
+                text: AppLocalizations(context).of("setting"),
                 onTap: () {
-                  tabClick(BottomBarType.Profile);
+                  tabClick(BottomBarType.Setting);
                 },
               ),
             ],
@@ -138,4 +139,4 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
   }
 }
 
-enum BottomBarType { Trips, HomeAdmin, Profile }
+enum BottomBarType { Trips, HomeAdmin, Setting }

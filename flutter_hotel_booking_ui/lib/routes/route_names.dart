@@ -123,7 +123,7 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoSettingsScreen() async {
-    //return await _pushMaterialPageRoute(SettingsScreen());
+    //return await _pushMaterialPageRoute(AdminProfileScreen());
   }
 
   Future<dynamic> gotoHeplCenterScreen() async {

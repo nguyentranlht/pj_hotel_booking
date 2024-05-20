@@ -155,8 +155,16 @@
     },
 
     {
-        "text_id": "home_admin",
-        "en": "Home Admin",
+        "text_id": "hotel",
+        "en": "Hotel",
+        "fr": "voyages",
+        "ar": "رحلات",
+        "ja": "旅行"
+    },
+
+    {
+        "text_id": "setting",
+        "en": "Setting",
         "fr": "voyages",
         "ar": "رحلات",
         "ja": "旅行"
@@ -663,6 +671,22 @@
     {
         "text_id": "admin_page",
         "en": "Admin Page",
+        "fr": "Inviter un ami",
+        "ar": "قم بدعوة صديق",
+        "ja": "友達を呼ぶ"
+    },
+
+    {
+        "text_id": "create_hotel",
+        "en": "Create Hotel",
+        "fr": "Inviter un ami",
+        "ar": "قم بدعوة صديق",
+        "ja": "友達を呼ぶ"
+    },
+
+    {
+        "text_id": "user_page",
+        "en": "User Page",
         "fr": "Inviter un ami",
         "ar": "قم بدعوة صديق",
         "ja": "友達を呼ぶ"

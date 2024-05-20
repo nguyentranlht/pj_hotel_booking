@@ -213,7 +213,8 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
       list.add(
         HotelListViewPage(
           callback: () {
-            NavigationServices(context).gotoHotelDetailes(f);
+            //chỉnh sửa thông tin khách sạn ở đây
+            //NavigationServices(context).gotoHotelDetailes(f);
           },
           hotelData: f,
           animation: animation,
