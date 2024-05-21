@@ -328,7 +328,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: (){
-                         NavigationServices(context).gotoIntroductionScreen();
+                         NavigationServices(context).gotoLoginApp();
                         },
                         child: Container(
                           width: 100,

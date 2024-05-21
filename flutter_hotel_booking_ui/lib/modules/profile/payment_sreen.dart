@@ -241,7 +241,7 @@ import '../../routes/route_names.dart';
                     Center(
                       child: GestureDetector(
                         onTap: (){
-                         NavigationServices(context).gotoIntroductionScreen();
+                         NavigationServices(context).gotoLoginApp();
                         },
                         child: Container(
                           width: 100,
