@@ -30,9 +30,9 @@
 			<string>fbshareextension</string>
 		</array>
 		<key>NSCameraUsageDescription</key>
-		<string>Scan your card to add it automatically</string>
-		<key>NSCameraUsageDescription &lt;string&gt;To scan cards&lt;/string&gt;</key>
-		<string>To scan cards</string>
+		<string>To capture profile photo please grant camera access</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>App needs access to photo lib for profile images</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
