@@ -23,9 +23,6 @@ class FacebookGoogleButtonView extends StatelessWidget {
               padding: EdgeInsets.zero,
               backgroundColor: Color(0x0FF3C5799),
               buttonTextWidget: _buttonTextUI(),
-              onTap: () {
-                context.read<SignInBloc>().add(SignInWithFacebookRequested());
-              },
             ),
           ),
           SizedBox(

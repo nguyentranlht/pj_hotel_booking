@@ -53,6 +53,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
     return Consumer<ThemeProvider>(
       builder: (_, provider, child) => Container(
         child: Scaffold(
+          //sửa lỗi frontend màn hình
           bottomNavigationBar: Container(
               height: 68 + MediaQuery.of(context).padding.bottom,
               child: getBottomBarUI(bottomBarType)),

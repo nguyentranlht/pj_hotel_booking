@@ -2,7 +2,7 @@ part of 'update_user_info_bloc.dart';
 
 abstract class UpdateUserInfoState extends Equatable {
   const UpdateUserInfoState();
-
+  
   @override
   List<Object> get props => [];
 }
@@ -10,14 +10,12 @@ abstract class UpdateUserInfoState extends Equatable {
 class UpdateUserInfoInitial extends UpdateUserInfoState {}
 
 class UploadPictureFailure extends UpdateUserInfoState {}
-
 class UploadPictureLoading extends UpdateUserInfoState {}
-
 class UploadPictureSuccess extends UpdateUserInfoState {
-  final String userImage;
+	final String userImage;
 
-  const UploadPictureSuccess(this.userImage);
+	const UploadPictureSuccess(this.userImage);
 
-  @override
+	@override
   List<Object> get props => [userImage];
 }

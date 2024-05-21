@@ -1,35 +1,26 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:user_repository/src/models/my_user.dart';
-import 'package:user_repository/src/models/session_manager.dart';
 import 'entities/entities.dart';
 import 'user_repo.dart';
-import 'models/input_textfield.dart';
-import 'package:firebase_database/firebase_database.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseUserRepository implements UserRepository {
-  TextEditingController _fnameController = TextEditingController();
-  TextEditingController _lnameController = TextEditingController();
-  final nameFocusNode = FocusNode();
   FirebaseUserRepository({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
-    FacebookLogin? facebookAuth,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn(),
-        _facebookAuth = facebookAuth ?? FacebookLogin();
+        _googleSignIn = googleSignIn ?? GoogleSignIn();
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-  final FacebookLogin _facebookAuth;
   final usersCollection = FirebaseFirestore.instance.collection('users');
-  DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
@@ -42,21 +33,22 @@ class FirebaseUserRepository implements UserRepository {
       return user;
     });
   }
+  
 
   @override
   Future<MyUser> signUp(MyUser myUser, String password) async {
     try {
       UserCredential user = await _firebaseAuth.createUserWithEmailAndPassword(
           email: myUser.email, password: password);
-
-      myUser = myUser.copyWith(userId: user.user!.uid);
-
+       myUser = myUser.copyWith(userId: user.user!.uid);
+      
       return myUser;
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
+  
 
   @override
   Future<void> signIn(String email, String password) async {
@@ -89,26 +81,10 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> signInFacebook() async {
-    try {
-      final FacebookLoginResult loginResult = await _facebookAuth.logIn();
-      if (loginResult.status == FacebookLoginStatus.success) {
-        final FacebookAccessToken accessToken = loginResult.accessToken!;
-        final credential = FacebookAuthProvider.credential(accessToken.token);
-        await _firebaseAuth.signInWithCredential(credential);
-      }
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
-  }
-
-  @override
   Future<void> logOut() async {
     try {
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
-      await _facebookAuth.logOut();
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -145,6 +121,7 @@ class FirebaseUserRepository implements UserRepository {
       rethrow;
     }
   }
+  
 
   @override
   Future<String> uploadPicture(String file, String userId) async {
@@ -163,49 +140,97 @@ class FirebaseUserRepository implements UserRepository {
       rethrow;
     }
   }
-
   @override
-  Future<void> showUserNameDialogAlert(
-      BuildContext context, String name) async {
-    _fnameController.text = name;
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Center(child: Text('Update User Name')),
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  InputTextField(
-                    myController: _fnameController,
-                    focusNode: nameFocusNode,
-                    onFiledSubmittedValue: (value) {},
-                    keyBoardType: TextInputType.text,
-                    obscureText: false,
-                    hint: 'Enter Name',
-                    onValidator: (value) {},
-                  )
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel')),
-              TextButton(
-                  onPressed: () {
-                    ref.child(SessionController().userId.toString()).update({
-                      'firstname': _fnameController.text.toString()
-                    }).then((value) {
-                      _fnameController.clear();
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'))
-            ],
-          );
+  Future<String?> getUserId() async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        return user.uid;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error getting user ID: $e');
+      rethrow;
+    }
+  }
+  @override
+  Future<String?> getUserWallet() async {
+  try {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      // Retrieve the wallet address from the Firestore document
+      final snapshot = await _firestore.collection('users').doc(user.uid).get();
+      if (snapshot.exists) {
+        final userData = snapshot.data();
+        if (userData != null && userData.containsKey('wallet')) {
+          return userData['wallet'] as String;
+        }
+      }
+    }
+    return null;
+  } catch (e) {
+    log('Error getting user wallet: $e');
+    rethrow;
+  }
+  }
+  
+  @override
+Future<String?> saveUserWallet(String wallet) async {
+  try {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      // Update the user's Firestore document with the wallet address
+      await _firestore.collection('users').doc(user.uid).update({
+        'wallet': wallet,
+      });
+    } else {
+      throw Exception('User is not signed in.');
+    }
+  } catch (e) {
+    log('Error saving user wallet: $e');
+    rethrow;
+  }
+}
+  @override
+  Future<String?> updateUserWallet(String userId, String wallet) async {
+  try {
+    // Get the user's Firestore document
+    final userDoc = await _firestore.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      // Parse the wallet string to a double
+      final newWallet = wallet;
+      if (newWallet != null) {
+        // Update the 'wallet' field in the user's document
+        await _firestore.collection('users').doc(userId).update({
+          'wallet': newWallet,
         });
+
+        print('User wallet updated successfully.');
+      } else {
+        throw Exception('Invalid wallet format.');
+      }
+    } else {
+      throw Exception('User document not found.');
+    }
+  } catch (e) {
+    log('Error updating user wallet: $e');
+    rethrow;
+  }
+}
+
+  Future<Stream<QuerySnapshot>> GetMyUser(String name) async{
+    return await FirebaseFirestore.instance.collection(name).snapshots();
+  }
+
+    Future addPaymentToRoom(Map<String, dynamic> userInfoMap, String userId) async {
+    return await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection("payment")
+                .add(userInfoMap);
+  }
+    Future<Stream<QuerySnapshot>> getRoomPayment(String id) async{
+    return await FirebaseFirestore.instance.collection("users").doc(id).collection("payment").snapshots();
   }
 }

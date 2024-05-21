@@ -2,8 +2,7 @@
   "project_info": {
     "project_number": "144157197167",
     "project_id": "db-hotel-booking",
-    "storage_bucket": "db-hotel-booking.appspot.com",
-    "firebase_url": "https://db-hotel-booking-default-rtdb.asia-southeast1.firebasedatabase.app"
+    "storage_bucket": "db-hotel-booking.appspot.com"
   },
   "client": [
     {
@@ -14,22 +13,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "144157197167-h81opq4vffjchqu0ikuql2je6ds6aq7u.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.flutter_hotel_booking_ui",
-            "certificate_hash": "98e935d51f94654cf6a6455dff90b748a4a03960"
-          }
-        },
-        {
-          "client_id": "144157197167-n813jgfpsh09nn663994sbikqkel77l3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.flutter_hotel_booking_ui",
-            "certificate_hash": "36b84499f4a98be21ed51b045239990005cce0b0"
-          }
-        },
         {
           "client_id": "144157197167-39996ddpap6ettemtuqbkpqts9l86sid.apps.googleusercontent.com",
           "client_type": 3

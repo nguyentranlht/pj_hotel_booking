@@ -153,23 +153,6 @@
         "ar": "رحلات",
         "ja": "旅行"
     },
-
-    {
-        "text_id": "hotel",
-        "en": "Hotel",
-        "fr": "voyages",
-        "ar": "رحلات",
-        "ja": "旅行"
-    },
-
-    {
-        "text_id": "setting",
-        "en": "Setting",
-        "fr": "voyages",
-        "ar": "رحلات",
-        "ja": "旅行"
-    },
-
     {
         "text_id": "profile",
         "en": "Profile",
@@ -667,31 +650,6 @@
         "ar": "قم بدعوة صديق",
         "ja": "友達を呼ぶ"
     },
-
-    {
-        "text_id": "admin_page",
-        "en": "Admin Page",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
-    {
-        "text_id": "create_hotel",
-        "en": "Create Hotel",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
-    {
-        "text_id": "user_page",
-        "en": "User Page",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
     {
         "text_id": "invite_your_friend",
         "en": "Invite your Friend",
@@ -855,7 +813,7 @@
     },
     {
         "text_id": "payment_text",
-        "en": "Payment",
+        "en": "Wallet",
         "fr": "Paiement",
         "ar": "دفع",
         "ja": "支払い"
@@ -1160,20 +1118,5 @@
         "fr": "Le nom de famille ne peut pas être vide",
         "ar": "لا يمكن أن يكون الاسم الأخير فارغًا",
         "ja": "姓を空にすることはできません"
-    },
-    {
-        "text_id": "new_personal_information",
-        "en": "New personal information NON",
-        "fr": "Nouvelles informations personnelles",
-        "ar": "معلومات شخصية جديدة",
-        "ja": "新しい個人情報"
-    },
-    {
-        "text_id": "enter_your_new_phone",
-        "en": "Enter your new phone"
-    },
-    {
-        "text_id": "enter_date_of_birth",
-        "en": "Enter your birthday"
     }
 ]

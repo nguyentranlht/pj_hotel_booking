@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/models/constants.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
@@ -10,14 +11,16 @@ import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:one_context/one_context.dart';
+import 'package:user_repository/user_repository.dart';
 class RoomeBookView extends StatefulWidget {
-  final Room roomData;
+  final Room room;
+
   final AnimationController animationController;
   final Animation<double> animation;
-
   const RoomeBookView(
       {Key? key,
-      required this.roomData,
+
+      required this.room,
       required this.animationController,
       required this.animation})
       : super(key: key);
@@ -29,9 +32,29 @@ class RoomeBookView extends StatefulWidget {
 class _RoomeBookViewState extends State<RoomeBookView> {
   var pageController = PageController(initialPage: 0);
 
+  int total = 0;
+  String? id;
+
+    getthesharedpref() async {
+      id = await FirebaseUserRepository().getUserId();
+      setState(() {});
+  }
+
+  ontheload() async {
+    await getthesharedpref();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ontheload();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    List<String> images = widget.roomData.imagePath.split(" ");
+    List<String> images = widget.room.imagePath.split(" ");
     return AnimatedBuilder(
       animation: widget.animationController,
       builder: (BuildContext context, Widget? child) {
@@ -85,7 +108,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            widget.roomData.titleTxt,
+                            widget.room.titleTxt,
                             maxLines: 2,
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
@@ -96,10 +119,9 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                           Expanded(child: SizedBox()),
                           SizedBox(
                             height: 38,
-                            child: CommonButton(
-                              //them o day ne NGUYEN
+                            child: CommonButton(                              
                               onTap: () {
-                                //OnePlatform.app = () => MyApp();
+                                openEdit();
                               },
                               //
                               buttonTextWidget: Padding(
@@ -120,7 +142,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "\$${widget.roomData.perNight}",
+                            "\$${widget.room.perNight}",
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
@@ -191,4 +213,94 @@ class _RoomeBookViewState extends State<RoomeBookView> {
       },
     );
   }
+
+  Future openEdit() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.cancel)),
+                        SizedBox(
+                          width: 60.0,
+                        ),
+                        Center(
+                          child: Text(
+                            'PAYMENT',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF008080),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                        
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Center(
+                      child: Text(
+                        "Go to Pay or Cancel",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                        )
+                        ),
+                    ),
+                    
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () async {
+                          Map<String, dynamic> addPaymentToRoom ={
+                                  "Name": widget.room.titleTxt,
+                                  "RoomId": widget.room.roomId,
+                                  "PerNight": widget.room.perNight,
+                                  "HotelId": widget.room.hotelId,
+                                  "Date": widget.room.date,
+                                  "isSelected": widget.room.isSelected, 
+                                  "People": widget.room.roomData.people,
+                                  "NumberRoom": widget.room.roomData.numberRoom,
+                                  "ImagePath": widget.room.imagePath,
+                                };
+                                await FirebaseUserRepository().addPaymentToRoom(addPaymentToRoom, id!);
+                              NavigationServices(context).gotoPayment();  
+
+                        },
+                        child: Container(
+                          width: 100,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF008080),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                              child: Text(
+                            "Pay",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ));
+
 }

@@ -6,8 +6,6 @@ class MyUser {
   final String firstname;
   final String lastname;
   String? picture;
-  final String number;
-  final String birthday;
   final String role; //Them role
 
   MyUser({
@@ -16,12 +14,11 @@ class MyUser {
     required this.firstname,
     required this.lastname,
     this.picture,
-    required this.number,
-    required this.birthday,
     required this.role,
   });
 
-  factory MyUser.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory MyUser.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data();
     return MyUser(
       userId: data?["userId"],
@@ -29,21 +26,12 @@ class MyUser {
       firstname: data?["firstname"],
       lastname: data?["lastname"],
       picture: data!["picture"],
-      number: data?["number"],
-      birthday: data!["birthday"],
       role: data["role"],
     );
   }
   // Empty user which represents an unauthenticated user.
-  static final empty = MyUser(
-      userId: '',
-      email: '',
-      firstname: '',
-      lastname: '',
-      picture: '',
-      number: '',
-      birthday: '',
-      role: '');
+  static final empty =
+      MyUser(userId: '', email: '', firstname: '', lastname: '', picture: '', role: '');
 
   /// Modify MyUser parameters
   MyUser copyWith({
@@ -52,8 +40,6 @@ class MyUser {
     String? firstname,
     String? lastname,
     String? picture,
-    String? number,
-    String? birthday,
     String? role,
   }) {
     return MyUser(
@@ -62,8 +48,6 @@ class MyUser {
       firstname: firstname ?? this.firstname,
       lastname: lastname ?? this.lastname,
       picture: picture ?? this.picture,
-      number: number ?? this.number,
-      birthday: birthday ?? this.birthday,
       role: role ?? this.role,
     );
   }
@@ -81,8 +65,6 @@ class MyUser {
       'firstname': firstname,
       'lastname': lastname,
       'picture': picture,
-      'number': number,
-      'birthday': birthday,
       'role': role,
     };
   }

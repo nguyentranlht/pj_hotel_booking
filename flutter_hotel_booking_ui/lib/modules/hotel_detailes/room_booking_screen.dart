@@ -62,7 +62,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
                         animationController.forward();
                         //room book view and room data
                         return RoomeBookView(
-                          roomData: state.rooms[index],
+                          room: state.rooms[index],
                           animation: animation,
                           animationController: animationController,
                         );

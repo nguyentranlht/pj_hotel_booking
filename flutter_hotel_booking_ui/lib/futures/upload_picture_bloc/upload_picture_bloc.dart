@@ -1,4 +1,4 @@
-//import 'dart:html' as html;
+import 'dart:html' as html;
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
