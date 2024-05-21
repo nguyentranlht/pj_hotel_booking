@@ -30,6 +30,7 @@ class FirebaseUserRepository implements UserRepository {
   final FacebookLogin _facebookAuth;
   final usersCollection = FirebaseFirestore.instance.collection('users');
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
@@ -207,5 +208,108 @@ class FirebaseUserRepository implements UserRepository {
             ],
           );
         });
+  }
+
+  @override
+  Future<String?> getUserId() async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        return user.uid;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('Error getting user ID: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> getUserWallet() async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        // Retrieve the wallet address from the Firestore document
+        final snapshot =
+            await _firestore.collection('users').doc(user.uid).get();
+        if (snapshot.exists) {
+          final userData = snapshot.data();
+          if (userData != null && userData.containsKey('wallet')) {
+            return userData['wallet'] as String;
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      log('Error getting user wallet: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> saveUserWallet(String wallet) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        // Update the user's Firestore document with the wallet address
+        await _firestore.collection('users').doc(user.uid).update({
+          'wallet': wallet,
+        });
+      } else {
+        throw Exception('User is not signed in.');
+      }
+    } catch (e) {
+      log('Error saving user wallet: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> updateUserWallet(String userId, String wallet) async {
+    try {
+      // Get the user's Firestore document
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        // Parse the wallet string to a double
+        final newWallet = wallet;
+        if (newWallet != null) {
+          // Update the 'wallet' field in the user's document
+          await _firestore.collection('users').doc(userId).update({
+            'wallet': newWallet,
+          });
+
+          print('User wallet updated successfully.');
+        } else {
+          throw Exception('Invalid wallet format.');
+        }
+      } else {
+        throw Exception('User document not found.');
+      }
+    } catch (e) {
+      log('Error updating user wallet: $e');
+      rethrow;
+    }
+  }
+
+  Future<Stream<QuerySnapshot>> GetMyUser(String name) async {
+    return await FirebaseFirestore.instance.collection(name).snapshots();
+  }
+
+  Future addPaymentToRoom(
+      Map<String, dynamic> userInfoMap, String userId) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection("payment")
+        .add(userInfoMap);
+  }
+
+  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .collection("payment")
+        .snapshots();
   }
 }

@@ -10,6 +10,7 @@ class MyUser extends Equatable {
   String? picture;
   final String number;
   final String birthday;
+  final String? wallet;
   final String role;
 
   MyUser({
@@ -21,6 +22,7 @@ class MyUser extends Equatable {
     required this.number,
     required this.birthday,
     required this.role,
+    required this.wallet,
   });
 
   /// Empty user which represents an unauthenticated user.
@@ -32,6 +34,7 @@ class MyUser extends Equatable {
       picture: '',
       number: '',
       birthday: '',
+      wallet: '',
       role: '');
 
   /// Modify MyUser parameters
@@ -44,6 +47,7 @@ class MyUser extends Equatable {
     String? number,
     String? birthday,
     String? role,
+    String? wallet,
   }) {
     return MyUser(
       userId: userId ?? this.userId,
@@ -53,6 +57,7 @@ class MyUser extends Equatable {
       picture: picture ?? this.picture,
       number: number ?? this.number,
       birthday: birthday ?? this.birthday,
+      wallet: wallet ?? this.wallet,
       role: role ?? this.role,
     );
   }
@@ -73,6 +78,7 @@ class MyUser extends Equatable {
       number: number,
       birthday: birthday,
       role: role,
+      wallet: wallet,
     );
   }
 
@@ -86,10 +92,11 @@ class MyUser extends Equatable {
       number: entity.number,
       birthday: entity.birthday,
       role: entity.role,
+      wallet: entity.wallet,
     );
   }
 
   @override
   List<Object?> get props =>
-      [userId, email, firstname, lastname, picture, number, birthday, role];
+      [userId, email, firstname, lastname, picture, number, birthday, role, wallet];
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import '../user_repository.dart';
@@ -24,4 +25,15 @@ abstract class UserRepository {
   Future<String> uploadPicture(String file, String userId);
 
   Future<void> showUserNameDialogAlert(BuildContext context, String name);
+
+  Future<String?> getUserId();
+
+  Future<String?> getUserWallet();
+
+  Future<String?> saveUserWallet(String wallet);
+
+
+  Future<String?> updateUserWallet(String userId, String amount);
+
+  Future<Stream<QuerySnapshot>> getRoomPayment(String id);
 }

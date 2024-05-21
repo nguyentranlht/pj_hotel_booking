@@ -22,6 +22,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/edit_profile.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/hepl_center_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/profile/payment_sreen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 import 'package:hotel_repository/hotel_repository.dart';
@@ -141,6 +142,10 @@ class NavigationServices {
   Future<dynamic> gotoCurrencyScreen() async {
     return await _pushMaterialPageRoute(CurrencyScreen(),
         fullscreenDialog: true);
+  }
+
+  Future<dynamic> gotoPayment() async {
+    return await _pushMaterialPageRoute(PaymentScreen());
   }
 
   Future<dynamic> gotoCountryScreen() async {

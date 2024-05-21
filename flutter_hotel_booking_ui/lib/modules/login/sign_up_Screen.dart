@@ -134,6 +134,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   email: _emailController.text,
                                   firstname: _fnameController.text,
                                   lastname: _lnameController.text,
+                                  wallet: '0',
                                   role: "user");
                               setState(() {
                                 context.read<SignUpBloc>().add(SignUpRequired(
