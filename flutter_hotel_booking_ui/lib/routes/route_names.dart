@@ -5,6 +5,7 @@ import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/base/views/base_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/create_hotel/blocs/create_hotel_bloc/create_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/create_hotel/views/create_hotel_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/hotel_home_screen.dart';
@@ -56,7 +57,7 @@ class NavigationServices {
         (Route<dynamic> route) => false);
   }
 
-   void gotoLoginApp() async {
+  void gotoLoginApp() async {
     return await _pushMaterialPageRoute(LoginApp(FirebaseUserRepository()));
   }
 
@@ -81,7 +82,12 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoCreateHotelScreen() async {
-    return await _pushMaterialPageRoute(const CreateHotelScreen());
+    return await _pushMaterialPageRoute(
+    BlocProvider(
+      create: (context) => CreateHotelBloc(FirebaseHotelRepo()),
+      child: const CreateHotelScreen(),
+    ),
+  );
   }
 
   Future<dynamic> gotoForgotPassword() async {

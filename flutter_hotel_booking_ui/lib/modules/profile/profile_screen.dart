@@ -304,7 +304,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Icon(Icons.cancel)),
                         SizedBox(
-                          width: 60.0,
+                          width: 30.0,
                         ),
                         Center(
                           child: Text(

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/models/input_textfield.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -286,7 +287,8 @@ class ProfileController extends ChangeNotifier {
             actions: [
               TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    NavigationServices(context)
+                                    .gotoLoginApp();
                   },
                   child: Text('Ok')),
             ],

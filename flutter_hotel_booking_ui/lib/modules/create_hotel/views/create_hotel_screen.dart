@@ -8,6 +8,7 @@ import 'package:flutter_hotel_booking_ui/modules/create_hotel/blocs/upload_pictu
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import '../../../routes/route_names.dart';
 import '../components/my_text_field.dart';
 
 class CreateHotelScreen extends StatefulWidget {
@@ -46,19 +47,16 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
           if (state is CreateHotelSuccess) {
             setState(() {
               creationRequired = false;
-              (context, state) => BaseScreen();
             });
-            (context, state) => BaseScreen();
           } else if (state is CreateHotelLoading) {
             setState(() {
               creationRequired = true;
+              NavigationServices(context).gotoBaseScreen();
             });
           }
         },
         child: BlocProvider(
-          create: (context) => UploadPictureBloc(
-                    FirebaseHotelRepo()
-                  ),
+          create: (context) => UploadPictureBloc(FirebaseHotelRepo()),
           child: BlocListener<UploadPictureBloc, UploadPictureState>(
             listener: (context, state) {
               if (state is UploadPictureLoading) {
@@ -70,6 +68,21 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
             },
             child: Scaffold(
               backgroundColor: Theme.of(context).colorScheme.background,
+              appBar: AppBar(
+                leading: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new_outlined,
+                      color: Color(0xFF373866),
+                    )),
+                centerTitle: true,
+                title: Text(
+                  'Create a New Hotel !',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                ),
+              ),
               body: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
@@ -77,63 +90,122 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Create a New Hotel !',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 22),
-                      ),
                       const SizedBox(height: 20),
                       InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () async {
-                          final ImagePicker picker = ImagePicker();
-                          final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery,
-                            maxHeight: 1000,
-                            maxWidth: 1000,
-                          );
-                          if (image != null && context.mounted) {
-                            context.read<UploadPictureBloc>().add(UploadPicture(
-                                await image.readAsBytes(),
-                                basename(image.path)));
-                          }
-                        },
-                        child: hotel.imagePath.startsWith(('http'))
-                            ? Container(
-                                width: 400,
-                                height: 400,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
-                                        image: NetworkImage(hotel.imagePath),
-                                        fit: BoxFit.cover)))
-                            : Ink(
-                                width: 400,
-                                height: 400,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.photo,
-                                      size: 100,
-                                      color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () async {
+                            final ImagePicker picker = ImagePicker();
+                            final XFile? image = await picker.pickImage(
+                              source: ImageSource.gallery,
+                              maxHeight: 1000,
+                              maxWidth: 1000,
+                            );
+                            if (image != null && context.mounted) {
+                              context.read<UploadPictureBloc>().add(
+                                  UploadPicture(await image.readAsBytes(),
+                                      basename(image.path)));
+                            }
+                          },
+                          child: Center(
+                            child: hotel.imagePath != ''
+                                ? Container(
+                                    width: 150,
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.black, width: 1.5),
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                            image:
+                                                NetworkImage(hotel.imagePath),
+                                            fit: BoxFit.cover)))
+                                : Container(
+                                    width: 150,
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black, width: 1.5),
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
+                                    child: const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Colors.black,
+                                        ),
+                                      ],
                                     ),
-                                    const Text(
-                                      "Add a Picture here...",
-                                      style: TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                              ),
+                                  ),
+                          )),
+                      // InkWell(
+                      //     child: const Text(
+                      //   "Add a Picture here...",
+                      //   style: TextStyle(fontSize: 18),
+
+                      // )),
+                      // const SizedBox(height: 20),
+                      // hotel.imagePath == ''
+                      //     ? Center(
+                      //         child: Material(
+                      //           elevation: 4.0,
+                      //           borderRadius: BorderRadius.circular(20),
+                      //           child: Container(
+                      //             width: 150,
+                      //             height: 150,
+                      //             decoration: BoxDecoration(
+                      //               border: Border.all(
+                      //                   color: Colors.black, width: 1.5),
+                      //               borderRadius: BorderRadius.circular(20),
+                      //             ),
+                      //             child: ClipRRect(
+                      //               borderRadius: BorderRadius.circular(20),
+                      //               child: Image.network(
+                      //                 hotel.imagePath,
+                      //                 fit: BoxFit.cover,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       )
+                      //     : GestureDetector(
+                      //         onTap: () async {
+                      //           final ImagePicker picker = ImagePicker();
+                      //           final XFile? image = await picker.pickImage(
+                      //             source: ImageSource.gallery,
+                      //             maxHeight: 1000,
+                      //             maxWidth: 1000,
+                      //           );
+                      //           if (image != null && context.mounted) {
+                      //             context.read<UploadPictureBloc>().add(
+                      //                 UploadPicture(await image.readAsBytes(),
+                      //                     basename(image.path)));
+                      //           }
+                      //         },
+                      //         child: Center(
+                      //           child: Material(
+                      //             elevation: 4.0,
+                      //             borderRadius: BorderRadius.circular(20),
+                      //             child: Container(
+                      //               width: 150,
+                      //               height: 150,
+                      //               decoration: BoxDecoration(
+                      //                 border: Border.all(
+                      //                     color: Colors.black, width: 1.5),
+                      //                 borderRadius: BorderRadius.circular(20),
+                      //               ),
+                      //               child: Icon(
+                      //                 Icons.camera_alt_outlined,
+                      //                 color: Colors.black,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      SizedBox(
+                        height: 30.0,
                       ),
-                      const SizedBox(height: 20),
                       Form(
                           key: _formKey,
                           child: Column(
@@ -282,7 +354,7 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                       !creationRequired
                           ? SizedBox(
                               width: 400,
-                              height: 40,
+                              height: 50,
                               child: TextButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
@@ -307,6 +379,7 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                           .read<CreateHotelBloc>()
                                           .add(CreateHotel(hotel));
                                     }
+                                    Navigator.pop(context);
                                   },
                                   style: TextButton.styleFrom(
                                       elevation: 3.0,

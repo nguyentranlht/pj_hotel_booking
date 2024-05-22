@@ -9,6 +9,7 @@ import 'package:flutter_hotel_booking_ui/futures/authentication_bloc/authenticat
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_profile_bloc/profile_controller.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:provider/provider.dart';
@@ -50,14 +51,22 @@ class _EditProfileState extends State<EditProfile> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  CommonAppbarView(
-                                    iconData: Icons.check,
-                                    titleText: AppLocalizations(context)
-                                        .of("edit_profile"),
-                                    onBackClick: () {
-                                      provider.showConformDialogAlert(context);
-                                      Navigator.pop(context);
-                                    },
+                                  AppBar(
+                                    leading: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Icon(
+                                          Icons.arrow_back_ios_new_outlined,
+                                          color: Color(0xFF373866),
+                                        )),
+                                    centerTitle: true,
+                                    title: Text(
+                                      'Edit Profile',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 20,
@@ -196,14 +205,45 @@ class _EditProfileState extends State<EditProfile> {
                                       title: 'Email',
                                       iconData: Icons.email_outlined,
                                       value: state.user!.email),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    width: 400,
+                                    height: 50,
+                                    child: TextButton(
+                                        onPressed: () {
+                                          NavigationServices(context)
+                                              .gotoLoginApp();
+                                        },
+                                        style: TextButton.styleFrom(
+                                            elevation: 3.0,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(60))),
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 25, vertical: 5),
+                                          child: Text(
+                                            'Update Profile',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                  )
                                 ],
                               );
                             } else {
-                              return Center(
-                                  child: Text(
-                                'Something went wrong',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ));
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
                             }
                           }))));
             },
@@ -241,356 +281,3 @@ class ReusbaleRow extends StatelessWidget {
     );
   }
 }
-// class _EditProfileState extends State<EditProfile> {
-//   List<SettingsListData> userInfoList = SettingsListData.userInfoList;
-//   FireBaseProvider get provider => provider;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Scaffold(
-//         backgroundColor: AppTheme.scaffoldBackgroundColor,
-//         body: RemoveFocuse(
-//           onClick: () {
-//             FocusScope.of(context).requestFocus(FocusNode());
-//           },
-//           child: BlocProvider(
-//             create: (context) => MyUserBloc(
-//                 myUserRepository:
-//                     context.read<AuthenticationBloc>().userRepository)
-//               ..add(GetMyUser(
-//                   myUserId:
-//                       context.read<AuthenticationBloc>().state.user!.uid)),
-//             child: BlocBuilder<MyUserBloc, MyUserState>(
-//               builder: (context, state) {
-//                 if (state.status == MyUserStatus.success) {
-//                   return Column(
-//                     //mainAxisAlignment: MainAxisAlignment.center,
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: <Widget>[
-//                       CommonAppbarView(
-//                         iconData: Icons.arrow_back,
-//                         titleText: AppLocalizations(context).of("edit_profile"),
-//                         onBackClick: () {
-//                           Navigator.pop(context);
-//                         },
-//                       ),
-//                       Padding(
-//                           padding: EdgeInsets.only(
-//                               bottom:
-//                                   16 + MediaQuery.of(context).padding.bottom),
-//                           child: getProfileUI(state.user!.picture!)),
-//                       Padding(
-//                           padding: EdgeInsets.only(
-//                               bottom:
-//                                   16 + MediaQuery.of(context).padding.bottom),
-//                           child: InkWell(
-//                             onTap: () {},
-//                             child: Column(
-//                               children: <Widget>[
-//                                 Padding(
-//                                   padding:
-//                                       const EdgeInsets.only(left: 8, right: 16),
-//                                   child: Row(
-//                                     children: <Widget>[
-//                                       GestureDetector(
-//                                         onTap: () {
-//                                           provider.showUserNameDialogAlert(
-//                                               context,
-//                                               '${state.user!.firstname} ${state.user!.lastname}');
-//                                         },
-//                                         child: Padding(
-//                                           padding: const EdgeInsets.only(
-//                                               left: 16.0, bottom: 16, top: 16),
-//                                           child: Text(
-//                                             AppLocalizations(context)
-//                                                 .of(userInfoList[1].titleTxt),
-//                                             style: TextStyles(context)
-//                                                 .getDescriptionStyle()
-//                                                 .copyWith(
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       Padding(
-//                                         padding: const EdgeInsets.only(
-//                                             right: 16.0, bottom: 16, top: 16),
-//                                         child: Container(
-//                                           child: Text(
-//                                             "${state.user!.firstname} ${state.user!.lastname}",
-//                                             style: TextStyles(context)
-//                                                 .getRegularStyle()
-//                                                 .copyWith(
-//                                                   fontWeight: FontWeight.w500,
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       )
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                       left: 16, right: 16),
-//                                   child: Divider(
-//                                     height: 1,
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           )),
-//                       Padding(
-//                           padding: EdgeInsets.only(
-//                               bottom:
-//                                   16 + MediaQuery.of(context).padding.bottom),
-//                           child: InkWell(
-//                             onTap: () {},
-//                             child: Column(
-//                               children: <Widget>[
-//                                 Padding(
-//                                   padding:
-//                                       const EdgeInsets.only(left: 8, right: 16),
-//                                   child: Row(
-//                                     children: <Widget>[
-//                                       Expanded(
-//                                         child: Padding(
-//                                           padding: const EdgeInsets.only(
-//                                               left: 16.0, bottom: 16, top: 16),
-//                                           child: Text(
-//                                             AppLocalizations(context)
-//                                                 .of(userInfoList[2].titleTxt),
-//                                             style: TextStyles(context)
-//                                                 .getDescriptionStyle()
-//                                                 .copyWith(
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       Padding(
-//                                         padding: const EdgeInsets.only(
-//                                             right: 16.0, bottom: 16, top: 16),
-//                                         child: Container(
-//                                           child: Text(
-//                                             "${state.user!.email}",
-//                                             style: TextStyles(context)
-//                                                 .getRegularStyle()
-//                                                 .copyWith(
-//                                                   fontWeight: FontWeight.w500,
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       )
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                       left: 16, right: 16),
-//                                   child: Divider(
-//                                     height: 1,
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           )),
-//                       Padding(
-//                           padding: EdgeInsets.only(
-//                               bottom:
-//                                   16 + MediaQuery.of(context).padding.bottom),
-//                           child: InkWell(
-//                             onTap: () {},
-//                             child: Column(
-//                               children: <Widget>[
-//                                 Padding(
-//                                   padding:
-//                                       const EdgeInsets.only(left: 8, right: 16),
-//                                   child: Row(
-//                                     children: <Widget>[
-//                                       Expanded(
-//                                         child: Padding(
-//                                           padding: const EdgeInsets.only(
-//                                               left: 16.0, bottom: 16, top: 16),
-//                                           child: Text(
-//                                             AppLocalizations(context)
-//                                                 .of(userInfoList[4].titleTxt),
-//                                             style: TextStyles(context)
-//                                                 .getDescriptionStyle()
-//                                                 .copyWith(
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       Padding(
-//                                         padding: const EdgeInsets.only(
-//                                             right: 16.0, bottom: 16, top: 16),
-//                                         child: Container(
-//                                           child: Text(
-//                                             "${state.user!.number}",
-//                                             style: TextStyles(context)
-//                                                 .getRegularStyle()
-//                                                 .copyWith(
-//                                                   fontWeight: FontWeight.w500,
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       )
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                       left: 16, right: 16),
-//                                   child: Divider(
-//                                     height: 1,
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           )),
-//                       Padding(
-//                           padding: EdgeInsets.only(
-//                               bottom:
-//                                   16 + MediaQuery.of(context).padding.bottom),
-//                           child: InkWell(
-//                             onTap: () {},
-//                             child: Column(
-//                               children: <Widget>[
-//                                 Padding(
-//                                   padding:
-//                                       const EdgeInsets.only(left: 8, right: 16),
-//                                   child: Row(
-//                                     children: <Widget>[
-//                                       Expanded(
-//                                         child: Padding(
-//                                           padding: const EdgeInsets.only(
-//                                               left: 16.0, bottom: 16, top: 16),
-//                                           child: Text(
-//                                             AppLocalizations(context)
-//                                                 .of(userInfoList[5].titleTxt),
-//                                             style: TextStyles(context)
-//                                                 .getDescriptionStyle()
-//                                                 .copyWith(
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                       Padding(
-//                                         padding: const EdgeInsets.only(
-//                                             right: 16.0, bottom: 16, top: 16),
-//                                         child: Container(
-//                                           child: Text(
-//                                             "${state.user!.birthday}",
-//                                             style: TextStyles(context)
-//                                                 .getRegularStyle()
-//                                                 .copyWith(
-//                                                   fontWeight: FontWeight.w500,
-//                                                   fontSize: 16,
-//                                                 ),
-//                                           ),
-//                                         ),
-//                                       )
-//                                     ],
-//                                   ),
-//                                 ),
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                       left: 16, right: 16),
-//                                   child: Divider(
-//                                     height: 1,
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           )),
-//                       CommonButton(
-//                         padding: const EdgeInsets.only(
-//                             right: 16.0, bottom: 16, top: 16),
-//                         backgroundColor: Colors.lightGreen.shade700,
-//                         buttonText:
-//                             AppLocalizations(context).of("edit_profile"),
-//                         onTap: () {},
-//                       )
-//                     ],
-//                   );
-//                 } else {
-//                   return Container();
-//                 }
-//               },
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget getProfileUI(String picture) {
-//     return Padding(
-//       padding: const EdgeInsets.only(bottom: 16),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: <Widget>[
-//           Container(
-//             width: 130,
-//             height: 130,
-//             child: Stack(
-//               alignment: Alignment.center,
-//               children: <Widget>[
-//                 Container(
-//                   width: 120,
-//                   height: 120,
-//                   decoration: BoxDecoration(
-//                     color: AppTheme.primaryColor,
-//                     shape: BoxShape.circle,
-//                     boxShadow: <BoxShadow>[
-//                       BoxShadow(
-//                         color: Theme.of(context).dividerColor,
-//                         blurRadius: 8,
-//                         offset: Offset(4, 4),
-//                       ),
-//                     ],
-//                   ),
-//                   child: ClipRRect(
-//                     borderRadius: BorderRadius.all(Radius.circular(60.0)),
-//                     child: Image.network(
-//                       picture,
-//                     ),
-//                   ),
-//                 ),
-//                 Positioned(
-//                   bottom: 6,
-//                   right: 6,
-//                   child: CommonCard(
-//                     color: AppTheme.primaryColor,
-//                     radius: 36,
-//                     child: Material(
-//                       color: Colors.transparent,
-//                       child: InkWell(
-//                         borderRadius: BorderRadius.all(Radius.circular(24.0)),
-//                         onTap: () {},
-//                         child: Padding(
-//                           padding: const EdgeInsets.all(8.0),
-//                           child: Icon(
-//                             Icons.camera_alt,
-//                             color: Theme.of(context).backgroundColor,
-//                             size: 18,
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
