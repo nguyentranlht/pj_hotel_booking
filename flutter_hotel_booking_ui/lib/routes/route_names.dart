@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/login_app.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/update_hotel.dart';
 import 'package:flutter_hotel_booking_ui/modules/base/views/base_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/create_hotel/blocs/create_hotel_bloc/create_hotel_bloc.dart';
@@ -118,6 +119,12 @@ class NavigationServices {
   Future<dynamic> gotoHotelDetailes(Hotel hotelData) async {
     return await _pushMaterialPageRoute(HotelDetailes(
       hotelData: hotelData,
+    ));
+  }
+
+  Future<dynamic> gotoUpdateHotel(Hotel hotelData) async {
+    return await _pushMaterialPageRoute(UpdateHotelForm(
+      hotel: hotelData,
     ));
   }
 
