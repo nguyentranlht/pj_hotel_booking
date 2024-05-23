@@ -299,16 +299,19 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                 height: 50,
                                 child: TextButton(
                                     onPressed: () {
-                                      firebase_storage.Reference storageRef = firebase_storage
-          .FirebaseStorage.instance
-          .ref('${hotel.hotelId}_lead');
-      firebase_storage.UploadTask uploadTask =
-          storageRef.putFile(File(provider.image!.path)
-                                                      .absolute);
-       Future.value(uploadTask);
+                                      firebase_storage.Reference storageRef =
+                                          firebase_storage
+                                              .FirebaseStorage.instance
+                                              .ref('${hotel.hotelId}_lead');
+                                      firebase_storage.UploadTask uploadTask =
+                                          storageRef.putFile(
+                                              File(provider.image!.path)
+                                                  .absolute);
+                                      Future.value(uploadTask);
                                       if (_formKey.currentState!.validate()) {
                                         setState(() {
-                                          hotel.imagePath = 'https://firebasestorage.googleapis.com/v0/b/db-hotel-booking.appspot.com/o/e36987e0-0e7a-1fe5-a909-09a5195b6bd2_lead?alt=media&token=${hotel.hotelId}_lead';
+                                          hotel.imagePath =
+                                              'https://firebasestorage.googleapis.com/v0/b/db-hotel-booking.appspot.com/o/e36987e0-0e7a-1fe5-a909-09a5195b6bd2_lead?alt=media&token=${hotel.hotelId}_lead';
                                           hotel.titleTxt = nameController.text;
                                           hotel.subTxt = addressController.text;
                                           hotel.perNight =

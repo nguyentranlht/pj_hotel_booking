@@ -4,23 +4,23 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_hotel_booking_ui/futures/update_hotel_controller.dart';
+import 'package:flutter_hotel_booking_ui/futures/update_room_controller.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
-import 'package:hotel_repository/hotel_repository.dart';
 import 'package:provider/provider.dart';
+import 'package:room_repository/room_repository.dart';
 
-class UpdateHotelForm extends StatefulWidget {
-  final Hotel hotel;
+class UpdateRoomForm extends StatefulWidget {
+  final Room room;
 
-  const UpdateHotelForm({Key? key, required this.hotel}) : super(key: key);
+  const UpdateRoomForm({Key? key, required this.room}) : super(key: key);
 
   @override
-  _UpdateHotelFormState createState() => _UpdateHotelFormState();
+  _UpdateRoomFormState createState() => _UpdateRoomFormState();
 }
 
-class _UpdateHotelFormState extends State<UpdateHotelForm> {
-  DatabaseReference ref = FirebaseDatabase.instance.ref().child('hotels');
+class _UpdateRoomFormState extends State<UpdateRoomForm> {
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child('rooms');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +37,13 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
               )),
           centerTitle: true,
           title: Text(
-            'Update Hotel',
+            'Update Room',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
         ),
         body: ChangeNotifierProvider(
-          create: (_) => UpdateHotelController(),
-          child: Consumer<UpdateHotelController>(
+          create: (_) => UpdateRoomController(),
+          child: Consumer<UpdateRoomController>(
             builder: (context, provider, child) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -54,11 +54,11 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () async {
-                          provider.pickeImage(context, widget.hotel.hotelId);
+                          provider.pickeImage(context, widget.room.roomId);
                         },
                         child: Center(
                             child: provider.image == null
-                                ? widget.hotel.imagePath != ''
+                                ? widget.room.imagePath != ''
                                     ? Container(
                                         width: 150,
                                         height: 150,
@@ -70,7 +70,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                                                 BorderRadius.circular(20),
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    widget.hotel.imagePath),
+                                                    widget.room.imagePath),
                                                 fit: BoxFit.cover)))
                                     : Container(
                                         width: 150,
@@ -110,108 +110,39 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          provider.showHotelNameDialogAlert(context,
-                              widget.hotel.titleTxt, widget.hotel.hotelId);
+                          provider.showRoomNameDialogAlert(context,
+                              widget.room.titleTxt, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Name',
+                            title: 'Room Name',
                             iconData: Icons.edit,
-                            value: widget.hotel.titleTxt),
+                            value: widget.room.titleTxt),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
                         onTap: () {
-                          provider.showHotelAddressDialogAlert(context,
-                              widget.hotel.subTxt, widget.hotel.hotelId);
+                          provider.showRoomCapacityDialogAlert(
+                              context, widget.room.dataTxt, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Address',
+                            title: 'Room Capacity',
                             iconData: Icons.edit,
-                            value: widget.hotel.subTxt),
+                            value: widget.room.dataTxt),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
                         onTap: () {
-                          provider.showHotelPriceDialogAlert(context,
-                              widget.hotel.perNight, widget.hotel.hotelId);
+                          provider.showRoomPriceDialogAlert(context,
+                              widget.room.perNight, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Price',
+                            title: 'Room Price',
                             iconData: Icons.edit,
-                            value: widget.hotel.perNight.toString()),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          provider.showHotelDistDialogAlert(
-                              context, widget.hotel.dist, widget.hotel.hotelId);
-                        },
-                        child: ReusbaleRow(
-                            title: 'Hotel Dist',
-                            iconData: Icons.edit,
-                            value: widget.hotel.dist.toString()),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          provider.showHotelRatingDialogAlert(context,
-                              widget.hotel.rating, widget.hotel.hotelId);
-                        },
-                        child: ReusbaleRow(
-                            title: 'Hotel Rating',
-                            iconData: Icons.edit,
-                            value: widget.hotel.rating.toString()),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          provider.showHotelReviewsDialogAlert(context,
-                              widget.hotel.reviews, widget.hotel.hotelId);
-                        },
-                        child: ReusbaleRow(
-                            title: 'Hotel Reviews',
-                            iconData: Icons.edit,
-                            value: widget.hotel.reviews.toString()),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          provider.showHotelNumberRoomDialogAlert(
-                              context,
-                              widget.hotel.roomData.numberRoom,
-                              widget.hotel.hotelId);
-                        },
-                        child: ReusbaleRow(
-                            title: 'Number Room',
-                            iconData: Icons.edit,
-                            value: widget.hotel.roomData.numberRoom.toString()),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          provider.showHotelPeopleDialogAlert(
-                              context,
-                              widget.hotel.roomData.people,
-                              widget.hotel.hotelId);
-                        },
-                        child: ReusbaleRow(
-                            title: 'People',
-                            iconData: Icons.edit,
-                            value: widget.hotel.roomData.people.toString()),
+                            value: widget.room.perNight.toString()),
                       ),
                       SizedBox(
                         height: 30.0,
@@ -234,7 +165,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Update Hotel',
+                                'Update Room',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -251,40 +182,8 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                         height: 50,
                         child: TextButton(
                             onPressed: () {
-                              NavigationServices(context).gotoRoomHotelScreen(
-                                  widget.hotel.titleTxt,
-                                  widget.hotel.hotelId);
-                            },
-                            style: TextButton.styleFrom(
-                                elevation: 3.0,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(60))),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 5),
-                              child: Text(
-                                'Hotel Room',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      SizedBox(
-                        width: 400,
-                        height: 50,
-                        child: TextButton(
-                            onPressed: () {
-                              provider.showDeleteHotelDialogAlert(
-                                  context, widget.hotel.hotelId);
+                              provider.showDeleteRoomDialogAlert(
+                                  context, widget.room.roomId);
                             },
                             style: TextButton.styleFrom(
                                 elevation: 3.0,
@@ -297,7 +196,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Delete Hotel',
+                                'Delete Room',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,

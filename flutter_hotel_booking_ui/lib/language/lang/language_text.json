@@ -868,6 +868,13 @@
         "ja": "設定"
     },
     {
+        "text_id": "update_room",
+        "en": "Update Room",
+        "fr": "Réglage",
+        "ar": "جلسة",
+        "ja": "設定"
+    },
+    {
         "text_id": "Notifications",
         "en": "Notifications",
         "fr": "Notifications",

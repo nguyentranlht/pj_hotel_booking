@@ -11,13 +11,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class UpdateHotelController extends ChangeNotifier {
+class UpdateRoomController extends ChangeNotifier {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   final fnameFocusNode = FocusNode();
   final lnameFocusNode = FocusNode();
   TextEditingController _distController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
+  TextEditingController _capacityController = TextEditingController();
   TextEditingController _ratingController = TextEditingController();
   TextEditingController _reviewController = TextEditingController();
   TextEditingController _peopleController = TextEditingController();
@@ -28,7 +28,7 @@ class UpdateHotelController extends ChangeNotifier {
   final picker = ImagePicker();
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
-  final hotelsCollection = FirebaseFirestore.instance.collection('hotels');
+  final roomsCollection = FirebaseFirestore.instance.collection('rooms');
   XFile? _image;
   XFile? get image => _image;
 
@@ -40,27 +40,27 @@ class UpdateHotelController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future pickGalleryImage(BuildContext context, String hotelId) async {
+  Future pickGalleryImage(BuildContext context, String roomId) async {
     final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadImage(context, hotelId);
+      uploadImage(context, roomId);
       notifyListeners();
     }
   }
 
-  Future pickCameraImage(BuildContext context, String hotelId) async {
+  Future pickCameraImage(BuildContext context, String roomId) async {
     final pickedFile =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
     if (pickedFile != null) {
       _image = XFile(pickedFile.path);
-      uploadImage(context, hotelId);
+      uploadImage(context, roomId);
       notifyListeners();
     }
   }
 
-  void pickeImage(context, String hotelId) {
+  void pickeImage(context, String roomId) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -71,7 +71,7 @@ class UpdateHotelController extends ChangeNotifier {
                 ListTile(
                   onTap: () {
                     Navigator.pop(context);
-                    pickCameraImage(context, hotelId);
+                    pickCameraImage(context, roomId);
                   },
                   leading: Icon(Icons.camera, color: AppTheme.primaryColor),
                   title: Text('Camera'),
@@ -79,7 +79,7 @@ class UpdateHotelController extends ChangeNotifier {
                 ListTile(
                   onTap: () {
                     Navigator.pop(context);
-                    pickGalleryImage(context, hotelId);
+                    pickGalleryImage(context, roomId);
                   },
                   leading: Icon(Icons.image, color: AppTheme.primaryColor),
                   title: Text('Gallery'),
@@ -90,31 +90,31 @@ class UpdateHotelController extends ChangeNotifier {
         });
   }
 
-  void uploadImage(BuildContext context, String hotelId) async {
+  void uploadImage(BuildContext context, String roomId) async {
     setLoading(true);
     try {
       firebase_storage.Reference storageRef = firebase_storage
           .FirebaseStorage.instance
-          .ref('$hotelId/PP/${hotelId}_lead');
+          .ref('$roomId/PP/${roomId}_lead');
       firebase_storage.UploadTask uploadTask =
           storageRef.putFile(File(image!.path).absolute);
       await Future.value(uploadTask);
       final newUrl = await storageRef.getDownloadURL();
-      hotelsCollection.doc(hotelId).update({'imagePath': newUrl});
+      roomsCollection.doc(roomId).update({'imagePath': newUrl});
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
 
-  Future<void> showHotelNameDialogAlert(
-      BuildContext context, String name, String hotelId) async {
+  Future<void> showRoomNameDialogAlert(
+      BuildContext context, String name, String roomId) async {
     _nameController.text = name;
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Name')),
+            title: Center(child: Text('Update Room Name')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -124,7 +124,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Name',
+                    hint: 'Enter Room Name',
                     onValidator: (value) {},
                   )
                 ],
@@ -138,7 +138,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
+                    roomsCollection.doc(roomId).update({
                       'titleTxt': _nameController.text.toString()
                     }).then((value) {
                       _nameController.clear();
@@ -151,24 +151,24 @@ class UpdateHotelController extends ChangeNotifier {
         });
   }
 
-  Future<void> showHotelAddressDialogAlert(
-      BuildContext context, String name, String hotelId) async {
-    _addressController.text = name;
+  Future<void> showRoomCapacityDialogAlert(
+      BuildContext context, String name, String roomId) async {
+    _capacityController.text = name;
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Address')),
+            title: Center(child: Text('Update Room Capacity')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
                   InputTextField(
-                    myController: _addressController,
+                    myController: _capacityController,
                     focusNode: birthdayFocusNode,
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Address',
+                    hint: 'Enter capacity',
                     onValidator: (value) {},
                   )
                 ],
@@ -182,10 +182,10 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
-                      'subTxt': _addressController.text.toString()
+                    roomsCollection.doc(roomId).update({
+                      'dataTxt': _capacityController.text.toString()
                     }).then((value) {
-                      _addressController.clear();
+                      _capacityController.clear();
                     });
                     Navigator.pop(context);
                   },
@@ -195,14 +195,14 @@ class UpdateHotelController extends ChangeNotifier {
         });
   }
 
-  Future<void> showHotelPriceDialogAlert(
-      BuildContext context, int name, String hotelId) async {
+  Future<void> showRoomPriceDialogAlert(
+      BuildContext context, int name, String roomId) async {
         _priceController.text = name.toString();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Price')),
+            title: Center(child: Text('Update Room Price')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -212,7 +212,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter hotel price',
+                    hint: 'Enter Room price',
                     onValidator: (value) {},
                   )
                 ],
@@ -226,7 +226,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
+                    roomsCollection.doc(roomId).update({
                       'perNight': int.parse(_priceController.text)
                     }).then((value) {
                       _priceController.clear();
@@ -238,97 +238,9 @@ class UpdateHotelController extends ChangeNotifier {
           );
         });
   }
-
-  Future<void> showHotelDistDialogAlert(
-      BuildContext context, double name, String hotelId) async {
-    _distController.text = name.toString();
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Center(child: Text('Update Hotel Dist')),
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  InputTextField(
-                    myController: _distController,
-                    focusNode: numberFocusNode,
-                    onFiledSubmittedValue: (value) {},
-                    keyBoardType: TextInputType.text,
-                    obscureText: false,
-                    hint: 'Enter Hotel Dist',
-                    onValidator: (value) {},
-                  )
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel')),
-              TextButton(
-                  onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
-                      'dist': double.parse(_distController.text)
-                    }).then((value) {
-                      _distController.clear();
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'))
-            ],
-          );
-        });
-  }
-
-  Future<void> showHotelRatingDialogAlert(
-      BuildContext context, double name, String hotelId) async {
-    _ratingController.text = name.toString();
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Center(child: Text('Update Hotel Rating')),
-            content: SingleChildScrollView(
-              child: Column(
-                children: [
-                  InputTextField(
-                    myController: _ratingController,
-                    focusNode: numberFocusNode,
-                    onFiledSubmittedValue: (value) {},
-                    keyBoardType: TextInputType.text,
-                    obscureText: false,
-                    hint: 'Enter Hotel Rating',
-                    onValidator: (value) {},
-                  )
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel')),
-              TextButton(
-                  onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
-                      'rating': double.parse(_ratingController.text)
-                    }).then((value) {
-                      _ratingController.clear();
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text('OK'))
-            ],
-          );
-        });
-  }
-
-  Future<void> showDeleteHotelDialogAlert(
-      BuildContext context, String hotelId) async {
+  
+  Future<void> showDeleteRoomDialogAlert(
+      BuildContext context, String roomId) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -344,7 +256,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('No')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).delete();
+                    roomsCollection.doc(roomId).delete();
                     NavigationServices(context).gotoBaseScreen();
                   },
                   child: Text('Yes'))
@@ -353,14 +265,14 @@ class UpdateHotelController extends ChangeNotifier {
         });
   }
 
-  Future<void> showHotelReviewsDialogAlert(
-      BuildContext context, int name, String hotelId) async {
+  Future<void> showRoomReviewsDialogAlert(
+      BuildContext context, int name, String roomId) async {
     _reviewController.text = name.toString();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Reviews')),
+            title: Center(child: Text('Update Room Reviews')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -370,7 +282,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Reviews',
+                    hint: 'Enter Room Reviews',
                     onValidator: (value) {},
                   )
                 ],
@@ -384,7 +296,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
+                    roomsCollection.doc(roomId).update({
                       'reviews': int.parse(_reviewController.text)
                     }).then((value) {
                       _reviewController.clear();
@@ -396,14 +308,14 @@ class UpdateHotelController extends ChangeNotifier {
           );
         });
   }
-  Future<void> showHotelNumberRoomDialogAlert(
-      BuildContext context, int name, String hotelId) async {
+  Future<void> showRoomNumberRoomDialogAlert(
+      BuildContext context, int name, String roomId) async {
     _numberRoomController.text = name.toString();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Number Room')),
+            title: Center(child: Text('Update Room Number Room')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -413,7 +325,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Number Room',
+                    hint: 'Enter Room Number Room',
                     onValidator: (value) {},
                   )
                 ],
@@ -427,7 +339,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
+                    roomsCollection.doc(roomId).update({
                       'roomData.numberRoom': int.parse(_numberRoomController.text)
                     }).then((value) {
                       _numberRoomController.clear();
@@ -440,14 +352,14 @@ class UpdateHotelController extends ChangeNotifier {
         });
   }
 
-  Future<void> showHotelPeopleDialogAlert(
-      BuildContext context, int name, String hotelId) async {
+  Future<void> showRoomPeopleDialogAlert(
+      BuildContext context, int name, String roomId) async {
     _peopleController.text = name.toString();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Number Room')),
+            title: Center(child: Text('Update Room Number Room')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -457,7 +369,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Number Room',
+                    hint: 'Enter Room Number Room',
                     onValidator: (value) {},
                   )
                 ],
@@ -471,7 +383,7 @@ class UpdateHotelController extends ChangeNotifier {
                   child: Text('Cancel')),
               TextButton(
                   onPressed: () {
-                    hotelsCollection.doc(hotelId).update({
+                    roomsCollection.doc(roomId).update({
                       'roomData.people': int.parse(_peopleController.text)
                     }).then((value) {
                       _peopleController.clear();
