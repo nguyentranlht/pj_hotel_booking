@@ -55,6 +55,7 @@ class FirebaseRoomRepo implements RoomRepo {
     try {
       return await roomCollection
           .where('hotelId', isEqualTo: hotelId)
+          .where('isSelected', isEqualTo: false)
           .get()
           .then((result) => result.docs
               .map(
