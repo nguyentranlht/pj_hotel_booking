@@ -107,21 +107,20 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).colorScheme.surface.withOpacity(0.4),
-                            Theme.of(context).colorScheme.surface.withOpacity(0.0),
+                            Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.4),
+                            Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.0),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                         )),
                       ),
                     ),
-                    //   serachUI on Top  Positioned
-                    Positioned(
-                      top: MediaQuery.of(context).padding.top,
-                      left: 0,
-                      right: 0,
-                      child: serachUI(),
-                    )
                   ],
                 ),
               ),
@@ -226,26 +225,6 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
       padding: const EdgeInsets.only(top: 8),
       child: Column(
         children: list,
-      ),
-    );
-  }
-
-  Widget serachUI() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-      child: CommonCard(
-        radius: 36,
-        child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(38)),
-          onTap: () {
-            NavigationServices(context).gotoSearchScreen();
-          },
-          child: CommonSearchBar(
-            iconData: FontAwesomeIcons.search,
-            enabled: false,
-            text: AppLocalizations(context).of("where_are_you_going"),
-          ),
-        ),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
@@ -37,7 +36,7 @@ class SerchView extends StatelessWidget {
                 children: <Widget>[
                   AspectRatio(
                     aspectRatio: 1.5,
-                    child: Image.asset(
+                    child: Image.network(
                       hotelInfo.imagePath,
                       fit: BoxFit.cover,
                     ),
