@@ -4,7 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_hotel_controller.dart';
+import 'package:flutter_hotel_booking_ui/modules/create_room/views/create_room_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:hotel_repository/hotel_repository.dart';
@@ -251,9 +253,38 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                         height: 50,
                         child: TextButton(
                             onPressed: () {
+                                NavigationServices(context).gotoCreateRoomScreen(widget.hotel.hotelId);
+                            },
+                            style: TextButton.styleFrom(
+                                elevation: 3.0,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(60))),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 25, vertical: 5),
+                              child: Text(
+                                'Create Room',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      SizedBox(
+                        width: 400,
+                        height: 50,
+                        child: TextButton(
+                            onPressed: () {
                               NavigationServices(context).gotoRoomHotelScreen(
-                                  widget.hotel.titleTxt,
-                                  widget.hotel.hotelId);
+                                  widget.hotel.titleTxt, widget.hotel.hotelId);
                             },
                             style: TextButton.styleFrom(
                                 elevation: 3.0,
