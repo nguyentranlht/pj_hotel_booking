@@ -869,6 +869,14 @@
     },
 
     {
+        "text_id": "booking",
+        "en": "Booking",
+        "fr": "Réglage",
+        "ar": "جلسة",
+        "ja": "設定"
+    },
+
+    {
         "text_id": "history_text",
         "en": "History Payment",
         "fr": "Paiement",

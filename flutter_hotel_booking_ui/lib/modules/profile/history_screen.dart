@@ -112,7 +112,7 @@ import '../../widgets/common_appbar_view.dart';
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              SizedBox(width: 60),
+                              SizedBox(width: 50),
                               Text("status:",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 108, 135, 85),

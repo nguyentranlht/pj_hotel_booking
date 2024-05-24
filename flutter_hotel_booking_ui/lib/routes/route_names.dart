@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/login_app.dart';
 import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/booking_room_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/room_hotel_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/update_hotel.dart';
@@ -123,6 +124,11 @@ class NavigationServices {
   Future<dynamic> gotoRoomBookingScreen(String hotelname, String hoteId) async {
     return await _pushMaterialPageRoute(
         RoomBookingScreen(hotelName: hotelname, hotelId: hoteId));
+  }
+
+  Future<dynamic> gotoBookingRoomScreen() async {
+    return await _pushMaterialPageRoute(
+        BookingRoomScreen());
   }
 
   Future<dynamic> gotoRoomHotelScreen(String hotelname, String hoteId) async {
