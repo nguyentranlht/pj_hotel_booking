@@ -867,6 +867,15 @@
         "ar": "جلسة",
         "ja": "設定"
     },
+
+    {
+        "text_id": "history_text",
+        "en": "History Payment",
+        "fr": "Paiement",
+        "ar": "دفع",
+        "ja": "支払い"
+    },
+
     {
         "text_id": "update_room",
         "en": "Update Room",

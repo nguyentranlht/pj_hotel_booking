@@ -7,7 +7,7 @@ import 'dart:typed_data';
 
 class FirebaseRoomRepo implements RoomRepo {
   final roomCollection = FirebaseFirestore.instance.collection('rooms');
-
+  final CollectionReference roomCollection2 = FirebaseFirestore.instance.collection('rooms');
   @override
   Future<List<Room>> getRooms() async {
     try {
@@ -63,6 +63,25 @@ class FirebaseRoomRepo implements RoomRepo {
     } catch (e) {
       print(e.toString());
       throw Exception('Failed to load rooms');
+    }
+  }
+
+  Future<String?> getRoomId(String userId) async {
+    // Giả sử rằng bạn có thông tin về phòng được thanh toán trong user document
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      return userDoc.get('roomId');
+    } else {
+      throw Exception('User not found.');
+    }
+  }
+
+  Future<void> updateIsSelected(String roomId, bool isSelected) async {
+    try {
+      // Cập nhật trạng thái của phòng
+      await roomCollection2.doc(roomId).update({'isSelected': isSelected});
+    } catch (error) {
+      throw Exception('Failed to update room status: $error');
     }
   }
 }

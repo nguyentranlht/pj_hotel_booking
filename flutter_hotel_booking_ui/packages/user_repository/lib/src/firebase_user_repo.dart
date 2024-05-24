@@ -31,7 +31,7 @@ class FirebaseUserRepository implements UserRepository {
   final usersCollection = FirebaseFirestore.instance.collection('users');
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
   ///
@@ -296,20 +296,87 @@ class FirebaseUserRepository implements UserRepository {
     return await FirebaseFirestore.instance.collection(name).snapshots();
   }
 
-  Future addPaymentToRoom(
-      Map<String, dynamic> userInfoMap, String userId) async {
-    return await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection("payment")
-        .add(userInfoMap);
+  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async{
+    return await FirebaseFirestore.instance.collection("users").doc(id).collection("payment").snapshots();
+  }
+   
+
+  Future<void> updateIsSelectedForUserPayments(String userId) async {
+
+    var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+   
+    var paymentCollection = userDoc.collection('payment');
+
+    var querySnapshot = await paymentCollection.where('isSelected', isEqualTo: false).get();
+  
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.update({'isSelected': true});
+    }
   }
 
-  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async {
-    return await FirebaseFirestore.instance
-        .collection("users")
-        .doc(id)
-        .collection("payment")
-        .snapshots();
+
+  @override
+  Future<Map<String, dynamic>?> getPaymentForUser(String userId, String roomId) async {
+  try {
+    
+    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance.collection('users').doc(userId).collection('payment').doc(roomId).get();
+
+    if (paymentDoc.exists) {
+      // Trả về dữ liệu của document "Payment" nếu tồn tại
+      return paymentDoc.data() as Map<String, dynamic>;
+    } else {
+      // Trả về null nếu document "Payment" không tồn tại
+      return null;
+    }
+  } catch (e) {
+    print('Lỗi khi tìm kiếm payment: $e');
+    rethrow;
+  }
+}
+
+  @override
+ Future<void> addPaymentToRoom(Map<String, dynamic> paymentData, String userId) async {
+    try {
+      CollectionReference paymentsCollectionRef = _firestore.collection('users').doc(userId).collection('payment');
+
+   
+      DocumentReference newPaymentRef = paymentsCollectionRef.doc();
+      String paymentId = newPaymentRef.id;  // Lấy ID tự sinh
+
+      // Thêm document với dữ liệu thanh toán và ID tự sinh
+      await newPaymentRef.set({
+        ...paymentData,
+        'paymentId': paymentId  // Lưu trữ paymentId trong document (nếu cần)
+      });
+    } catch (e) {
+    }
+  }
+  @override
+  Future<void> deletePaymentFromRoom(String userId, String paymentId) async {
+    try {
+      DocumentReference paymentDocRef = _firestore.collection('users').doc(userId).collection('payment').doc(paymentId);
+
+      // Xóa document
+      await paymentDocRef.delete();
+
+      print('Payment with ID $paymentId deleted successfully.');
+    } catch (e) {
+      print('Error deleting payment: $e');
+    }
+  }
+
+  Future<void> updateUserRoomId(String userId, String roomId) async {
+    try {
+      await userCollection.doc(userId).update({'roomId': roomId});
+    } catch (error) {
+      throw Exception('Failed to update user room ID: $error');
+    }
+  }
+  Future<void> removeUserRoomId(String userId) async {
+    try {
+      await userCollection.doc(userId).update({'roomId': FieldValue.delete()});
+    } catch (error) {
+      throw Exception('Failed to remove user room ID: $error');
+    }
   }
 }

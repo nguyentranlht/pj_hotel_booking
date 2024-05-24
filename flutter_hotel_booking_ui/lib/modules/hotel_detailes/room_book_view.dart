@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/models/constants.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
-
-import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
-import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:one_context/one_context.dart';
 import 'package:user_repository/user_repository.dart';
-
 class RoomeBookView extends StatefulWidget {
   final Room room;
+
   final AnimationController animationController;
   final Animation<double> animation;
-
   const RoomeBookView(
       {Key? key,
+
       required this.room,
       required this.animationController,
       required this.animation})
@@ -31,13 +25,12 @@ class RoomeBookView extends StatefulWidget {
 
 class _RoomeBookViewState extends State<RoomeBookView> {
   var pageController = PageController(initialPage: 0);
-
   int total = 0;
   String? id;
 
-    getthesharedpref() async {
-      id = await FirebaseUserRepository().getUserId();
-      setState(() {});
+  getthesharedpref() async {
+    id = await FirebaseUserRepository().getUserId();
+    setState(() {});
   }
 
   ontheload() async {
@@ -50,6 +43,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
     super.initState();
     ontheload();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +112,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                           Expanded(child: SizedBox()),
                           SizedBox(
                             height: 38,
-                            child: CommonButton(
-                              //them o day ne NGUYEN
+                            child: CommonButton(                              
                               onTap: () {
                                 openEdit();
                               },
@@ -131,7 +124,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                   AppLocalizations(context).of("book_now"),
                                   textAlign: TextAlign.center,
                                   style: TextStyles(context).getRegularStyle(),
-                                  // onClick:
+                                 // onClick: 
                                 ),
                               ),
                             ),
@@ -242,18 +235,22 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             ),
                           ),
                         )
+                        
                       ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
                     Center(
-                      child: Text("Go to Pay or Cancel",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                          )),
+                      child: Text(
+                        "Go to Pay or Cancel",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                        )
+                        ),
                     ),
+                    
                     SizedBox(
                       height: 10.0,
                     ),
@@ -263,20 +260,28 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                     Center(
                       child: GestureDetector(
                         onTap: () async {
-                          Map<String, dynamic> addPaymentToRoom = {
-                            "Name": widget.room.titleTxt,
-                            "RoomId": widget.room.roomId,
-                            "PerNight": widget.room.perNight,
-                            "HotelId": widget.room.hotelId,
-                            "Date": widget.room.date,
-                            "isSelected": widget.room.isSelected,
-                            "People": widget.room.roomData.people,
-                            "NumberRoom": widget.room.roomData.numberRoom,
-                            "ImagePath": widget.room.imagePath,
-                          };
-                          await FirebaseUserRepository()
-                              .addPaymentToRoom(addPaymentToRoom, id!);
-                          NavigationServices(context).gotoPayment();
+                          if(id != null && !widget.room.isSelected)
+                          {
+                         /// String id2 = randomAlphaNumeric(10);
+                          Map<String, dynamic> addPaymentToRoom ={
+                                  "Name": widget.room.titleTxt,
+                                  "RoomId": widget.room.roomId,
+                                  "PerNight": widget.room.perNight,
+                                  "HotelId": widget.room.hotelId,
+                                  "Date": widget.room.date,
+                                  "isSelected": widget.room.isSelected, 
+                                  "People": widget.room.roomData.people,
+                                  "NumberRoom": widget.room.roomData.numberRoom,
+                                   "ImagePath": widget.room.imagePath,
+                                 // "PaymentId": id2,
+                                 
+                                };
+                                await FirebaseUserRepository().addPaymentToRoom(addPaymentToRoom, id!);
+                                await FirebaseUserRepository().updateUserRoomId(id!, widget.room.roomId);
+                          }
+                          
+                                NavigationServices(context).gotoPayment(); 
+
                         },
                         child: Container(
                           width: 100,

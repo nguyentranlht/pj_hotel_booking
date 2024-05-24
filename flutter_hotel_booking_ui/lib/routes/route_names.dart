@@ -25,6 +25,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/country_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/currency_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/edit_profile.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/hepl_center_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/profile/history_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/payment_sreen.dart';
@@ -93,6 +94,10 @@ class NavigationServices {
       child: const CreateHotelScreen(),
     ),
   );
+  }
+
+  Future<dynamic> gotoHistory() async {
+    return await _pushMaterialPageRoute(HistoryScreen());
   }
 
   Future<dynamic> gotoForgotPassword() async {

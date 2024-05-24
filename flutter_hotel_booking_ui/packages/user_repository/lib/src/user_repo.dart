@@ -36,4 +36,8 @@ abstract class UserRepository {
   Future<String?> updateUserWallet(String userId, String amount);
 
   Future<Stream<QuerySnapshot>> getRoomPayment(String id);
+
+  Future<Map<String, dynamic>?> getPaymentForUser(String userId, String roomId);
+
+  Future<void> addPaymentToRoom(Map<String, dynamic> paymentData, String userId);
 }

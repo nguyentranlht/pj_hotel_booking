@@ -50,6 +50,11 @@ class SettingsListData {
       iconData: FontAwesomeIcons.infoCircle,
     ),
     SettingsListData(
+      titleTxt: 'history_text',
+      isSelected: false,
+      iconData: Icons.history_sharp,
+    ),
+    SettingsListData(
       titleTxt: 'payment_text',
       isSelected: false,
       iconData: FontAwesomeIcons.wallet,

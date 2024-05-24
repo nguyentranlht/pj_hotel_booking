@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return InkWell(
                             onTap: () async {
                               //setting screen view
-                              if (index == 5) {
+                              if (index == 6) {
                                 context
                                     .read<SignInBloc>()
                                     .add(const SignOutRequired());
@@ -90,6 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               }
                               if (index == 4) {
+                                NavigationServices(context).gotoHistory();
+                              }
+                              if (index == 5) {
                                 NavigationServices(context).gotoWallet();
                               }
                             },
@@ -156,12 +159,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         NavigationServices(context).gotoEditProfile();
       },
       child: BlocProvider(
-        create: (context) =>  MyUserBloc(
-                    myUserRepository:
-                        context.read<AuthenticationBloc>().userRepository)
-                  ..add(GetMyUser(
-                      myUserId:
-                          context.read<AuthenticationBloc>().state.user!.uid)),
+        create: (context) => MyUserBloc(
+            myUserRepository: context.read<AuthenticationBloc>().userRepository)
+          ..add(GetMyUser(
+              myUserId: context.read<AuthenticationBloc>().state.user!.uid)),
         child: BlocBuilder<MyUserBloc, MyUserState>(
           builder: (context, state) {
             if (state.status == MyUserStatus.success) {
