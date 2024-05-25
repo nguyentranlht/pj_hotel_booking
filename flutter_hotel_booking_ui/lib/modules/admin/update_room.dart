@@ -37,7 +37,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
               )),
           centerTitle: true,
           title: Text(
-            'Update Room',
+            'Cập Nhật Phòng',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
         ),
@@ -114,7 +114,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               widget.room.titleTxt, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Room Name',
+                            title: 'Tên phòng',
                             iconData: Icons.edit,
                             value: widget.room.titleTxt),
                       ),
@@ -127,7 +127,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               context, widget.room.dataTxt, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Room Capacity',
+                            title: 'Sức chứa',
                             iconData: Icons.edit,
                             value: widget.room.dataTxt),
                       ),
@@ -140,7 +140,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               widget.room.perNight, widget.room.roomId);
                         },
                         child: ReusbaleRow(
-                            title: 'Room Price',
+                            title: 'Giá Phòng',
                             iconData: Icons.edit,
                             value: widget.room.perNight.toString()),
                       ),
@@ -165,7 +165,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Update Room',
+                                'Cập nhật',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -196,7 +196,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Delete Room',
+                                'Xoá',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,

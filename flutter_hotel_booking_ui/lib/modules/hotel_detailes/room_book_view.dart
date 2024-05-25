@@ -135,11 +135,11 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                   ),
                                 )
                               : Text(
-                                  "Reserved!",
+                                  "Đã được đặt!",
                                   style: TextStyle(
                                     color: Colors.red,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.normal,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                         ],
@@ -240,7 +240,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         ),
                         Center(
                           child: Text(
-                            'PAYMENT',
+                            'Thanh toán',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xFF008080),
@@ -254,7 +254,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                       height: 20.0,
                     ),
                     Center(
-                      child: Text("Go to Pay or Cancel",
+                      child: Text("Chuyển đến Thanh toán hoặc Hủy",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black,
@@ -300,7 +300,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                           ),
                           child: Center(
                               child: Text(
-                            "Pay",
+                            "Thanh toán",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),

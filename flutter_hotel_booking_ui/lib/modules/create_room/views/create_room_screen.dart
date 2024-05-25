@@ -73,7 +73,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                       )),
                   centerTitle: true,
                   title: Text(
-                    'Create a New Room !',
+                    'Tạo phòng mới !',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                 ),
@@ -153,13 +153,13 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: nameController,
-                                        hintText: 'Name',
+                                        hintText: 'Tên',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -168,13 +168,13 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: capacityController,
-                                        hintText: 'Capacity',
+                                        hintText: 'Sức chứa',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -183,20 +183,20 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: priceController,
-                                        hintText: 'Price',
+                                        hintText: 'Giá',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
                                 const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    const Text('Is Select :'),
+                                    const Text('Đã được đặt :'),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -215,13 +215,13 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: numberRoomController,
-                                        hintText: 'Number Room',
+                                        hintText: 'Số phòng',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -230,13 +230,13 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: peopleController,
-                                        hintText: 'People',
+                                        hintText: 'Số người',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -296,7 +296,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 25, vertical: 5),
                                       child: Text(
-                                        'Create Hotel',
+                                        'Tạo',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,

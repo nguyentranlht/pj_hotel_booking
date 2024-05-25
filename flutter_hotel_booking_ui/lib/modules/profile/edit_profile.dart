@@ -62,7 +62,7 @@ class _EditProfileState extends State<EditProfile> {
                                         )),
                                     centerTitle: true,
                                     title: Text(
-                                      'Edit Profile',
+                                      'Chỉnh Sửa Thông Tin',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 22),
@@ -159,7 +159,7 @@ class _EditProfileState extends State<EditProfile> {
                                           state.user!.userId);
                                     },
                                     child: ReusbaleRow(
-                                        title: 'First name',
+                                        title: 'Họ',
                                         iconData: Icons.person_outlined,
                                         value: state.user!.firstname),
                                   ),
@@ -171,7 +171,7 @@ class _EditProfileState extends State<EditProfile> {
                                             state.user!.userId);
                                       },
                                       child: ReusbaleRow(
-                                          title: 'Last name',
+                                          title: 'Tên',
                                           iconData: Icons.person_outlined,
                                           value: state.user!.lastname)),
                                   GestureDetector(
@@ -182,7 +182,7 @@ class _EditProfileState extends State<EditProfile> {
                                             state.user!.userId);
                                       },
                                       child: ReusbaleRow(
-                                          title: 'Phone',
+                                          title: 'Số điện thoại',
                                           iconData:
                                               Icons.phone_android_outlined,
                                           value: state.user!.number == ""
@@ -196,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
                                             state.user!.userId);
                                       },
                                       child: ReusbaleRow(
-                                          title: 'Birthday',
+                                          title: 'Ngày sinh',
                                           iconData: Icons.cake_outlined,
                                           value: state.user!.birthday == ""
                                               ? 'dd/MM/YYY'
@@ -229,7 +229,7 @@ class _EditProfileState extends State<EditProfile> {
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 25, vertical: 5),
                                           child: Text(
-                                            'Update Profile',
+                                            'Cập nhật thông tin',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.white,

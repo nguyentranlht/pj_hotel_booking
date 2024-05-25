@@ -114,7 +114,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Name')),
+            title: Center(child: Text('Cập nhật tên khách sạn')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -124,7 +124,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Name',
+                    hint: 'Nhập tên khách sạn',
                     onValidator: (value) {},
                   )
                 ],
@@ -158,7 +158,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Address')),
+            title: Center(child: Text('Cập nhật địa chỉ khách sạn')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -168,7 +168,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Address',
+                    hint: 'Nhập địa chỉ',
                     onValidator: (value) {},
                   )
                 ],
@@ -202,7 +202,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Price')),
+            title: Center(child: Text('Cập nhật giá')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -212,7 +212,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter hotel price',
+                    hint: 'Nhập giá',
                     onValidator: (value) {},
                   )
                 ],
@@ -246,7 +246,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Dist')),
+            title: Center(child: Text('Cập nhật khoảng cách')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -256,7 +256,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Dist',
+                    hint: 'Nhập khoảng cách',
                     onValidator: (value) {},
                   )
                 ],
@@ -290,7 +290,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Rating')),
+            title: Center(child: Text('Cập nhật xếp hạng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -300,7 +300,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Rating',
+                    hint: 'Nhập xếp hạng',
                     onValidator: (value) {},
                   )
                 ],
@@ -333,7 +333,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Are you sure you want to delete!!')),
+            title: Center(child: Text('Bạn có chắc muốn xoá!!')),
             content: SingleChildScrollView(
             ),
             actions: [
@@ -341,13 +341,13 @@ class UpdateHotelController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('No')),
+                  child: Text('Không')),
               TextButton(
                   onPressed: () {
                     hotelsCollection.doc(hotelId).delete();
                     NavigationServices(context).gotoBaseScreen();
                   },
-                  child: Text('Yes'))
+                  child: Text('Có'))
             ],
           );
         });
@@ -360,7 +360,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Reviews')),
+            title: Center(child: Text('Cập nhật đánh giá')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -370,7 +370,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Reviews',
+                    hint: 'Nhập đánh giá',
                     onValidator: (value) {},
                   )
                 ],
@@ -403,7 +403,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Number Room')),
+            title: Center(child: Text('Cập nhật số phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -413,7 +413,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Number Room',
+                    hint: 'Nhập số phòng',
                     onValidator: (value) {},
                   )
                 ],
@@ -447,7 +447,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Hotel Number Room')),
+            title: Center(child: Text('Cập nhật số người')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -457,7 +457,7 @@ class UpdateHotelController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Hotel Number Room',
+                    hint: 'Nhập số người',
                     onValidator: (value) {},
                   )
                 ],
@@ -490,7 +490,7 @@ class UpdateHotelController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Reset app to see the change')),
+            title: Center(child: Text('Khởi động lại ứng dụng')),
             actions: [
               TextButton(
                   onPressed: () {

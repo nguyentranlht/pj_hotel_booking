@@ -113,14 +113,7 @@ import '../../widgets/common_appbar_view.dart';
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               SizedBox(width: 50),
-                              Text("status:",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 108, 135, 85),
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal, 
-                              ),
-                              ), 
-                              Text(" Payment Success",
+                              Text("Thanh toán thành công",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 104, 159, 56),
                                 fontSize: 15,
@@ -174,10 +167,8 @@ import '../../widgets/common_appbar_view.dart';
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               SizedBox(width: 60),
-                              Text("     " +"Status: ",
-                              selectionColor: Colors.black12 ,
-                              ),
-                              Text("Payment Error",
+                              
+                              Text("Lỗi thanh toán",
                               style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
@@ -245,7 +236,7 @@ import '../../widgets/common_appbar_view.dart';
                               )),
                               centerTitle: true,
                               title: Text(
-                              "History Payment",
+                              "Lịch Sử Thanh Toán",
                               style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 22),

@@ -39,7 +39,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
               )),
           centerTitle: true,
           title: Text(
-            'Update Hotel',
+            'Cập Nhật Khách Sạn',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
         ),
@@ -116,7 +116,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.titleTxt, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Name',
+                            title: 'Tên khách sạn',
                             iconData: Icons.edit,
                             value: widget.hotel.titleTxt),
                       ),
@@ -129,7 +129,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.subTxt, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Address',
+                            title: 'Địa chỉ',
                             iconData: Icons.edit,
                             value: widget.hotel.subTxt),
                       ),
@@ -142,7 +142,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.perNight, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Price',
+                            title: 'Giá',
                             iconData: Icons.edit,
                             value: widget.hotel.perNight.toString()),
                       ),
@@ -155,7 +155,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               context, widget.hotel.dist, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Dist',
+                            title: 'Khoảng cách tới thành phố',
                             iconData: Icons.edit,
                             value: widget.hotel.dist.toString()),
                       ),
@@ -168,7 +168,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.rating, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Rating',
+                            title: 'Xếp hạng',
                             iconData: Icons.edit,
                             value: widget.hotel.rating.toString()),
                       ),
@@ -181,7 +181,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.reviews, widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Hotel Reviews',
+                            title: 'Đánh giá',
                             iconData: Icons.edit,
                             value: widget.hotel.reviews.toString()),
                       ),
@@ -196,7 +196,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'Number Room',
+                            title: 'Số phòng',
                             iconData: Icons.edit,
                             value: widget.hotel.roomData.numberRoom.toString()),
                       ),
@@ -211,7 +211,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               widget.hotel.hotelId);
                         },
                         child: ReusbaleRow(
-                            title: 'People',
+                            title: 'Số người',
                             iconData: Icons.edit,
                             value: widget.hotel.roomData.people.toString()),
                       ),
@@ -236,7 +236,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Update Hotel',
+                                'Cập nhật',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -266,7 +266,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Create Room',
+                                'Tạo phòng',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -297,7 +297,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Hotel Room',
+                                'Phòng của khách sạn',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -328,7 +328,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
                               child: Text(
-                                'Delete Hotel',
+                                'Xoá',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,

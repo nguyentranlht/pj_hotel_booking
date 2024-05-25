@@ -77,7 +77,7 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                       )),
                   centerTitle: true,
                   title: Text(
-                    'Create a New Hotel !',
+                    'Tạo Khách Sạn Mới !',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                 ),
@@ -157,13 +157,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: nameController,
-                                        hintText: 'Name',
+                                        hintText: 'Tên khách sạn',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -172,13 +172,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: addressController,
-                                        hintText: 'Address',
+                                        hintText: 'Địa chỉ',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -187,20 +187,20 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: priceController,
-                                        hintText: 'Price',
+                                        hintText: 'Giá',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
                                 const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    const Text('Is Select :'),
+                                    const Text('Đã được đặt :'),
                                     const SizedBox(
                                       width: 10,
                                     ),
@@ -218,13 +218,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: distController,
-                                        hintText: 'Dist',
+                                        hintText: 'Khoản cách tới Thành Phố',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -233,13 +233,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: ratingController,
-                                        hintText: 'Rating',
+                                        hintText: 'Xếp hạng',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -248,13 +248,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: reviewsController,
-                                        hintText: 'Reviews',
+                                        hintText: 'Đánh giá',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -263,13 +263,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: numberRoomController,
-                                        hintText: 'Number Room',
+                                        hintText: 'Số phòng',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -278,13 +278,13 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                     width: 400,
                                     child: MyTextField(
                                         controller: peopleController,
-                                        hintText: 'People',
+                                        hintText: 'Số người',
                                         obscureText: false,
                                         keyboardType: TextInputType.text,
                                         errorMsg: _errorMsg,
                                         validator: (val) {
                                           if (val!.isEmpty) {
-                                            return 'Please fill in this field';
+                                            return 'Làm ơn điền đầy đủ thông tin';
                                           }
                                           return null;
                                         })),
@@ -349,7 +349,7 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 25, vertical: 5),
                                       child: Text(
-                                        'Create Hotel',
+                                        'Tạo',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,

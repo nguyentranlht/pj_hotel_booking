@@ -104,7 +104,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Your Wallet",
+                                      "Ví của bạn",
                                       style: AppWidget.LightTextFeildStyle(),
                                     ),
                                     SizedBox(
@@ -127,7 +127,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               left: 20.0,
                             ),
                             child: Text(
-                              "Add money",
+                              "Chọn số tiền",
                               style: AppWidget.boldTextFeildStyle(),
                             ),
                           ),
@@ -240,7 +240,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 decoration:
                                     BoxDecoration(color: Color(0xFF008080)),
                                 child: Center(
-                                  child: Text("Add Money",
+                                  child: Text("Thêm tiền vào ví",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16.0,
@@ -310,7 +310,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               ),
                               Center(
                                 child: Text(
-                                  "Payment Success",
+                                  "Thanh toán thành công",
                                   style: TextStyle(
                                     color: Colors.lightGreen.shade700,
                                     fontWeight: FontWeight.bold,
@@ -323,7 +323,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           SizedBox(
                             height: 20.0,
                           ),
-                          Text("Thanks you"),
+                          Text("Cảm ơn"),
                           SizedBox(
                             height: 10.0,
                           ),
@@ -344,7 +344,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ),
                                 child: Center(
                                     child: Text(
-                                  "Home",
+                                  "Trang chủ",
                                   style: TextStyle(color: Colors.white),
                                 )),
                               ),
@@ -417,7 +417,7 @@ class _WalletScreenState extends State<WalletScreen> {
           )),
       centerTitle: true,
       title: Text(
-        "WALLET",
+        "Ví Tiền",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
       ),
     );
@@ -443,7 +443,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         ),
                         Center(
                           child: Text(
-                            'Add Money',
+                            'Thêm',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xFF008080),
@@ -456,7 +456,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text("Amount"),
+                    Text("Số tiền"),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -468,7 +468,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       child: TextField(
                         controller: amountcontroller,
                         decoration: InputDecoration(
-                            border: InputBorder.none, hintText: 'Enter Amount'),
+                            border: InputBorder.none, hintText: 'Nhập số tiền'),
                       ),
                     ),
                     SizedBox(
@@ -489,7 +489,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            "Pay",
+                            "Trả",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),

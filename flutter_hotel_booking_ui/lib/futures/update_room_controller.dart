@@ -114,7 +114,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Name')),
+            title: Center(child: Text('Cập nhật tên phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -124,7 +124,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Room Name',
+                    hint: 'Nhập tên phòng',
                     onValidator: (value) {},
                   )
                 ],
@@ -158,7 +158,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Capacity')),
+            title: Center(child: Text('Cập nhật sức chứa')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -168,7 +168,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter capacity',
+                    hint: 'Nhập sức chứa',
                     onValidator: (value) {},
                   )
                 ],
@@ -202,7 +202,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Price')),
+            title: Center(child: Text('Cập nhật giá phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -212,7 +212,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Room price',
+                    hint: 'Nhập giá phòng',
                     onValidator: (value) {},
                   )
                 ],
@@ -245,7 +245,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Are you sure you want to delete!!')),
+            title: Center(child: Text('Bạn có chắc muốn xoá!!')),
             content: SingleChildScrollView(
             ),
             actions: [
@@ -253,13 +253,13 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('No')),
+                  child: Text('Không')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).delete();
                     NavigationServices(context).gotoBaseScreen();
                   },
-                  child: Text('Yes'))
+                  child: Text('Có'))
             ],
           );
         });
@@ -272,7 +272,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Reviews')),
+            title: Center(child: Text('Cập nhật đánh giá')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -282,7 +282,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Room Reviews',
+                    hint: 'Nhập đánh giá phòng',
                     onValidator: (value) {},
                   )
                 ],
@@ -315,7 +315,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Number Room')),
+            title: Center(child: Text('Cập nhật sô phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -325,7 +325,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Room Number Room',
+                    hint: 'Nhập số phòng',
                     onValidator: (value) {},
                   )
                 ],
@@ -359,7 +359,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update Room Number Room')),
+            title: Center(child: Text('Cập nhật số người')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -369,7 +369,7 @@ class UpdateRoomController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Room Number Room',
+                    hint: 'Nhập số người',
                     onValidator: (value) {},
                   )
                 ],
@@ -402,7 +402,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Reset app to see the change')),
+            title: Center(child: Text('Khởi động lại ứng dụng')),
             actions: [
               TextButton(
                   onPressed: () {

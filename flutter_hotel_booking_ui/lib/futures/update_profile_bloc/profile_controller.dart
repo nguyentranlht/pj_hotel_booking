@@ -109,7 +109,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Name')),
+            title: Center(child: Text('Cập nhật họ')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -119,7 +119,7 @@ class ProfileController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter first Name',
+                    hint: 'Nhập Ho',
                     onValidator: (value) {},
                   )
                 ],
@@ -153,7 +153,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Birthday')),
+            title: Center(child: Text('Cập nhật ngày sinh')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -163,7 +163,7 @@ class ProfileController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Birthday',
+                    hint: 'Nhập ngày sinh',
                     onValidator: (value) {},
                   )
                 ],
@@ -197,7 +197,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Name')),
+            title: Center(child: Text('Cập nhật tên')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -207,7 +207,7 @@ class ProfileController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter last Name',
+                    hint: 'Nhập tên',
                     onValidator: (value) {},
                   )
                 ],
@@ -241,7 +241,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Phone Number')),
+            title: Center(child: Text('Cập nhật số điện thoại')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -251,7 +251,7 @@ class ProfileController extends ChangeNotifier {
                     onFiledSubmittedValue: (value) {},
                     keyBoardType: TextInputType.text,
                     obscureText: false,
-                    hint: 'Enter Phone Number',
+                    hint: 'Nhập số điện thoại',
                     onValidator: (value) {},
                   )
                 ],
@@ -283,7 +283,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Reset app to see the change')),
+            title: Center(child: Text('Khởi động lại ứng dụng')),
             actions: [
               TextButton(
                   onPressed: () {

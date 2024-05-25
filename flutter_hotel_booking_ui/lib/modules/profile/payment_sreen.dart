@@ -87,21 +87,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Confirm Deletion"),
+                                  title: Text("Xác nhận xóa"),
                                   content: Text(
-                                      "Are you sure you want to delete this payment?"),
+                                      "Bạn có chắc muốn xoá?"),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
-                                      child: Text("Cancel"),
+                                      child: Text("Huỷ"),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                       },
-                                      child: Text("Delete"),
+                                      child: Text("Xoá"),
                                     ),
                                   ],
                                 );
@@ -119,7 +119,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content:
-                                          Text('Payment deleted successfully'),
+                                          Text('Đã xóa thanh toán thành công'),
                                     ),
                                   );
                                   amount2 = amount2 -
@@ -151,12 +151,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             width: 90,
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: Color(0xFF008080),
+                              color: Color.fromARGB(255, 194, 9, 3),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
                               child: Text(
-                                "Delete Payment",
+                                "Xoá",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -229,7 +229,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total Price",
+                    "Tổng số tiền",
                     style: AppWidget.boldTextFeildStyle(),
                   ),
                   Text(
@@ -276,7 +276,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     left: 30.0, right: 30.0, bottom: 60.0, top: 0.0),
                 child: Center(
                     child: Text(
-                  "CheckOut",
+                  "Thực hiện thanh toán",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
@@ -314,7 +314,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                         Center(
                           child: Text(
-                            "Payment Success",
+                            "Thanh toán thành công",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.lightGreen.shade700,
@@ -328,7 +328,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text("Thanks you",
+                    Text("Cảm ơn",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
@@ -353,7 +353,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            "Home",
+                            "Trang chủ",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),
@@ -390,7 +390,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                         Center(
                           child: Text(
-                            "Payment Error",
+                            "Lỗi thanh toán",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.red,
@@ -429,7 +429,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            "Home",
+                            "Trang chủ",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),
@@ -453,7 +453,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           )),
       centerTitle: true,
       title: Text(
-        "PAYMENT",
+        "Thanh Toán",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
       ),
     );

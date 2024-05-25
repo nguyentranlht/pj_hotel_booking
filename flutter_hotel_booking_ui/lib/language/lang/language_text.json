@@ -1,192 +1,175 @@
 [
     {
         "text_id": "best_hotel_deals",
-        "en": "Best hotel deals for your holiday",
+        "en": "Ưu đãi khách sạn tốt nhất cho kỳ nghỉ của bạn",
         "fr": "Meilleures offres d'hôtels pour vos vacances",
         "ar": "أفضل عروض الفنادق لقضاء عطلتك",
         "ja": "あなたの休日のための最高のホテルのお得な情報"
     },
     {
         "text_id": "already_have_account",
-        "en": "Already have account? Log in",
+        "en": "Đã có tài khoản? Đăng nhập",
         "fr": "Vous avez déjà un compte? Connexion",
         "ar": "لديك حساب بالفعل؟ تسجيل الدخول",
         "ja": "すでにアカウントをお持ちですか？サインイン"
     },
     {
         "text_id": "get_started",
-        "en": "Get started",
+        "en": "Bắt đầu",
         "fr": "Commencer",
         "ar": "البدء",
         "ja": "始めましょう"
     },
     {
         "text_id": "plan_your_trips",
-        "en": "Plan your trips",
+        "en": "Lên kế hoạch cho chuyến đi",
         "fr": "Planifiez vos voyages",
         "ar": "خطط لرحلاتك",
         "ja": "あなたの旅行を計画する"
     },
     {
         "text_id": "book_one_of_your",
-        "en": "book one of your unique hotel to\nescape the ordinary",
+        "en": "đặt một trong những khách sạn độc đáo của bạn để\nthoát khỏi điều bình thường",
         "fr": "réservez l'un de vos hôtels uniques pour\n néchapper à l'ordinaire",
         "ar": "احجز أحد فنادقك الفريدة \n لتتخطى المألوف",
         "ja": "普通のホテルを\nするためにあなたのユニークなホテルの1つを予約する"
     },
     {
         "text_id": "find_best_deals",
-        "en": "Find best deals",
+        "en": "Tìm ưu đãi tốt nhất",
         "fr": "Trouvez les meilleures offres",
         "ar": "البحث عن أفضل الصفقات",
         "ja": "最高のお得な情報を見つける"
     },
     {
         "text_id": "find_deals_for_any",
-        "en": "Find deals for any season from cosy\ncountry homes to city flats",
+        "en": "Tìm ưu đãi cho bất kỳ mùa nào từ ấm cúng\ncountry homes to city flats",
         "fr": "Trouvez des offres pour toutes les saisons, des maisons de campagne \n confortables aux appartements en ville",
         "ar": "اعثر على صفقات لأي موسم من المنازل الريفية المريحة \n إلى شقق المدينة",
         "ja": "居心地の良いカントリーハウスからシティ\nフラットまで、あらゆる季節のお得な情報を探す"
     },
     {
         "text_id": "best_travelling_all_time",
-        "en": "Best travelling all time",
+        "en": "Du lịch tốt nhất mọi thời đại",
         "fr": "Meilleur voyage de tous les temps",
         "ar": "أفضل السفر طوال الوقت",
         "ja": "常に最高の旅行"
     },
     {
         "text_id": "login",
-        "en": "Login",
+        "en": "Đăng nhập",
         "fr": "Connexion",
         "ar": "تسجيل الدخول",
         "ja": "ログイン"
     },
     {
         "text_id": "create_account",
-        "en": "Create account",
+        "en": "Tạo tài khoản",
         "fr": "Créer un compte",
         "ar": "إنشاء حساب",
         "ja": "アカウントを作成する"
     },
     {
         "text_id": "log_with mail",
-        "en": "or log in with email",
+        "en": "hoặc đăng nhập với Email",
         "fr": "ou connectez-vous avec e-mail",
         "ar": "أو تسجيل الدخول بالبريد الإلكتروني",
         "ja": "またはメールでログイン"
     },
     {
         "text_id": "your_mail",
-        "en": "Your email",
+        "en": "Email của bạn",
         "fr": "Votre email",
         "ar": "بريدك الالكتروني",
         "ja": "あなたのメール"
     },
     {
         "text_id": "password",
-        "en": "Password",
+        "en": "Mật khẩu",
         "fr": "Mot de passe",
         "ar": "كلمه السر",
         "ja": "パスワード"
     },
     {
         "text_id": "forgot_your_Password",
-        "en": "Forgot your Password?",
+        "en": "Bạn quên mật khẩu?",
         "fr": "Mot de passe oublié?",
         "ar": "نسيت رقمك السري؟",
         "ja": "パスワードをお忘れですか？"
     },
     {
         "text_id": "resend_email_link",
-        "en": "Enter your email to receive an email to reset your password",
+        "en": "Nhập email của bạn để nhận email reset mật khẩu",
         "fr": "Entrez votre email pour recevoir un email pour réinitialiser votre mot de passe",
         "ar": "أدخل بريدك الإلكتروني لتلقي بريد إلكتروني لإعادة تعيين كلمة المرور الخاصة بك",
         "ja": "パスワードをリセットするためのメールを受信するには、メールアドレスを入力してください"
     },
     {
         "text_id": "send",
-        "en": "Send",
+        "en": "Gửi",
         "fr": "Envoyer",
         "ar": "إرسال",
         "ja": "送信"
     },
     {
         "text_id": "sign_up",
-        "en": "Sign up",
+        "en": "Đăng kí",
         "fr": "S'inscrire",
         "ar": "اشتراك",
         "ja": "サインアップ"
     },
     {
         "text_id": "first_name",
-        "en": "First name",
+        "en": "Tên",
         "fr": "Prénom",
         "ar": "الاسم الأول",
         "ja": "ファーストネーム"
     },
     {
         "text_id": "last_name",
-        "en": "Last name",
+        "en": "Họ tên",
         "fr": "Nom de famille",
         "ar": "الكنية",
         "ja": "苗字"
     },
     {
         "text_id": "terms_agreed",
-        "en": "By Signing up,you agreed with our terms of\n Services and privacy policy",
+        "en": "Bằng cách đăng ký, bạn đã đồng ý với cá điều khoản\nDịch vụ và chính sách quyền riêng tư của chúng tôi",
         "fr": "En vous inscrivant, vous acceptez nos conditions de",
         "ar": "بالتسجيل ، فإنك توافق على شروطنا الخاصة بـ",
         "ja": "サインアップすることにより、あなたは私たちの条件に同意した"
     },
     {
         "text_id": "explore",
-        "en": "Explore",
+        "en": "Khám phá",
         "fr": "explorer",
         "ar": "يكتشف",
         "ja": "見る"
     },
     {
         "text_id": "trips",
-        "en": "Trips",
+        "en": "Chuyến đi",
         "fr": "voyages",
         "ar": "رحلات",
         "ja": "旅行"
     },
-
-    {
-        "text_id": "hotel",
-        "en": "Hotel",
-        "fr": "voyages",
-        "ar": "رحلات",
-        "ja": "旅行"
-    },
-
-    {
-        "text_id": "setting",
-        "en": "Setting",
-        "fr": "voyages",
-        "ar": "رحلات",
-        "ja": "旅行"
-    },
-
     {
         "text_id": "profile",
-        "en": "Profile",
+        "en": "Hồ sơ",
         "fr": "profil",
         "ar": "الملف الشخصي",
         "ja": "プロフィール"
     },
     {
         "text_id": "where_are_you_going",
-        "en": "Where are you going?",
+        "en": "Bạn đi đâu?",
         "fr": "Où vas-tu?",
         "ar": "إلى أين تذهب؟",
         "ja": "どこに行くの？"
     },
     {
         "text_id": "search_hotel",
-        "en": "Search",
+        "en": "Tìm kiếm",
         "fr": "Rechercher",
         "ar": "يبحث",
         "ja": "探す"
@@ -200,35 +183,35 @@
     },
     {
         "text_id": "Backpacker_data",
-        "en": "Backpacker",
+        "en": "Du lịch",
         "fr": "Randonneuse",
         "ar": "الرحال",
         "ja": "バックパッカー"
     },
     {
         "text_id": "Resort_data",
-        "en": "Resort",
+        "en": "Khu nghỉ mát",
         "fr": "Recours",
         "ar": "ملجأ",
         "ja": "リゾート"
     },
     {
         "text_id": "villa_data",
-        "en": "Villa",
+        "en": "Biệt thự",
         "fr": "Villa",
         "ar": "فيلا",
         "ja": "ヴィラ"
     },
     {
         "text_id": "apartment",
-        "en": "Apartment",
+        "en": "Căn hộ",
         "fr": "Appartement",
         "ar": "شقة",
         "ja": "アパート"
     },
     {
         "text_id": "guest_house",
-        "en": "Guest house",
+        "en": "Nhà khách",
         "fr": "Maison d'hôtes",
         "ar": "منزل الضيف",
         "ja": "ゲストハウス"
@@ -242,28 +225,28 @@
     },
     {
         "text_id": "accommodation",
-        "en": "Accommodation",
+        "en": "Chỗ ở",
         "fr": "Hébergement",
         "ar": "إقامة",
         "ja": "宿泊施設"
     },
     {
         "text_id": "Bed_breakfast",
-        "en": "Bed & Breakfast",
+        "en": "Giường & Bữa sáng",
         "fr": "lit et petit-déjeuner",
         "ar": "سرير و فطور",
         "ja": "ベッド＆ブレックファスト"
     },
     {
         "text_id": "Last_search",
-        "en": "Last searches",
+        "en": "Tìm kiếm cuối cùng",
         "fr": "Dernières recherches",
         "ar": "عمليات البحث الأخيرة",
         "ja": "最後の検索"
     },
     {
         "text_id": "clear_all",
-        "en": "Clear all",
+        "en": "Xóa tất cả",
         "fr": "Tout effacer",
         "ar": "امسح الكل",
         "ja": "すべてクリア"
@@ -277,84 +260,84 @@
     },
     {
         "text_id": "five_star",
-        "en": "Extraordinary five-star\noutdoor activites",
+        "en": "Năm sao \nCác hoạt động ngoài trời",
         "fr": "Activités d'extérieur \nextraordinaires",
         "ar": "أنشطة غير عادية من فئة الخمس نجوم \nفي الهواء الطلق",
         "ja": "並外れた5つ星の\n屋外アクティビティ"
     },
     {
         "text_id": "view_hotel",
-        "en": "View Hotel",
+        "en": "Xem Hotel",
         "fr": "Voir l'hôtel",
         "ar": "عرض الفندق",
         "ja": "ホテルを見る"
     },
     {
         "text_id": "hotel found",
-        "en": "Hotel found",
+        "en": "Hotel tìm",
         "fr": "Hôtel trouvé",
         "ar": "وجدت الفندق",
         "ja": "ホテルが見つかりました"
     },
     {
         "text_id": "filtter",
-        "en": "Filtter",
+        "en": "Lọc",
         "fr": "Filtre",
         "ar": "منقي",
         "ja": "フィルタ"
     },
     {
         "text_id": "popular_destination",
-        "en": "Popular Destination",
+        "en": "Điểm đến phổ biến",
         "fr": "Destination populaire",
         "ar": "الوجهات المشهورة",
         "ja": "人気の目的地"
     },
     {
         "text_id": "best_deal",
-        "en": "Best Deals",
+        "en": "Ưu đãi tốt nhất",
         "fr": "Meilleures affaires",
         "ar": "افضل العروض",
         "ja": "お得な情報"
     },
     {
         "text_id": "view_all",
-        "en": "View all",
+        "en": "Xem tất cả",
         "fr": "Voir tout",
         "ar": "مشاهدة الكل",
         "ja": "すべて表示"
     },
     {
         "text_id": "km_to_city",
-        "en": "km to city",
+        "en": "km tới thành phố",
         "fr": "km de la ville",
         "ar": "كم للمدينة",
         "ja": "街までキロ"
     },
     {
         "text_id": "per_night",
-        "en": "/per night",
+        "en": "/người đêm",
         "fr": "/par nuit",
         "ar": "/لليلة الواحدة",
         "ja": "/一泊"
     },
     {
         "text_id": "reviews",
-        "en": "Reviews",
+        "en": "Đánh giá",
         "fr": "Commentaires",
         "ar": "المراجعات",
         "ja": "レビュー"
     },
     {
         "text_id": "book_now",
-        "en": "Book now",
+        "en": "Đặt Phòng",
         "fr": "Destination\npopulaire",
         "ar": " احجز الآن",
         "ja": "今予約する"
     },
     {
         "text_id": "more_details",
-        "en": "More Details",
+        "en": "Thêm Chi Tiết",
         "fr": "Plus de détails",
         "ar": "المزيد من التفاصيل",
         "ja": "詳細"
@@ -368,42 +351,42 @@
     },
     {
         "text_id": "read_more",
-        "en": "read more",
+        "en": "xem nhiều hơn",
         "fr": "Lire la suite",
         "ar": "اقرأ أكثر",
         "ja": "続きを読む"
     },
     {
         "text_id": "less",
-        "en": "less",
+        "en": "ít hơn",
         "fr": "moins",
         "ar": "أقل",
         "ja": "もっと少なく"
     },
     {
         "text_id": "Overall_rating",
-        "en": "Overall rating",
+        "en": "Đánh giá tổng thể",
         "fr": "Note globale",
         "ar": "تقييم عام",
         "ja": "総合評価"
     },
     {
         "text_id": "room",
-        "en": "Room",
+        "en": "Phòng",
         "fr": "Chambre",
         "ar": "غرفة",
         "ja": "ルーム"
     },
     {
         "text_id": "service",
-        "en": "Services",
+        "en": "Dịch vụ",
         "fr": "Prestations de service",
         "ar": "خدمات",
         "ja": "サービス"
     },
     {
         "text_id": "location",
-        "en": "Location",
+        "en": "Vị trí",
         "fr": "Emplacement",
         "ar": "موقع",
         "ja": "ロケーション"
@@ -417,154 +400,154 @@
     },
     {
         "text_id": "room_photo",
-        "en": "Photo",
+        "en": "Hình",
         "fr": "photo",
         "ar": "صورة",
         "ja": "写真"
     },
     {
         "text_id": "last_update",
-        "en": "Last Update",
+        "en": "Cập nhật cuối cùng",
         "fr": "Dernière mise à jour",
         "ar": "اخر تحديث",
         "ja": "最後の更新"
     },
     {
         "text_id": "reply",
-        "en": "Reply",
+        "en": "Hồi đáp",
         "fr": "Réponse",
         "ar": "رد",
         "ja": "応答"
     },
     {
         "text_id": "My_Trips",
-        "en": "My Trip",
+        "en": "Chuyến đi của tôi",
         "fr": "Mon voyage",
         "ar": "رحلتي",
         "ja": "私の旅行"
     },
     {
         "text_id": "upcoming",
-        "en": "Upcoming",
+        "en": "Sắp tới",
         "fr": "A venir",
         "ar": "القادمة",
         "ja": "今後の"
     },
     {
         "text_id": "finished",
-        "en": "Finished",
+        "en": "Hoàn thành",
         "fr": "finie",
         "ar": "تم الانتهاء من",
         "ja": "終了しました"
     },
     {
         "text_id": "favorites",
-        "en": "Favorites",
+        "en": "Yêu thích",
         "fr": "Favoris",
         "ar": "المفضلة",
         "ja": "お気に入り"
     },
     {
         "text_id": "hotel_found",
-        "en": "Hotel Found",
+        "en": "Tìm Hotel",
         "fr": "Hôtel trouvé",
         "ar": "العثور على فندق",
         "ja": "ホテルが見つかりました"
     },
     {
         "text_id": "filtter",
-        "en": "filtter",
+        "en": "lọc",
         "fr": "filtre",
         "ar": "منقي",
         "ja": "フィルタ"
     },
     {
         "text_id": "price_text",
-        "en": "price (for 1 night)",
+        "en": "giá (cho 1 đêm)",
         "fr": "prix (pour 1 nuit)",
         "ar": "السعر (لليلة واحدة)",
         "ja": "料金（1泊分）"
     },
     {
         "text_id": "popular filter",
-        "en": "Popular filter",
+        "en": "Tìm kiếm phổ biến",
         "fr": "Filtre populaire",
         "ar": "مرشح شعبي",
         "ja": "人気のフィルター"
     },
     {
         "text_id": "distance from city",
-        "en": "Distance from city center",
+        "en": "Khoản cách đến city",
         "fr": "Distance du centre-ville",
         "ar": "المسافة من وسط المدينة",
         "ja": "市内中心部からの距離"
     },
     {
         "text_id": "type of accommodation",
-        "en": "Type of Accommodation",
+        "en": "Loại chỗ ở",
         "fr": "Type d'hébergement",
         "ar": "نوع الإقامة",
         "ja": "宿泊施設の種類"
     },
     {
         "text_id": "Apply_text",
-        "en": "Apply",
+        "en": "Áp dụng",
         "fr": "Appliquer",
         "ar": "تطبيق",
         "ja": "適用する"
     },
     {
         "text_id": "all_text",
-        "en": "All",
+        "en": "Tất cả",
         "fr": "toute",
         "ar": "الجميع",
         "ja": "すべて"
     },
     {
         "text_id": "Home_text",
-        "en": "Home",
+        "en": "Nhà",
         "fr": "Domicile",
         "ar": "منزل، بيت",
         "ja": "ホームホーム"
     },
     {
         "text_id": "free_breakfast",
-        "en": "Free Breakfast",
+        "en": "Bữa sáng miễn phí",
         "fr": "Petit déjeuner gratuit",
         "ar": "إفطار مجاني",
         "ja": "無料の朝食"
     },
     {
         "text_id": "free_Parking",
-        "en": "Free Parking",
+        "en": "Bãi đậu xe miễn phí",
         "fr": "Parking gratuit",
         "ar": "موقف سيارات مجاني",
         "ja": "無料駐車場"
     },
     {
         "text_id": "pool_text",
-        "en": "Pool",
+        "en": "Hồ bơi",
         "fr": "Piscine",
         "ar": "تجمع",
         "ja": "プール"
     },
     {
         "text_id": "pet_friendlly",
-        "en": "Pet Friendlly",
+        "en": "Thân thiện với thú cưng",
         "fr": "Animaux acceptés",
         "ar": "صديق للحيوانات الاليفة",
         "ja": "ペットに優しい"
     },
     {
         "text_id": "Free_Wifi",
-        "en": "Free Wifi",
+        "en": "Wifi miến phí",
         "fr": "Wifi gratuit",
         "ar": "واى فاى مجانى",
         "ja": "無料のWifi"
     },
     {
         "text_id": "Less_than",
-        "en": "Less than",
+        "en": "Ít hơn",
         "fr": "Moins que",
         "ar": "أقل من",
         "ja": "未満"
@@ -585,42 +568,42 @@
     },
     {
         "text_id": "view_edit",
-        "en": "View and Edit profile",
+        "en": "Xem và chỉnh sửa hồ sơ",
         "fr": "Afficher et modifier le profil",
         "ar": "عرض وتحرير الملف الشخصي",
         "ja": "プロファイルの表示と編集"
     },
     {
         "text_id": "edit_profile",
-        "en": "Edit Profile",
+        "en": "Chỉnh sửa hồ sơ",
         "fr": "Editer le profil",
         "ar": "تعديل الملف الشخصي",
         "ja": "プロファイル編集"
     },
     {
         "text_id": "username_text",
-        "en": "UserName",
+        "en": "Tên tài khoản",
         "fr": "Nom d'utilisateur",
         "ar": "اسم االمستخدم",
         "ja": "ユーザー名"
     },
     {
         "text_id": "phone",
-        "en": "Phone",
+        "en": "Điện thoại",
         "fr": "Téléphoner",
         "ar": "هاتف",
         "ja": "電話"
     },
     {
         "text_id": "date_of_birth",
-        "en": "Date of Birth",
+        "en": "Ngày sinh",
         "fr": "Date de naissance",
         "ar": "تاريخ الولادة",
         "ja": "生年月日"
     },
     {
         "text_id": "address_text",
-        "en": "Address",
+        "en": "Địa chỉ",
         "fr": "Adresse",
         "ar": "عنوان",
         "ja": "住所"
@@ -634,570 +617,564 @@
     },
     {
         "text_id": "change_password",
-        "en": "Change Password",
+        "en": "Đổi mật khẩu",
         "fr": "Changer le mot de passe",
         "ar": "تغيير كلمة المرور",
         "ja": "パスワードを変更する"
     },
     {
         "text_id": "enter_your_new_password",
-        "en": "Enter your new password and confirm your password",
+        "en": "Nhập mật khẩu mới và xác nhận mật khẩu của bạn",
         "fr": "Entrez votre nouveau mot de passe et confirmez votre mot de passe",
         "ar": "أدخل كلمة المرور الجديدة الخاصة بك وقم بتأكيد كلمة المرور الخاصة بك",
         "ja": "新しいパスワードを入力し、パスワードを確認します"
     },
     {
         "text_id": "new_password",
-        "en": "New Password",
+        "en": "Mật khẩu mới",
         "fr": "nouveau mot de passe",
         "ar": "كلمة السر الجديدة",
         "ja": " 新しいパスワード"
     },
     {
         "text_id": "confirm_password",
-        "en": "Confirm Password",
+        "en": "Xác nhận mật khẩu",
         "fr": "Confirmez le mot de passe",
         "ar": "تأكيد كلمة المرور",
         "ja": "パスワードを認証する"
     },
     {
         "text_id": "invite_friend",
-        "en": "Invite Friend",
+        "en": "Mời bạn bè",
         "fr": "Inviter un ami",
         "ar": "قم بدعوة صديق",
         "ja": "友達を呼ぶ"
     },
-
-    {
-        "text_id": "admin_page",
-        "en": "Admin Page",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
-    {
-        "text_id": "create_hotel",
-        "en": "Create Hotel",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
-    {
-        "text_id": "user_page",
-        "en": "User Page",
-        "fr": "Inviter un ami",
-        "ar": "قم بدعوة صديق",
-        "ja": "友達を呼ぶ"
-    },
-
     {
         "text_id": "invite_your_friend",
-        "en": "Invite your Friend",
+        "en": "Mời bạn của bạn",
         "fr": "Invitez votre ami",
         "ar": "ادعو صديقك",
         "ja": "友達を招待する"
     },
     {
         "text_id": "invite_friend_desc",
-        "en": "are you one of those who makes everything at the last moment",
+        "en": "bạn có phải một trong những người làm được mọi việc vào phút cuối không",
         "fr": "es-tu de ceux qui font tout au dernier moment",
         "ar": "هل أنت ممن يصنعون كل شيء في آخر لحظة",
         "ja": "あなたは最後の瞬間にすべてを作る人の一人ですか"
     },
     {
         "text_id": "share_text",
-        "en": "Share",
+        "en": "Chia sẻ",
         "fr": "Partager",
         "ar": "يشارك",
         "ja": "シェア"
     },
     {
         "text_id": "credit_coupons",
-        "en": "Crdit & Coupons",
+        "en": "Tín dụng & Phiếu giảm giá",
         "fr": "Crédit et coupons",
         "ar": "الائتمان والقسائم",
         "ja": "クレジット＆クーポン"
     },
     {
         "text_id": "help_center",
-        "en": "Help Center",
+        "en": "Trung tâm trợ giúp",
         "fr": "Centre d'aide",
         "ar": "مركز المساعدة",
         "ja": "ヘルプセンター"
     },
     {
         "text_id": "how_can_help_you",
-        "en": "How can we help",
+        "en": "Làm thế nào chúng ta có thể giúp đỡ",
         "fr": "Comment pouvons nous aider",
         "ar": "كيف يمكن أن نساعد",
         "ja": "どのように我々は助けることができます"
     },
     {
         "text_id": "search_help_artical",
-        "en": "Search help articales",
+        "en": "Tìm kiếm bài viết trợ giúp",
         "fr": "Rechercher de l'aide Articales",
         "ar": "ابحث في تعليمات المساعدة",
         "ja": "ヘルプアーティカルを検索"
     },
     {
         "text_id": "paying_for_a_reservation",
-        "en": "Paying for a reservation",
+        "en": "Trả tiền đặt chỗ",
         "fr": "Payer une réservation",
         "ar": "دفع مقابل الحجز",
         "ja": "予約の支払い"
     },
     {
         "text_id": "trust_and_safety",
-        "en": "Trust and Safety",
+        "en": "Tin cậy và an toàn",
         "fr": "Confiance et sécurité",
         "ar": "الثقة والأمان",
         "ja": "信頼と安全"
     },
     {
         "text_id": "How do I ",
-        "en": "How do I cancel my rooms reservation?",
+        "en": "Làm cách nào để hủy đặt phòng của tôi",
         "fr": "Comment annuler ma réservation de chambres?",
         "ar": "كيف ألغي حجز غرفتي؟",
         "ja": "部屋の予約をキャンセルするにはどうすればよいですか？"
     },
     {
         "text_id": "What methods ",
-        "en": "What methods of payment does Roome accept?",
+        "en": "Roome chấp nhận những phương thức thanh toán nào?",
         "fr": "Quels modes de paiement Roome accepte-t-il?",
         "ar": "ما هي طرق الدفع التي يقبلها Roome؟",
         "ja": "Roomeはどのような支払い方法を受け入れますか？"
     },
     {
         "text_id": "I'm_a_guest_What",
-        "en": "I'm a guest. What are some safety tips I can follow?",
+        "en": "Tôi là khách. Tôi có thể làm theo một số mẹo an toàn nào?",
         "fr": "Je suis un invité. Quels conseils de sécurité puis-je suivre?",
         "ar": "أنا ضيف. ما هي بعض نصائح الأمان التي يمكنني اتباعها؟",
         "ja": "私はゲストです。私が従うことができるいくつかの安全上のヒントは何ですか？"
     },
     {
         "text_id": "When am I charged",
-        "en": "When am I charged for a reservation?",
+        "en": "Khi nào tôi bị tính phí đặt chỗ?",
         "fr": "Quand suis-je facturé pour une réservation?",
         "ar": "متى يتم محاسبتي على الحجز؟",
         "ja": "予約はいつ請求されますか？"
     },
     {
         "text_id": "How do I edit",
-        "en": "How do I edit or remove a payment method?",
+        "en": "Làm cách nào để chỉnh sửa?",
         "fr": "Comment modifier ou supprimer un mode de paiement?",
         "ar": "كيف أقوم بتعديل أو إزالة طريقة الدفع؟",
         "ja": "お支払い方法を編集または削除するにはどうすればよいですか？"
     },
     {
         "text_id": "You can cancel",
-        "en": "You can cancel a reservation any time before Or during your trip. To cancel a reservation:",
+        "en": "Bạn có there huy đặt phòng chỗ bất kỳ lúc nào trước Hoặc trong chuyến đi của mình. Để hủy đặt chỗ:",
         "fr": "Vous pouvez annuler une réservation à tout moment avant ou pendant votre voyage. Pour annuler une réservation:",
         "ar": "يمكنك إلغاء الحجز في أي وقت قبل أو أثناء رحلتك. لإلغاء الحجز:",
         "ja": "旅行前または旅行中はいつでも予約をキャンセルできます。予約をキャンセルするには："
     },
     {
         "text_id": "GO to Trips and choose yotr trip",
-        "en": "GO to Trips and choose yotr trip Click Your home reservation Click Modify reservation",
+        "en": "Đi tới chuyến đi và chọn chuyến đi của bạn Nhấp vào Đặt chỗ tại nhà của bạn Nhấp vao Sửa đổi đặt chỗ",
         "fr": "Allez à Voyages et choisissez votre voyage Cliquez sur Votre réservation de maison Cliquez sur Modifier la réservation",
         "ar": "اذهب إلى الرحلات واختر yotr trip انقر فوق حجز منزلك انقر فوق تعديل الحجز",
         "ja": "Tripsに移動し、yotrtripを選択します。自宅の予約をクリックします。予約の変更をクリックします。"
     },
     {
         "text_id": "You'll be taken to",
-        "en": "You'll be taken to a new page where you either change or cancel your reservation. Click the Next button under Cancel reservation to Start the cancellation process.",
+        "en": "Bạn sẽ được đưa đến một trang mới nơi bạn có thể thay đổi hoặc hủy đặt chỗ của mình. Nhấp vào nút Tiếp theo trong Hủy đặt để bắt đầu quá trình hủy.",
         "fr": "Vous serez redirigé vers une nouvelle page où vous modifiez ou annulez votre réservation. Cliquez sur le bouton Suivant sous Annuler la réservation pour démarrer le processus d'annulation.",
         "ar": "سيتم نقلك إلى صفحة جديدة حيث يمكنك إما تغيير أو إلغاء حجزك. انقر فوق الزر التالي ضمن إلغاء الحجز لبدء عملية الإلغاء.",
         "ja": "予約を変更またはキャンセルする新しいページに移動します。 [予約のキャンセル]の下の[次へ]ボタンをクリックして、キャンセルプロセスを開始します。"
     },
     {
         "text_id": "If you cancel, your ",
-        "en": "If you cancel, your refund Will be determined by your host'r cancellation policy. We'll show your refund breakdown before you finalize the cancellation.",
+        "en": "Nếu bạn hủy, khoản tiền hoàn lại của bạn sẽ được xác định theo chính sách hủy của chủ nhà. Chúng tôi sẽ hiển thị chi tiết số tiền hoàn lại của bạn trước khi bạn hoàn tất việc hủy.",
         "fr": "Si vous annulez, votre remboursement sera déterminé par la politique d'annulation de votre hôte. Nous vous montrerons le détail de votre remboursement avant de finaliser l'annulation.",
         "ar": "إذا قمت بالإلغاء ، فسيتم تحديد المبلغ المسترد من خلال سياسة الإلغاء الخاصة بالمضيف. سنعرض تفاصيل استرداد الأموال الخاصة بك قبل الانتهاء من الإلغاء.",
         "ja": "キャンセルした場合、返金はホストのキャンセルポリシーによって決定されます。キャンセルを確定する前に、払い戻しの内訳を表示します。"
     },
     {
         "text_id": "Give feedback",
-        "en": "Give feedback",
+        "en": "Đưa ra phản hồi",
         "fr": "Donnez votre avis",
         "ar": "إعطاء ردود الفعل",
         "ja": "フィードバックを与えます"
     },
     {
         "text_id": "Related articles",
-        "en": "Related articles",
+        "en": "Những bài viết liên quan",
         "fr": "Articles Liés",
         "ar": "مقالات ذات صلة",
         "ja": "関連記事"
     },
     {
         "text_id": "Can I change",
-        "en": "Can I change a reservation as a guest?",
+        "en": "Tôi có thể thay đổi đặt chỗ với tư cách là khách hàng không?",
         "fr": "Puis-je modifier une réservation en tant qu'invité?",
         "ar": "هل يمكنني تغيير الحجز كضيف؟",
         "ja": "ゲストとして予約を変更することはできますか？"
     },
     {
         "text_id": "HoW do I cancel",
-        "en": "HoW do I cancel a reservation request?",
+        "en": "Làm cách nào để hủy yêu cầu đặt chỗ?",
         "fr": "Comment annuler une demande de réservation?",
         "ar": "كيف يمكنني إلغاء طلب الحجز؟",
         "ja": "予約リクエストをキャンセルするにはどうすればよいですか？"
     },
     {
         "text_id": "What is the",
-        "en": "What is the Resolution Center?",
+        "en": "Trung tâm giải quyết là gì?",
         "fr": "Qu'est-ce que le centre de résolution?",
         "ar": "ما هو مركز القرار؟",
         "ja": "解決センターとは何ですか？"
     },
     {
         "text_id": "payment_text",
-        "en": "Payment",
+        "en": "Ví",
+        "fr": "Paiement",
+        "ar": "دفع",
+        "ja": "支払い"
+    },
+    {
+        "text_id": "history_text",
+        "en": "Lịch sử thanh toán",
         "fr": "Paiement",
         "ar": "دفع",
         "ja": "支払い"
     },
     {
         "text_id": "setting_text",
-        "en": "Setting",
-        "fr": "Réglage",
-        "ar": "جلسة",
-        "ja": "設定"
-    },
-
-    {
-        "text_id": "booking",
-        "en": "Booking",
-        "fr": "Réglage",
-        "ar": "جلسة",
-        "ja": "設定"
-    },
-
-    {
-        "text_id": "history_text",
-        "en": "History Payment",
-        "fr": "Paiement",
-        "ar": "دفع",
-        "ja": "支払い"
-    },
-
-    {
-        "text_id": "update_room",
-        "en": "Update Room",
+        "en": "Cài đặt",
         "fr": "Réglage",
         "ar": "جلسة",
         "ja": "設定"
     },
     {
         "text_id": "Notifications",
-        "en": "Notifications",
+        "en": "Thông báo",
         "fr": "Notifications",
         "ar": "إشعارات",
         "ja": "通知"
     },
     {
         "text_id": "Theme Mode",
-        "en": "Theme Mode",
+        "en": "Chế độ chủ đề",
         "fr": "Mode thème",
         "ar": "وضع السمة",
         "ja": "テーマモード"
     },
     {
         "text_id": "light",
-        "en": "light",
+        "en": "ánh sáng",
         "fr": "lumière",
         "ar": "ضوء",
         "ja": "光"
     },
     {
         "text_id": "dark",
-        "en": "dark",
+        "en": "tối",
         "fr": "foncée",
         "ar": "داكن",
         "ja": "闇"
     },
     {
         "text_id": "system",
-        "en": "system",
+        "en": "hệ thống",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "admin_page",
+        "en": "Trang quản trị",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "user_page",
+        "en": "Trang người dùng",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "update_room",
+        "en": "Cập nhật phòng",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "create_hotel",
+        "en": "Tạo khách sạn mới",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "booking",
+        "en": "Phòng đã đặt",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "hotel",
+        "en": "Khách sạn",
+        "fr": "système",
+        "ar": "النظام",
+        "ja": "システム"
+    },
+    {
+        "text_id": "setting",
+        "en": "Cài đặt",
         "fr": "système",
         "ar": "النظام",
         "ja": "システム"
     },
     {
         "text_id": "Fonts",
-        "en": "Fonts",
+        "en": "Phông chữ",
         "fr": "polices",
         "ar": "الخطوط",
         "ja": "フォント"
     },
     {
         "text_id": "selected_fonts",
-        "en": "Selected fonts",
+        "en": "Phông chữ đã chọn",
         "fr": "Polices sélectionnées",
         "ar": "الخطوط المختارة",
         "ja": "選択したフォント"
     },
+
     {
         "text_id": "Color",
-        "en": "Color",
+        "en": "Màu sắc",
         "fr": "Couleur",
         "ar": "اللون",
         "ja": "色"
     },
     {
         "text_id": "Selected color",
-        "en": "Selected color",
+        "en": "Màu chữ đã chọn",
         "fr": "Couleur sélectionnée",
         "ar": "اللون المحدد",
         "ja": "選択した色"
     },
     {
         "text_id": "Language",
-        "en": "Language",
+        "en": "Ngôn ngữ",
         "fr": "Langue",
         "ar": "لغة",
         "ja": "言語"
     },
     {
         "text_id": "Selected language",
-        "en": "Selected language",
+        "en": "Lựa chọn ngôn ngữ",
         "fr": "Langue sélectionnée",
         "ar": "اللغة المختارة",
         "ja": "選択した言語"
     },
     {
         "text_id": "Country",
-        "en": "Country",
+        "en": "Quốc gia",
         "fr": "Pays",
         "ar": "دولة",
         "ja": "国"
     },
     {
         "text_id": "Currency",
-        "en": "Currency",
+        "en": "Tiền tệ",
         "fr": "Devise",
         "ar": "عملة",
         "ja": "通貨"
     },
     {
         "text_id": "Terms of Services",
-        "en": "Terms of Services",
+        "en": "Điều khoản dịch vụ",
         "fr": "Conditions de services",
         "ar": "شروط الخدمة",
         "ja": "利用規約"
     },
     {
         "text_id": "Privacy Policy",
-        "en": "Privacy Policy",
+        "en": "Chính sách bảo mật",
         "fr": "Politique de confidentialité",
         "ar": "سياسة الخصوصية",
         "ja": "個人情報保護方針"
     },
     {
         "text_id": "Give Us Feedbacks",
-        "en": "Give Us Feedbacks",
+        "en": "Phản hồi cho chúng tôi",
         "fr": "Donnez-nous des commentaires",
         "ar": "قدم لنا الاصداء",
         "ja": "フィードバックをお寄せください"
     },
     {
         "text_id": "Log out",
-        "en": "Log out",
+        "en": "Đăng xuất",
         "fr": "Se déconnecter",
         "ar": "تسجيل خروج",
         "ja": "ログアウト"
     },
     {
         "text_id": "Hello",
-        "en": "Hello",
+        "en": "Xin chào",
         "fr": "Bonjour",
         "ar": "مرحبا",
         "ja": "こんにちは"
     },
     {
         "text_id": "room_selected",
-        "en": "Room selected",
+        "en": "Phòng đã chọn",
         "fr": "Chambre sélectionnée",
         "ar": "تم اختيار الغرفة",
         "ja": "選択された部屋"
     },
     {
         "text_id": "number_room",
-        "en": "Number of Room",
+        "en": "Số phòng",
         "fr": "Nombre de chambre",
         "ar": "عدد الغرف",
         "ja": "部屋数"
     },
     {
         "text_id": "people_data",
-        "en": "People",
+        "en": "Người",
         "fr": "Gens",
         "ar": "الناس",
         "ja": "人"
     },
     {
         "text_id": "room_data",
-        "en": "Room",
+        "en": "Phòng",
         "fr": "Chambre",
         "ar": "غرفة",
         "ja": "ルーム"
     },
     {
         "text_id": "choose_date",
-        "en": "Choose Date",
+        "en": "Chọn ngày",
         "fr": "Choisissez la date",
         "ar": "اختر موعدا",
         "ja": "日付を選択"
     },
     {
         "text_id": "Apply_date",
-        "en": "Apply",
+        "en": "Áp dụng",
         "fr": "Appliquer",
         "ar": "تطبيق",
         "ja": "適用する"
     },
     {
         "text_id": "From_text",
-        "en": "From",
+        "en": "Từ",
         "fr": "De",
         "ar": "من عند",
         "ja": "から"
     },
     {
         "text_id": "to_text",
-        "en": "To",
+        "en": "Đến",
         "fr": "À",
         "ar": "ل",
         "ja": "に"
     },
     {
         "text_id": "sleeps",
-        "en": "sleeps",
+        "en": "ngủ",
         "fr": "dort",
         "ar": "ينام",
         "ja": "眠る"
     },
     {
         "text_id": "children",
-        "en": "children",
+        "en": "những đứa trẻ",
         "fr": "enfants",
         "ar": "الأطفال",
         "ja": "子供達"
     },
     {
         "text_id": "enter_new_password",
-        "en": "enter new password",
+        "en": "nhập mật khẩu mới",
         "fr": "Entrez un nouveau mot de passe",
         "ar": "أدخل كلمة مرور جديدة",
         "ja": "新しいパスワードを入力してください"
     },
     {
         "text_id": "enter_confirm_password",
-        "en": "enter confirm password",
+        "en": "nhập mật khẩu xác nhận",
         "fr": "Entrez confirmer le mot de passe",
         "ar": "أدخل تأكيد كلمة المرور",
         "ja": "確認パスワードを入力してください"
     },
     {
         "text_id": "password_cannot_empty",
-        "en": "Password cannot be empty",
+        "en": "Mật khẩu không được để trống",
         "fr": "Le mot de passe ne peut pas être vide",
         "ar": "لا يمكن أن تكون كلمة المرور فارغة",
         "ja": "パスワードを空にすることはできません"
     },
     {
         "text_id": "valid_new_password",
-        "en": "We cannot allow less than 6 lengths of the password, please enter a valid new password",
+        "en": "Chúng tôi không thể cho phép mật khẩu có độ dài ít hơn 6, vui lòng nhập mật khẩu hợp lệ",
         "fr": "Nous ne pouvons pas autoriser moins de 6 longueurs de mot de passe, veuillez entrer un nouveau mot de passe valide",
         "ar": "لا يمكننا السماح بأقل من 6 أطوال لكلمة المرور ، يرجى إدخال كلمة مرور جديدة صالحة",
         "ja": "6未満の長さのパスワードは許可されません。有効な新しいパスワードを入力してください"
     },
     {
         "text_id": "valid_password",
-        "en": "We cannot allow less than 6 lengths of the password, please enter a valid password",
+        "en": "Chúng tôi không thể cho phép mật khẩu có độ dài ít hơn 6, vui lòng nhập mật khẩu hợp lệ",
         "fr": "Nous ne pouvons pas autoriser moins de 6 longueurs de mot de passe, veuillez entrer un mot de passe valide",
         "ar": "لا يمكننا السماح بأقل من 6 أطوال لكلمة المرور ، يرجى إدخال كلمة مرور صالحة",
         "ja": "パスワードの長さは6未満にすることはできません。有効なパスワードを入力してください"
     },
     {
         "text_id": "password_not_match",
-        "en": "Password does not match, please enter a valid password",
+        "en": "Mật khẩu không khớp, vui lòng nhập mật khẩu hợp lệ",
         "fr": "Le mot de passe ne correspond pas, veuillez entrer un mot de passe valide",
         "ar": "كلمة المرور غير متطابقة ، الرجاء إدخال كلمة مرور صالحة",
         "ja": "パスワードが一致しません。有効なパスワードを入力してください"
     },
     {
         "text_id": "enter_your_email",
-        "en": "enter your email",
+        "en": "nhập email của bạn",
         "fr": "entrer votre Email",
         "ar": "أدخل بريدك الإلكتروني",
         "ja": "メールアドレスを入力"
     },
     {
         "text_id": "email_cannot_empty",
-        "en": "Email cannot be empty",
+        "en": "Email không được để trống",
         "fr": "L'e-mail ne peut pas être vide",
         "ar": "لا يمكن أن يكون البريد الإلكتروني فارغًا",
         "ja": "メールを空にすることはできません"
     },
     {
         "text_id": "enter_valid_email",
-        "en": "Please enter a valid email address, abc@xyz.com",
+        "en": "Vui lòng nhập địa chỉ email hợp lệ, abc@xyz.com",
         "fr": "Veuillez entrer une adresse e-mail valide, abc@xyz.com",
         "ar": "الرجاء إدخال عنوان بريد إلكتروني صالح ، abc@xyz.com",
         "ja": "有効なメールアドレスabc@xyz.comを入力してください"
     },
     {
         "text_id": "enter_password",
-        "en": "enter password",
+        "en": "nhập mật khẩu",
         "fr": "enter_password",
         "ar": "أدخل كلمة المرور",
         "ja": "パスワードを入力する"
     },
     {
         "text_id": "enter_first_name",
-        "en": "Enter first name",
+        "en": "Nhập tên",
         "fr": "entrez votre prénom",
         "ar": "أدخل الاسم الأول",
         "ja": "名を入力してください"
     },
     {
         "text_id": "enter_last_name",
-        "en": "Enter last name",
+        "en": "Nhập họ",
         "fr": "Entrer le nom de famille",
         "ar": "إدخال اسم آخر",
         "ja": "名前を入力してください"
     },
     {
         "text_id": "first_name_cannot_empty",
-        "en": "First Name cannot be empty",
+        "en": "Tên không được để trống",
         "fr": "Le prénom ne peut pas être vide",
         "ar": "لا يمكن أن يكون الاسم الأول فارغًا",
         "ja": "名を空にすることはできません"
     },
     {
         "text_id": "last_name_cannot_empty",
-        "en": "Last Name cannot be empty",
+        "en": "Họ Tên không được để trống",
         "fr": "Le nom de famille ne peut pas être vide",
         "ar": "لا يمكن أن يكون الاسم الأخير فارغًا",
         "ja": "姓を空にすることはできません"
-    },
-    {
-        "text_id": "new_personal_information",
-        "en": "New personal information NON",
-        "fr": "Nouvelles informations personnelles",
-        "ar": "معلومات شخصية جديدة",
-        "ja": "新しい個人情報"
-    },
-    {
-        "text_id": "enter_your_new_phone",
-        "en": "Enter your new phone"
-    },
-    {
-        "text_id": "enter_date_of_birth",
-        "en": "Enter your birthday"
     }
 ]
+
