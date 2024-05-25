@@ -6,6 +6,7 @@ import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:user_repository/user_repository.dart';
+
 class RoomeBookView extends StatefulWidget {
   final Room room;
 
@@ -13,7 +14,6 @@ class RoomeBookView extends StatefulWidget {
   final Animation<double> animation;
   const RoomeBookView(
       {Key? key,
-
       required this.room,
       required this.animationController,
       required this.animation})
@@ -43,7 +43,6 @@ class _RoomeBookViewState extends State<RoomeBookView> {
     super.initState();
     ontheload();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,25 +109,39 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(child: SizedBox()),
-                          SizedBox(
-                            height: 38,
-                            child: CommonButton(                              
-                              onTap: () {
-                                openEdit();
-                              },
-                              //
-                              buttonTextWidget: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 16.0, right: 16.0, top: 4, bottom: 4),
-                                child: Text(
-                                  AppLocalizations(context).of("book_now"),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles(context).getRegularStyle(),
-                                 // onClick: 
+                          widget.room.isSelected == false
+                              ? SizedBox(
+                                  height: 38,
+                                  child: CommonButton(
+                                    onTap: () {
+                                      openEdit();
+                                    },
+                                    //
+                                    buttonTextWidget: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                          right: 16.0,
+                                          top: 4,
+                                          bottom: 4),
+                                      child: Text(
+                                        AppLocalizations(context)
+                                            .of("book_now"),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyles(context)
+                                            .getRegularStyle(),
+                                        // onClick:
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  "Reserved!",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       Row(
@@ -235,22 +248,18 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             ),
                           ),
                         )
-                        
                       ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
                     Center(
-                      child: Text(
-                        "Go to Pay or Cancel",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                        )
-                        ),
+                      child: Text("Go to Pay or Cancel",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
                     ),
-                    
                     SizedBox(
                       height: 10.0,
                     ),
@@ -260,28 +269,27 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                     Center(
                       child: GestureDetector(
                         onTap: () async {
-                          if(id != null && !widget.room.isSelected)
-                          {
-                         /// String id2 = randomAlphaNumeric(10);
-                          Map<String, dynamic> addPaymentToRoom ={
-                                  "Name": widget.room.titleTxt,
-                                  "RoomId": widget.room.roomId,
-                                  "PerNight": widget.room.perNight,
-                                  "HotelId": widget.room.hotelId,
-                                  "Date": widget.room.date,
-                                  "isSelected": widget.room.isSelected, 
-                                  "People": widget.room.roomData.people,
-                                  "NumberRoom": widget.room.roomData.numberRoom,
-                                   "ImagePath": widget.room.imagePath,
-                                 // "PaymentId": id2,
-                                 
-                                };
-                                await FirebaseUserRepository().addPaymentToRoom(addPaymentToRoom, id!);
-                                await FirebaseUserRepository().updateUserRoomId(id!, widget.room.roomId);
+                          if (id != null && !widget.room.isSelected) {
+                            /// String id2 = randomAlphaNumeric(10);
+                            Map<String, dynamic> addPaymentToRoom = {
+                              "Name": widget.room.titleTxt,
+                              "RoomId": widget.room.roomId,
+                              "PerNight": widget.room.perNight,
+                              "HotelId": widget.room.hotelId,
+                              "Date": widget.room.date,
+                              "isSelected": widget.room.isSelected,
+                              "People": widget.room.roomData.people,
+                              "NumberRoom": widget.room.roomData.numberRoom,
+                              "ImagePath": widget.room.imagePath,
+                              // "PaymentId": id2,
+                            };
+                            await FirebaseUserRepository()
+                                .addPaymentToRoom(addPaymentToRoom, id!);
+                            await FirebaseUserRepository()
+                                .updateUserRoomId(id!, widget.room.roomId);
                           }
-                          
-                                NavigationServices(context).gotoPayment(); 
 
+                          NavigationServices(context).gotoPayment();
                         },
                         child: Container(
                           width: 100,
