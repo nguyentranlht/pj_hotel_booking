@@ -2,12 +2,10 @@ import 'dart:io';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/models/input_textfield.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -16,9 +14,7 @@ class UpdateRoomController extends ChangeNotifier {
   TextEditingController _priceController = TextEditingController();
   final fnameFocusNode = FocusNode();
   final lnameFocusNode = FocusNode();
-  TextEditingController _distController = TextEditingController();
   TextEditingController _capacityController = TextEditingController();
-  TextEditingController _ratingController = TextEditingController();
   TextEditingController _reviewController = TextEditingController();
   TextEditingController _peopleController = TextEditingController();
   TextEditingController _numberRoomController = TextEditingController();

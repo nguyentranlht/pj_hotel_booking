@@ -379,4 +379,25 @@ class FirebaseUserRepository implements UserRepository {
       throw Exception('Failed to remove user room ID: $error');
     }
   }
+
+  Future<Map<String, dynamic>?> getPaymentData(String userId) async {
+  try {
+    var paymentQuerySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('payment')
+        .where('isSelected', isEqualTo: true)
+        .limit(1)
+        .get();
+    
+    if (paymentQuerySnapshot.docs.isNotEmpty) {
+      return paymentQuerySnapshot.docs.first.data();
+    } else {
+      return null;
+    }
+  } catch (e) {
+    print('Error getting payment data: $e');
+    throw e;
+  }
+}
 }

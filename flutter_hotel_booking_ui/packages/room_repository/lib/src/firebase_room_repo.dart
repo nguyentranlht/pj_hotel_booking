@@ -84,4 +84,13 @@ class FirebaseRoomRepo implements RoomRepo {
       throw Exception('Failed to update room status: $error');
     }
   }
+
+  Future<void> updateRoomData(String roomId, Map<String, dynamic> data) async {
+    try {
+      await roomCollection.doc(roomId).update(data);
+    } catch (e) {
+      print('Error updating room data: $e');
+      throw e;
+    }
+  }
 }

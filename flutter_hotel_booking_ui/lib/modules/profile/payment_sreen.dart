@@ -16,11 +16,34 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? userId, wallet, paymentId, roomId;
+  DateTime _selectedDate = DateTime.now();
 
   num total = 0;
   int amount2 = 0, note = 0, amount3 = 0;
   Stream? roomStream;
   bool isSelectedRoom = false;
+
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+
+  @override
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      initialDateRange: _selectedStartDate != null && _selectedEndDate != null
+          ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
+          : null,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
+    );
+        if (picked != null) {
+      setState(() {
+        _selectedStartDate = picked.start;
+        _selectedEndDate = picked.end;
+      });
+    }
+  }
+
   void startTimer() {
     Timer(Duration(seconds: 3), () {
       amount2 = int.parse(total.toString());
@@ -87,7 +110,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Xác nhận xóa"),
+                                                                    title: Text("Xác nhận xóa"),
+
                                   content: Text(
                                       "Bạn có chắc muốn xoá?"),
                                   actions: <Widget>[
@@ -101,7 +125,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                       },
-                                      child: Text("Xoá"),
+                                                                            child: Text("Xoá"),
+
                                     ),
                                   ],
                                 );
@@ -229,7 +254,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Tổng số tiền",
+                    "Total Price",
                     style: AppWidget.boldTextFeildStyle(),
                   ),
                   Text(
@@ -257,11 +282,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       .updateIsSelectedForUserPayments(userId!);
 
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
-                  if (roomId != null) {
-                    await FirebaseRoomRepo().updateIsSelected(roomId!, true);
-                  }
+                  // if (roomId != null) {
+                  //   await FirebaseRoomRepo().updateIsSelected(roomId!, true);
+                  // }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
 
+                  await updateRoomDataWithPayment(userId!,roomId!);
                   setState(() {});
                   openEdit();
                 }
@@ -404,7 +430,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Text("Insufficient balance",
+                    Text("Số dư không đủ",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
@@ -458,4 +484,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+  Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
+  try {
+    var paymentData = await FirebaseUserRepository().getPaymentData(userId);
+    if (paymentData != null) {
+      await FirebaseRoomRepo().updateRoomData(
+        roomId,
+        {
+          'StartDate': paymentData['StartDate'],
+          'EndDate': paymentData['EndDate'],
+          'isSelected': true,
+        },
+      );
+    }
+  } catch (e) {
+    print('Error updating room data with payment: $e');
+    throw e;
+  }
+}
 }
