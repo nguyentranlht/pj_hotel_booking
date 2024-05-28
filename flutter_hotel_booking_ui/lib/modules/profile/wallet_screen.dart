@@ -18,6 +18,7 @@ import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../../models/setting_list_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +35,7 @@ class _WalletScreenState extends State<WalletScreen> {
   String? wallet, userId, flap;
   int? add;
   TextEditingController amountcontroller = new TextEditingController();
-
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
   getthesharedpref() async {
     wallet = await FirebaseUserRepository().getUserWallet();
     userId = await FirebaseUserRepository().getUserId();
@@ -111,7 +112,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                       height: 5.0,
                                     ),
                                     Text(
-                                      "\$" + "${state.user!.wallet}",
+                                      "${oCcy.format(int.parse((state.user!.wallet).toString()))} ₫",
                                       style: AppWidget.boldTextFeildStyle(),
                                     ),
                                   ],
@@ -139,7 +140,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  makePayment('100');
+                                  makePayment('100000');
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(5),
@@ -149,14 +150,14 @@ class _WalletScreenState extends State<WalletScreen> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Text(
-                                    "\$" + "100",
+                                    "${oCcy.format(100000)} ₫",
                                     style: AppWidget.boldTextFeildStyle(),
                                   ),
                                 ),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  makePayment('250');
+                                  makePayment('200000');
                                 },
                                 child: Container(
                                     padding: EdgeInsets.all(5),
@@ -167,13 +168,38 @@ class _WalletScreenState extends State<WalletScreen> {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "\$" + "250",
+                                      "${oCcy.format(200000)} ₫",
+                                      style: AppWidget.boldTextFeildStyle(),
+                                    )),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  makePayment('500000');
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color:
+                                              Color.fromARGB(255, 80, 75, 75)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      "${oCcy.format(500000)} ₫",
                                       style: AppWidget.boldTextFeildStyle(),
                                     )),
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  makePayment('500');
+                                  makePayment('1000000');
                                 },
                                 child: Container(
                                     padding: EdgeInsets.all(5),
@@ -184,41 +210,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
-                                      "\$" + "500",
-                                      style: AppWidget.boldTextFeildStyle(),
-                                    )),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  makePayment('1000');
-                                },
-                                child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color:
-                                              Color.fromARGB(255, 80, 75, 75)),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      "\$" + "1000",
-                                      style: AppWidget.boldTextFeildStyle(),
-                                    )),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  makePayment('2000');
-                                },
-                                child: Container(
-                                    padding: EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color:
-                                              Color.fromARGB(255, 80, 75, 75)),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      "\$" + "2000",
+                                      "${oCcy.format(1000000)} ₫",
                                       style: AppWidget.boldTextFeildStyle(),
                                     )),
                               ),
@@ -260,7 +252,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   Future<void> makePayment(String amount) async {
     try {
-      paymentIntent = await createPaymentIntent(amount, 'USD');
+      paymentIntent = await createPaymentIntent(amount, 'VND');
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
@@ -400,7 +392,7 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   calculateAmount(String amount) {
-    final calculatedAmout = (int.parse(amount)) * 100;
+    final calculatedAmout = (int.parse(amount));
 
     return calculatedAmout.toString();
   }

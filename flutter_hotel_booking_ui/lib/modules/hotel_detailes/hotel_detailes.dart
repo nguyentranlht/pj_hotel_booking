@@ -12,6 +12,7 @@ import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:intl/intl.dart';
 import '../../models/hotel_list_data.dart';
 import 'hotel_roome_list.dart';
 import 'rating_view.dart';
@@ -36,7 +37,7 @@ class _HotelDetailesState extends State<HotelDetailes>
   late AnimationController animationController;
   var imageHieght = 0.0;
   late AnimationController _animationController;
-
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
   @override
   void initState() {
     animationController = AnimationController(
@@ -620,7 +621,7 @@ class _HotelDetailesState extends State<HotelDetailes>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             Text(
-              "\$${widget.hotelData.perNight}",
+              "${oCcy.format(widget.hotelData.perNight)} ₫",
               textAlign: TextAlign.left,
               style: TextStyles(context).getBoldStyle().copyWith(
                     fontSize: 22,
