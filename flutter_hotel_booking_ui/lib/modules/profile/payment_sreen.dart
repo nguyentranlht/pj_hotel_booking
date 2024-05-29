@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
+import 'package:intl/intl.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../routes/route_names.dart';
@@ -22,7 +23,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   int amount2 = 0, note = 0, amount3 = 0;
   Stream? roomStream;
   bool isSelectedRoom = false;
-
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
 
@@ -208,7 +209,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               style: AppWidget.semiBoldTextFeildStyle(),
                             ),
                             Text(
-                              "\$" + ds["PerNight"].toString(),
+                              "${oCcy.format(ds["PerNight"])} ₫",
                               style: AppWidget.semiBoldTextFeildStyle(),
                             ),
                           ],
@@ -254,11 +255,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total Price",
+                    "Tổng tiền",
                     style: AppWidget.boldTextFeildStyle(),
                   ),
                   Text(
-                    "\$" + amount2.toString(),
+                    "${oCcy.format(amount2)} ₫",
                     style: AppWidget.semiBoldTextFeildStyle(),
                   )
                 ],
