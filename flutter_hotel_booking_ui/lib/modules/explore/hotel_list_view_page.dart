@@ -10,6 +10,7 @@ import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:flutter_hotel_booking_ui/widgets/list_cell_animation_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HotelListViewPage extends StatelessWidget {
@@ -18,8 +19,8 @@ class HotelListViewPage extends StatelessWidget {
   final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
-
-  const HotelListViewPage(
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
+  HotelListViewPage(
       {Key? key,
       required this.hotelData,
       required this.animationController,
@@ -140,7 +141,7 @@ class HotelListViewPage extends StatelessWidget {
                                               CrossAxisAlignment.end,
                                           children: <Widget>[
                                             Text(
-                                              "\$${hotelData.perNight}",
+                                              "${oCcy.format(hotelData.perNight)} ₫",
                                               textAlign: TextAlign.left,
                                               style: TextStyles(context)
                                                   .getBoldStyle()

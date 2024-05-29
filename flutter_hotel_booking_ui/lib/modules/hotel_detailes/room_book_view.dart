@@ -31,7 +31,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
   var pageController = PageController(initialPage: 0);
-
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
   String? id;
 
   String? formatDate(DateTime? date) {
@@ -202,7 +202,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "\$${widget.room.perNight}",
+                            "${oCcy.format(widget.room.perNight)} ₫",
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
@@ -352,6 +352,8 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                               "StartDate": formatDate(_selectedStartDate),
                               "EndDate": formatDate(_selectedEndDate)
                             };
+                            await FirebaseRoomRepo().clearUserPayments(id!);
+                            await FirebaseUserRepository().removeUserRoomId(id!);
                             await FirebaseUserRepository()
                                 .addPaymentToRoom(addPaymentToRoom, id!);
                             await FirebaseUserRepository()

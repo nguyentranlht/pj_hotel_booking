@@ -8,6 +8,7 @@ import 'dart:typed_data';
 class FirebaseRoomRepo implements RoomRepo {
   final roomCollection = FirebaseFirestore.instance.collection('rooms');
   final CollectionReference roomCollection2 = FirebaseFirestore.instance.collection('rooms');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Future<List<Room>> getRooms() async {
     try {
@@ -90,6 +91,24 @@ class FirebaseRoomRepo implements RoomRepo {
       await roomCollection.doc(roomId).update(data);
     } catch (e) {
       print('Error updating room data: $e');
+      throw e;
+    }
+  }
+
+  Future<void> clearUserPayments(String userId) async {
+    try {
+      QuerySnapshot paymentCollectionSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .where('isSelected', isEqualTo: false)
+          .get();
+
+      for (QueryDocumentSnapshot doc in paymentCollectionSnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      print('Error clearing user payments: $e');
       throw e;
     }
   }
