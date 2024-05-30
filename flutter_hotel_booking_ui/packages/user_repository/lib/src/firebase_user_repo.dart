@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,7 +31,10 @@ class FirebaseUserRepository implements UserRepository {
   final usersCollection = FirebaseFirestore.instance.collection('users');
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+      final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
   ///
@@ -69,7 +72,27 @@ class FirebaseUserRepository implements UserRepository {
       rethrow;
     }
   }
+  Future<int?> getAmountFromPayment(String userId, String paymentId) async {
+  try {
+    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('payment')
+        .doc(paymentId)
+        .get();
 
+    if (paymentDoc.exists) {
+      int? PerNight = paymentDoc.get('PerNight');
+      return PerNight;
+    } else {
+      print("Không tìm thấy thông tin về gia tien trong payment.");
+      return null;
+    }
+  } catch (e) {
+    print('Lỗi khi lấy thông tin gia tien từ payment: $e');
+    throw e;
+  }
+}
   @override
   Future<void> signInGoogle() async {
     try {
@@ -296,65 +319,77 @@ class FirebaseUserRepository implements UserRepository {
     return await FirebaseFirestore.instance.collection(name).snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async{
-    return await FirebaseFirestore.instance.collection("users").doc(id).collection("payment").snapshots();
+  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .collection("payment")
+        .snapshots();
   }
-   
 
   Future<void> updateIsSelectedForUserPayments(String userId) async {
-
     var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-   
+
     var paymentCollection = userDoc.collection('payment');
 
-    var querySnapshot = await paymentCollection.where('isSelected', isEqualTo: false).get();
-  
+    var querySnapshot =
+        await paymentCollection.where('isSelected', isEqualTo: false).get();
+
     for (var doc in querySnapshot.docs) {
       await doc.reference.update({'isSelected': true});
     }
   }
 
-
   @override
-  Future<Map<String, dynamic>?> getPaymentForUser(String userId, String roomId) async {
-  try {
-    
-    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance.collection('users').doc(userId).collection('payment').doc(roomId).get();
-
-    if (paymentDoc.exists) {
-      // Trả về dữ liệu của document "Payment" nếu tồn tại
-      return paymentDoc.data() as Map<String, dynamic>;
-    } else {
-      // Trả về null nếu document "Payment" không tồn tại
-      return null;
-    }
-  } catch (e) {
-    print('Lỗi khi tìm kiếm payment: $e');
-    rethrow;
-  }
-}
-
-  @override
- Future<void> addPaymentToRoom(Map<String, dynamic> paymentData, String userId) async {
+  Future<Map<String, dynamic>?> getPaymentForUser(
+      String userId, String roomId) async {
     try {
-      CollectionReference paymentsCollectionRef = _firestore.collection('users').doc(userId).collection('payment');
+      DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(roomId)
+          .get();
 
-   
+      if (paymentDoc.exists) {
+        // Trả về dữ liệu của document "Payment" nếu tồn tại
+        return paymentDoc.data() as Map<String, dynamic>;
+      } else {
+        // Trả về null nếu document "Payment" không tồn tại
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi khi tìm kiếm payment: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addPaymentToRoom(
+      Map<String, dynamic> paymentData, String userId) async {
+    try {
+      CollectionReference paymentsCollectionRef =
+          _firestore.collection('users').doc(userId).collection('payment');
+
       DocumentReference newPaymentRef = paymentsCollectionRef.doc();
-      String paymentId = newPaymentRef.id;  // Lấy ID tự sinh
+      String paymentId = newPaymentRef.id; // Lấy ID tự sinh
 
       // Thêm document với dữ liệu thanh toán và ID tự sinh
       await newPaymentRef.set({
         ...paymentData,
-        'paymentId': paymentId  // Lưu trữ paymentId trong document (nếu cần)
+        'paymentId': paymentId // Lưu trữ paymentId trong document (nếu cần)
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
+
   @override
   Future<void> deletePaymentFromRoom(String userId, String paymentId) async {
     try {
-      DocumentReference paymentDocRef = _firestore.collection('users').doc(userId).collection('payment').doc(paymentId);
+      DocumentReference paymentDocRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId);
 
       // Xóa document
       await paymentDocRef.delete();
@@ -372,6 +407,7 @@ class FirebaseUserRepository implements UserRepository {
       throw Exception('Failed to update user room ID: $error');
     }
   }
+
   Future<void> removeUserRoomId(String userId) async {
     try {
       await userCollection.doc(userId).update({'roomId': FieldValue.delete()});
@@ -381,23 +417,131 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   Future<Map<String, dynamic>?> getPaymentData(String userId) async {
-  try {
-    var paymentQuerySnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('payment')
-        .where('isSelected', isEqualTo: true)
-        .limit(1)
-        .get();
-    
-    if (paymentQuerySnapshot.docs.isNotEmpty) {
-      return paymentQuerySnapshot.docs.first.data();
-    } else {
+    try {
+      var paymentQuerySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .where('isSelected', isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (paymentQuerySnapshot.docs.isNotEmpty) {
+        return paymentQuerySnapshot.docs.first.data();
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting payment data: $e');
+      throw e;
+    }
+  }
+
+  Future<String?> getPaymentId(String userId) async {
+    try {
+      CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment');
+
+      QuerySnapshot paymentSnapshot = await paymentsCollectionRef.get();
+
+      if (paymentSnapshot.docs.isNotEmpty) {
+        return paymentSnapshot.docs.first
+            .id; // Lấy ID của tài liệu đầu tiên (có thể điều chỉnh theo yêu cầu)
+      } else {
+        return null; // Không có tài liệu thanh toán nào
+      }
+    } catch (e) {
+      print('Error getting paymentId: $e');
       return null;
     }
-  } catch (e) {
-    print('Error getting payment data: $e');
-    throw e;
   }
-}
+
+  Future<DateTime?> getStartDate(String userId, String paymentId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId)
+          .get();
+
+      if (userDoc.exists) {
+        String startDateString = userDoc.get('StartDate');
+        DateTime startDate = dateFormat.parse(startDateString);
+        return startDate;
+      } else {
+        print("khong thay gia tri StartDate");
+        return null;
+      }
+    } catch (e) {
+      print('Error getting StartDate: $e');
+      throw e;
+    }
+  }
+
+  Future<DateTime?> getEndDate(String userId, String paymentId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId)
+          .get();
+
+      if (userDoc.exists) {
+        String endDateString = userDoc.get('EndDate');
+        DateTime endDate = dateFormat.parse(endDateString);
+        return endDate;
+      } else {
+        print("khong thay gia tri EndDate");
+        return null;
+      }
+    } catch (e) {
+      print('Error getting EndDate: $e');
+      throw e;
+    }
+  }
+
+  Future<int?> getRoomNumberFromPayment(String userId, String paymentId) async {
+    try {
+      DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId)
+          .get();
+
+      if (paymentDoc.exists) {
+        int? roomNumber = paymentDoc.get('NumberRoom');
+        return roomNumber;
+      } else {
+        print("Không tìm thấy thông tin về số phòng trong payment.");
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi khi lấy thông tin số phòng từ payment: $e');
+      throw e;
+    }
+  }
+
+  Future<Map<String, String?>> getUserInfo(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      if (userSnapshot.exists) {
+        String? email = userSnapshot['email'];
+        String? firstname = userSnapshot['firstname'];
+        return {'email': email, 'firstname': firstname};
+      } else {
+        return {'email': null, 'fristname': null};
+      }
+    } catch (e) {
+      print('Error getting user info: $e');
+      return {'email': null, 'fristname': null};
+    }
+  }
 }

@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/widgets/sendGridApi.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../routes/route_names.dart';
-
+import 'package:intl/intl.dart';
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
@@ -26,7 +27,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final oCcy = NumberFormat("#,##0", "vi_VN");
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
+  String? luu,luu2;
+  int? perNight;
+  String? customerEmail;
+  String? customerName;
 
+  int? roomNumber;
   @override
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
@@ -51,7 +57,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       setState(() {});
     });
   }
-
+  String? formatDate(DateTime? date) {
+      if (date == null) return null;
+      return DateFormat('dd-MM-yyyy').format(date);
+    }
   getthesharedpref() async {
     userId = await FirebaseUserRepository().getUserId();
     wallet = await FirebaseUserRepository().getUserWallet();
@@ -59,10 +68,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   ontheload() async {
-    await getthesharedpref();
-    roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
-    setState(() {});
-  }
+      await getthesharedpref();
+
+      var userInfo = await FirebaseUserRepository().getUserInfo(userId!); 
+      String? email = userInfo['email'];
+      String? name = userInfo['firstname'];
+      
+      setState(() {
+        customerEmail = email;
+        customerName = name;
+      });
+
+      roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
+
+      setState(() {});
+    }
 
   @override
   void initState() {
@@ -279,9 +299,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   await FirebaseUserRepository().updateIsSelectedForUserPayments(userId!);
 
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
+                  if (roomId != null) {
+                      String? paymentId = await FirebaseUserRepository().getPaymentId(userId!);
+                      
+                      if (paymentId != null) {
+                        perNight = await FirebaseUserRepository().getAmountFromPayment(userId!, paymentId);
+                        roomNumber = await FirebaseUserRepository().getRoomNumberFromPayment(userId!, paymentId);
+                        _selectedStartDate = await FirebaseUserRepository().getStartDate(userId!, paymentId);
+                        _selectedEndDate = await FirebaseUserRepository().getEndDate(userId!, paymentId);
+                        luu = formatDate(_selectedStartDate);
+                        luu2 = formatDate(_selectedEndDate);
+                        setState(() {});
+                       
+                      } else {
+                        print('No paymentId found.');
+                      }
+                    }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
 
                   await updateRoomDataWithPayment(userId!, roomId!);
+                  await sendConfirmationEmail(
+                    customerEmail ?? 'khachhang@example.com', 
+                    customerName ?? 'Tên Khách Hàng',
+                   // hotelName ?? 'Khách sạn của bạn',
+                    roomNumber?.toString() ?? 'Số phòng của bạn',
+                    luu?.toString() ?? 'N/A',
+                    luu2?.toString() ?? 'N/A',
+                    "${oCcy.format(perNight)} ₫".toString(), 
+                  );
                   setState(() {});
                   openEdit();
                 }
