@@ -112,4 +112,21 @@ class FirebaseRoomRepo implements RoomRepo {
       throw e;
     }
   }
+
+  Future<void> addDateToRoom(
+      Map<String, dynamic> dateTime, String roomId) async {
+    try {
+      CollectionReference roomsCollectionRef =
+          _firestore.collection('rooms').doc(roomId).collection('dateTime');
+
+      DocumentReference newRoomRef = roomsCollectionRef.doc();
+      String paymentId = newRoomRef.id; // Lấy ID tự sinh
+
+      // Thêm document với dữ liệu thanh toán và ID tự sinh
+      await newRoomRef.set({
+        ...dateTime,
+        'dateTimeId': paymentId // Lưu trữ paymentId trong document (nếu cần)
+      });
+    } catch (e) {}
+  }
 }

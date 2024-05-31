@@ -8,10 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/authentication_bloc/authentication_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/update_profile_bloc/profile_controller.dart';
-import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {

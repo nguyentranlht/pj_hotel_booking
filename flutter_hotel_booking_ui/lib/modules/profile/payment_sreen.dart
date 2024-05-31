@@ -9,6 +9,7 @@ import 'package:room_repository/room_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../routes/route_names.dart';
 import 'package:intl/intl.dart';
+
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
@@ -27,7 +28,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final oCcy = NumberFormat("#,##0", "vi_VN");
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
-  String? luu,luu2;
+  String? luu, luu2;
   int? perNight;
   String? customerEmail;
   String? customerName;
@@ -57,10 +58,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
       setState(() {});
     });
   }
+
   String? formatDate(DateTime? date) {
-      if (date == null) return null;
-      return DateFormat('dd-MM-yyyy').format(date);
-    }
+    if (date == null) return null;
+    return DateFormat('dd-MM-yyyy').format(date);
+  }
+
   getthesharedpref() async {
     userId = await FirebaseUserRepository().getUserId();
     wallet = await FirebaseUserRepository().getUserWallet();
@@ -68,21 +71,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   ontheload() async {
-      await getthesharedpref();
+    await getthesharedpref();
 
-      var userInfo = await FirebaseUserRepository().getUserInfo(userId!); 
-      String? email = userInfo['email'];
-      String? name = userInfo['firstname'];
-      
-      setState(() {
-        customerEmail = email;
-        customerName = name;
-      });
+    var userInfo = await FirebaseUserRepository().getUserInfo(userId!);
+    String? email = userInfo['email'];
+    String? name = userInfo['firstname'];
 
-      roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
+    setState(() {
+      customerEmail = email;
+      customerName = name;
+    });
 
-      setState(() {});
-    }
+    roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
+
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -122,121 +125,127 @@ class _PaymentScreenState extends State<PaymentScreen> {
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             DocumentSnapshot ds = snapshot.data.docs[index];
-            return ds["isSelected"] == true?
-            Container()
-            :Slidable(
-              key: Key(ds.id),
-              endActionPane: ActionPane(
-                motion: ScrollMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: (context) async {
-                      bool confirmDelete = await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Xác nhận xóa"),
-                            content: Text("Bạn có chắc muốn xoá?"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                                child: Text("Huỷ"),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                },
-                                child: Text("Xoá"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      if (confirmDelete == true) {
-                        try {
-                          if (userId != null && ds.id != null) {
-                            await FirebaseUserRepository().deletePaymentFromRoom(userId!, ds.id);
-                            await FirebaseUserRepository().removeUserRoomId(userId!);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Đã xóa thanh toán thành công'),
-                              ),
-                            );
-                            // Cập nhật lại tổng tiền sau khi xóa
-                            setState(() {
-                              snapshot.data.docs.removeAt(index);
-                              calculateTotal(snapshot);
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('User ID or Payment ID is null'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to delete payment: $error'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: 'Xóa',
-                  ),
-                ],
-              ),
-              child: Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
-                child: Material(
-                  elevation: 5.0,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: Row(
+            return ds["isSelected"] == true
+                ? Container()
+                : Slidable(
+                    key: Key(ds.id),
+                    endActionPane: ActionPane(
+                      motion: ScrollMotion(),
                       children: [
-                        SizedBox(width: 20.0),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.network(
-                            ds["ImagePath"],
-                            height: 90,
-                            width: 90,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 20.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              ds["Name"],
-                              style: AppWidget.semiBoldTextFeildStyle(),
-                            ),
-                            Text(
-                              "${oCcy.format(ds["PerNight"])} ₫",
-                              style: AppWidget.semiBoldTextFeildStyle(),
-                            ),
-                          ],
+                        SlidableAction(
+                          onPressed: (context) async {
+                            bool confirmDelete = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Xác nhận xóa"),
+                                  content: Text("Bạn có chắc muốn xoá?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text("Huỷ"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text("Xoá"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if (confirmDelete == true) {
+                              try {
+                                if (userId != null && ds.id != null) {
+                                  await FirebaseUserRepository()
+                                      .deletePaymentFromRoom(userId!, ds.id);
+                                  await FirebaseUserRepository()
+                                      .removeUserRoomId(userId!);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'Đã xóa khỏi thanh toán thành công'),
+                                    ),
+                                  );
+                                  // Cập nhật lại tổng tiền sau khi xóa
+                                  setState(() {
+                                    snapshot.data.docs.removeAt(index);
+                                    calculateTotal(snapshot);
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('User ID or Payment ID is null'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              } catch (error) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Failed to delete payment: $error'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Xóa',
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-            );
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          left: 20.0, right: 20.0, bottom: 10.0),
+                      child: Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 20.0),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Image.network(
+                                  ds["ImagePath"],
+                                  height: 90,
+                                  width: 90,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(width: 20.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    ds["Name"],
+                                    style: AppWidget.semiBoldTextFeildStyle(),
+                                  ),
+                                  Text(
+                                    "${oCcy.format(ds["PerNight"])} ₫",
+                                    style: AppWidget.semiBoldTextFeildStyle(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
           },
         );
       },
@@ -294,38 +303,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   return openError();
                 } else {
                   int amount = int.parse(wallet!) - amount2;
-                  await FirebaseUserRepository().updateUserWallet(userId!, amount.toString());
-                  await FirebaseUserRepository().saveUserWallet(amount.toString());
-                  await FirebaseUserRepository().updateIsSelectedForUserPayments(userId!);
+                  await FirebaseUserRepository()
+                      .updateUserWallet(userId!, amount.toString());
+                  await FirebaseUserRepository()
+                      .saveUserWallet(amount.toString());
+                  await FirebaseUserRepository()
+                      .updateIsSelectedForUserPayments(userId!);
 
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
-                      String? paymentId = await FirebaseUserRepository().getPaymentId(userId!);
-                      
-                      if (paymentId != null) {
-                        perNight = await FirebaseUserRepository().getAmountFromPayment(userId!, paymentId);
-                        roomNumber = await FirebaseUserRepository().getRoomNumberFromPayment(userId!, paymentId);
-                        _selectedStartDate = await FirebaseUserRepository().getStartDate(userId!, paymentId);
-                        _selectedEndDate = await FirebaseUserRepository().getEndDate(userId!, paymentId);
-                        luu = formatDate(_selectedStartDate);
-                        luu2 = formatDate(_selectedEndDate);
-                        setState(() {});
-                       
-                      } else {
-                        print('No paymentId found.');
-                      }
+                    String? paymentId =
+                        await FirebaseUserRepository().getPaymentId(userId!);
+
+                    if (paymentId != null) {
+                      perNight = await FirebaseUserRepository()
+                          .getAmountFromPayment(userId!, paymentId);
+                      roomNumber = await FirebaseUserRepository()
+                          .getRoomNumberFromPayment(userId!, paymentId);
+                      _selectedStartDate = await FirebaseUserRepository()
+                          .getStartDate(userId!, paymentId);
+                      _selectedEndDate = await FirebaseUserRepository()
+                          .getEndDate(userId!, paymentId);
+                      luu = formatDate(_selectedStartDate);
+                      luu2 = formatDate(_selectedEndDate);
+                      setState(() {});
+                    } else {
+                      print('No paymentId found.');
                     }
+                  }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
 
                   await updateRoomDataWithPayment(userId!, roomId!);
                   await sendConfirmationEmail(
-                    customerEmail ?? 'khachhang@example.com', 
+                    customerEmail ?? 'khachhang@example.com',
                     customerName ?? 'Tên Khách Hàng',
-                   // hotelName ?? 'Khách sạn của bạn',
+                    // hotelName ?? 'Khách sạn của bạn',
                     roomNumber?.toString() ?? 'Số phòng của bạn',
                     luu?.toString() ?? 'N/A',
                     luu2?.toString() ?? 'N/A',
-                    "${oCcy.format(perNight)} ₫".toString(), 
+                    "${oCcy.format(perNight)} ₫".toString(),
                   );
                   setState(() {});
                   openEdit();
@@ -338,7 +354,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 60.0, top: 0.0),
+                margin: EdgeInsets.only(
+                    left: 30.0, right: 30.0, bottom: 60.0, top: 0.0),
                 child: Center(
                   child: Text(
                     "Thực hiện thanh toán",
@@ -358,162 +375,162 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Future openEdit() => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      NavigationServices(context).gotoLoginApp();
-                    },
-                    child: Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          NavigationServices(context).gotoLoginApp();
+                        },
+                        child: Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Center(
+                        child: Text(
+                          "Thanh toán thành công",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.lightGreen.shade700,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    "Cảm ơn",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
                   ),
                   SizedBox(
-                    width: 16.0,
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    height: 10.0,
                   ),
                   Center(
-                    child: Text(
-                      "Thanh toán thành công",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.lightGreen.shade700,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                    child: GestureDetector(
+                      onTap: () {
+                        NavigationServices(context).gotoLoginApp();
+                      },
+                      child: Container(
+                        width: 100,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF008080),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Trang chủ",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Text(
-                "Cảm ơn",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    NavigationServices(context).gotoLoginApp();
-                  },
-                  child: Container(
-                    width: 100,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Color(0xFF008080),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Trang chủ",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   Future openError() => showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      NavigationServices(context).gotoIntroductionScreen();
-                    },
-                    child: Icon(
-                      Icons.error,
-                      color: Colors.red,
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          NavigationServices(context).gotoIntroductionScreen();
+                        },
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0,
+                      ),
+                      Center(
+                        child: Text(
+                          "Lỗi thanh toán",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    "Số dư không đủ",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
                     ),
                   ),
                   SizedBox(
-                    width: 16.0,
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    height: 10.0,
                   ),
                   Center(
-                    child: Text(
-                      "Lỗi thanh toán",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+                    child: GestureDetector(
+                      onTap: () {
+                        NavigationServices(context).gotoLoginApp();
+                      },
+                      child: Container(
+                        width: 100,
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.lightGreen.shade700,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Trang chủ",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Text(
-                "Số dư không đủ",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    NavigationServices(context).gotoLoginApp();
-                  },
-                  child: Container(
-                    width: 100,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.lightGreen.shade700,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Trang chủ",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   _appBar() {
     return AppBar(
@@ -540,14 +557,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
     try {
       var paymentData = await FirebaseUserRepository().getPaymentData(userId);
+
       if (paymentData != null) {
-        await FirebaseRoomRepo().updateRoomData(
-          roomId,
-          {
-            'StartDate': paymentData['StartDate'],
-            'EndDate': paymentData['EndDate'],
-            'isSelected': true,
-          },
+        Map<String, dynamic> addDateToRoom = {
+          "StartDate": paymentData['StartDate'],
+          "EndDate": paymentData['EndDate'],
+          "paymentId": paymentData['paymentId']
+        };
+        await FirebaseRoomRepo().addDateToRoom(addDateToRoom,
+          roomId
         );
       }
     } catch (e) {

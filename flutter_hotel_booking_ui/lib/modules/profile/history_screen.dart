@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/models/my_user.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:user_repository/user_repository.dart';
-import '../../language/appLocalizations.dart';
-import '../../routes/route_names.dart';
-import '../../widgets/common_appbar_view.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -19,18 +17,9 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   String? userId, wallet;
   num total = 0;
-  int amount2 = 0, note = 0;
+  int note = 0;
   bool isSelected = false;
   final oCcy = NumberFormat("#,##0", "vi_VN");
-  DateTime? _selectedStartDate;
-  DateTime? _selectedEndDate;
-
-  void startTimer() {
-    Timer(Duration(seconds: 3), () {
-      amount2 = int.parse(total.toString());
-      setState(() {});
-    });
-  }
 
   getthesharedpref() async {
     userId = await FirebaseUserRepository().getUserId();
@@ -47,11 +36,43 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     ontheload();
-    startTimer();
     super.initState();
   }
 
   Stream? roomStream;
+
+  Future<void> deleteItem(String docId, num perNight) async {
+    try {
+      //await FirebaseUserRepository().deletePaymentFromRoom(userId!, docId);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(docId)
+          .update({'isSelected': false});
+      num amount = num.parse(wallet!) + perNight;
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'wallet': amount.toString()});
+      setState(() {
+        total -= perNight;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã đặt phòng thành công'),
+        ),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete payment: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   Widget roomPayment() {
     return StreamBuilder(
@@ -71,35 +92,45 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
             return Slidable(
               key: Key(ds.id),
-              startActionPane: ActionPane(
-                motion: ScrollMotion(),
-                children: [
-                  SlidableAction(
-                    onPressed: (context) {
-                      // Xử lý hành động "Sản phẩm tương tự"
-                    },
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    //icon: Icons.similar,
-                    label: 'Sản phẩm tương tự',
-                  ),
-                ],
-              ),
               endActionPane: ActionPane(
                 motion: ScrollMotion(),
                 children: [
-                  SlidableAction(
-                    onPressed: (context) async {
-                      bool? confirmed = true;
-                      if (confirmed == true) {
-                        // Xử lý hành động "Xóa"
-                      }
-                    },
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    icon: Icons.delete,
-                    label: 'Xóa',
-                  ),
+                  ds["isSelected"] == false
+                      ? Container()
+                      : SlidableAction(
+                          onPressed: (context) async {
+                            bool confirmDelete = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Xác nhận huỷ phòng"),
+                                  content: Text("Bạn có chắc muốn huỷ?"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text("Thoát"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text("Huỷ"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if (confirmDelete == true) {
+                              await deleteItem(ds.id, ds["PerNight"]);
+                            }
+                          },
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Huỷ',
+                        ),
                 ],
               ),
               child: Container(
@@ -145,9 +176,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SizedBox(width: 50),
                                 Text(
-                                  "Status: ",
+                                  "Trạng thái: ",
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 108, 135, 85),
                                     fontSize: 15,
@@ -156,8 +186,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ),
                                 Text(
                                   ds["isSelected"]
-                                      ? "Payment Success"
-                                      : "Payment Error",
+                                      ? "Thành công"
+                                      : "Thất bại",
                                   style: TextStyle(
                                     color: ds["isSelected"]
                                         ? Color.fromARGB(255, 104, 159, 56)
@@ -181,28 +211,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       },
     );
   }
-
-  // Future<bool> _showConfirmationDialog(BuildContext context) async {
-  //   return showDialog<bool>(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text('Xác nhận'),
-  //         content: Text('Bạn có chắc chắn muốn xóa sản phẩm này?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () => Navigator.of(context).pop(false),
-  //             child: Text('Hủy'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () => Navigator.of(context).pop(true),
-  //             child: Text('Xóa'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -248,7 +256,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       centerTitle: true,
       title: Text(
-        "Lịch sử thanh toán",
+        "Trạng thái thanh toán",
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,

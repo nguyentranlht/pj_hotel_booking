@@ -65,7 +65,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
           ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
           : null,
       firstDate: DateTime.now(),
-      lastDate: DateTime(2025),
+      lastDate: DateTime.now().add(Duration(days: 10)),
     );
 
     if (picked != null) {

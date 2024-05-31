@@ -32,7 +32,7 @@ class _CustomDialogState extends State<CustomDialog>
   void initState() {
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 480));
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _startAnimation());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startAnimation());
     super.initState();
   }
 
