@@ -41,7 +41,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Stream? roomStream;
 
-  Future<void> deleteItem(String docId, num perNight) async {
+  Future<void> deleteItem(String docId, num perNight, String roomId) async {
     try {
       //await FirebaseUserRepository().deletePaymentFromRoom(userId!, docId);
       FirebaseFirestore.instance
@@ -50,6 +50,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
           .collection('payment')
           .doc(docId)
           .update({'isSelected': false});
+      FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(roomId)
+          .collection('dateTime')
+          .where('paymentId', isEqualTo: docId)
+          .get()
+          .then((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          // Lấy document đầu tiên vì giả định là paymentId là duy nhất
+          var document = querySnapshot.docs.first;
+          document.reference.delete().then((_) {
+            print("Document successfully deleted!");
+          }).catchError((error) {
+            print("Error removing document: $error");
+          });
+        } else {
+          print("No document found with paymentId: $docId");
+        }
+      }).catchError((error) {
+        print("Error retrieving documents: $error");
+      });
       num amount = num.parse(wallet!) + perNight;
       FirebaseFirestore.instance
           .collection('users')
@@ -123,7 +144,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               },
                             );
                             if (confirmDelete == true) {
-                              await deleteItem(ds.id, ds["PerNight"]);
+                              await deleteItem(ds.id, ds["PerNight"],ds["RoomId"]);
                             }
                           },
                           backgroundColor: Colors.red,
@@ -185,9 +206,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ),
                                 ),
                                 Text(
-                                  ds["isSelected"]
-                                      ? "Thành công"
-                                      : "Thất bại",
+                                  ds["isSelected"] ? "Thành công" : "Thất bại",
                                   style: TextStyle(
                                     color: ds["isSelected"]
                                         ? Color.fromARGB(255, 104, 159, 56)
