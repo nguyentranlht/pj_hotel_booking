@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
@@ -33,6 +34,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
   var pageController = PageController(initialPage: 0);
   final oCcy = new NumberFormat("#,##0", "vi_VN");
   String? id;
+  List<DateTime> bookedDates = [];
 
   String? formatDate(DateTime? date) {
     if (date == null) return null;
@@ -54,27 +56,87 @@ class _RoomeBookViewState extends State<RoomeBookView> {
   @override
   void initState() {
     super.initState();
+    getBookedDates();
     getthesharedpref();
     ontheload();
   }
 
-  Future<void> _selectDateRange(BuildContext context) async {
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      initialDateRange: _selectedStartDate != null && _selectedEndDate != null
-          ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
-          : null,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 10)),
-    );
+    // Hàm truy vấn Firebase
+  void getBookedDates() async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('rooms')
+      .doc(widget.room.roomId)
+      .collection('dateTime')
+      .get();
+  List<DateTime> dates = [];
+   DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+  querySnapshot.docs.forEach((doc) {
+    // Parse và lưu trữ các ngày đã đặt từ dữ liệu Firestore
+    String startDateString = doc['StartDate'];
+    String endDateString = doc['EndDate'];
 
-    if (picked != null) {
-      setState(() {
-        _selectedStartDate = picked.start;
-        _selectedEndDate = picked.end;
-      });
+    DateTime startDate = dateFormat.parse(startDateString);
+    DateTime endDate = dateFormat.parse(endDateString);
+    // Thêm các ngày đã đặt vào danh sách bookedDates
+    while (startDate.isBefore(endDate.add(Duration(days: 1)))) {
+      dates.add(startDate);
+      startDate = startDate.add(Duration(days: 1));
+    }
+  });
+  setState(() {
+    bookedDates = dates;
+  });
+}
+
+
+bool isDateRangeBooked(DateTime start, DateTime end) {
+  for (DateTime date = start; date.isBefore(end.add(const Duration(days: 1))); date = date.add(const Duration(days: 1))) {
+    if (bookedDates.contains(date)) {
+      return true;
     }
   }
+  return false;
+}
+
+void showBookingAlert() {
+  if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Thông báo'),
+        content: Text(
+          "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Future<void> _selectDateRange(BuildContext context) async {
+  final DateTimeRange? picked = await showDateRangePicker(
+    context: context,
+    initialDateRange: _selectedStartDate != null && _selectedEndDate != null
+        ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
+        : null,
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(Duration(days: 15)),
+  );
+
+  if (picked != null) {
+    setState(() {
+      _selectedStartDate = picked.start;
+      _selectedEndDate = picked.end;
+    });
+    showBookingAlert();
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -146,10 +208,26 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                   height: 38,
                                   child: CommonButton(
                                     onTap: () {
-                                      if (_selectedStartDate != null &&
+                                      if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){      
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text('Thông báo'),
+                                            content: Text(
+                                              "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                child: Text("OK"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      else if (_selectedStartDate != null &&
                                           _selectedEndDate != null) {
                                         openEdit();
-                                      } else {
+                                      } else{
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
