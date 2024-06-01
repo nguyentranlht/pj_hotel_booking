@@ -422,7 +422,7 @@ class FirebaseUserRepository implements UserRepository {
           .collection('users')
           .doc(userId)
           .collection('payment')
-          .where('isSelected', isEqualTo: true)
+          .where('isSelected', isEqualTo: false)
           .limit(1)
           .get();
 

@@ -307,14 +307,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       .updateUserWallet(userId!, amount.toString());
                   await FirebaseUserRepository()
                       .saveUserWallet(amount.toString());
-                  await FirebaseUserRepository()
-                      .updateIsSelectedForUserPayments(userId!);
 
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
                     String? paymentId =
                         await FirebaseUserRepository().getPaymentId(userId!);
-
+                    await updateRoomDataWithPayment(userId!, roomId!);
+                    await FirebaseUserRepository()
+                        .updateIsSelectedForUserPayments(userId!);
                     if (paymentId != null) {
                       perNight = await FirebaseUserRepository()
                           .getAmountFromPayment(userId!, paymentId);
@@ -333,7 +333,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
 
-                  await updateRoomDataWithPayment(userId!, roomId!);
                   await sendConfirmationEmail(
                     customerEmail ?? 'khachhang@example.com',
                     customerName ?? 'Tên Khách Hàng',
@@ -564,9 +563,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           "EndDate": paymentData['EndDate'],
           "paymentId": paymentData['paymentId']
         };
-        await FirebaseRoomRepo().addDateToRoom(addDateToRoom,
-          roomId
-        );
+        await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }
     } catch (e) {
       print('Error updating room data with payment: $e');
