@@ -68,111 +68,115 @@ class _HomeExploreScreenState extends State<HomeExploreScreen>
   @override
   Widget build(BuildContext context) {
     sliderImageHieght = MediaQuery.of(context).size.width * 1.3;
-    return BlocBuilder<GetHotelBloc, GetHotelState>(
-      builder: (context, state) {
-        if (state is GetHotelSuccess) {
-          return BottomTopMoveAnimationView(
-            animationController: widget.animationController,
-            child: Consumer<ThemeProvider>(
-              builder: (context, provider, child) => Stack(
-                children: <Widget>[
-                  Container(
-                    color: AppTheme.scaffoldBackgroundColor,
-                    child: ListView.builder(
-                      controller: controller,
-                      itemCount: 4,
-                      // padding on top is only for we need spec for sider
-                      padding: EdgeInsets.only(
-                          top: sliderImageHieght + 32, bottom: 16),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        // some list UI
-                        var count = 4;
-                        var animation = Tween(begin: 0.0, end: 1.0).animate(
-                          CurvedAnimation(
-                            parent: widget.animationController,
-                            curve: Interval((1 / count) * index, 1.0,
-                                curve: Curves.fastOutSlowIn),
-                          ),
-                        );
-                        if (index == 0) {
-                          return TitleView(
-                            titleTxt: AppLocalizations(context)
-                                .of("popular_destination"),
-                            subTxt: '',
-                            animation: animation,
-                            animationController: widget.animationController,
-                            click: () {},
-                          );
-                        } else if (index == 1) {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            //Popular Destinations animation view
-                            child: PopularListView(
-                              animationController: widget.animationController,
-                              callBack: (index) {},
+    return BlocProvider(
+      create: (context) => GetHotelBloc(FirebaseHotelRepo())..add(GetHotel()),
+      child: BlocBuilder<GetHotelBloc, GetHotelState>(
+        builder: (context, state) {
+          if (state is GetHotelSuccess) {
+            return BottomTopMoveAnimationView(
+              animationController: widget.animationController,
+              child: Consumer<ThemeProvider>(
+                builder: (context, provider, child) => Stack(
+                  children: <Widget>[
+                    Container(
+                      color: AppTheme.scaffoldBackgroundColor,
+                      child: ListView.builder(
+                        controller: controller,
+                        itemCount: 4,
+                        // padding on top is only for we need spec for sider
+                        padding: EdgeInsets.only(
+                            top: sliderImageHieght + 32, bottom: 16),
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) {
+                          // some list UI
+                          var count = 4;
+                          var animation = Tween(begin: 0.0, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: widget.animationController,
+                              curve: Interval((1 / count) * index, 1.0,
+                                  curve: Curves.fastOutSlowIn),
                             ),
                           );
-                        } else if (index == 2) {
-                          return TitleView(
-                            titleTxt: AppLocalizations(context).of("best_deal"),
-                            subTxt: AppLocalizations(context).of("view_all"),
-                            animation: animation,
-                            isLeftButton: true,
-                            animationController: widget.animationController,
-                            click: () {},
-                          );
-                        } else {
-                          return getDealListView(index, state.hotels);
-                        }
-                      },
+                          if (index == 0) {
+                            return TitleView(
+                              titleTxt: AppLocalizations(context)
+                                  .of("popular_destination"),
+                              subTxt: '',
+                              animation: animation,
+                              animationController: widget.animationController,
+                              click: () {},
+                            );
+                          } else if (index == 1) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              //Popular Destinations animation view
+                              child: PopularListView(
+                                animationController: widget.animationController,
+                                callBack: (index) {},
+                              ),
+                            );
+                          } else if (index == 2) {
+                            return TitleView(
+                              titleTxt:
+                                  AppLocalizations(context).of("best_deal"),
+                              subTxt: AppLocalizations(context).of("view_all"),
+                              animation: animation,
+                              isLeftButton: true,
+                              animationController: widget.animationController,
+                              click: () {},
+                            );
+                          } else {
+                            return getDealListView(index, state.hotels);
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  // sliderUI with 3 images are moving
-                  _sliderUI(),
+                    // sliderUI with 3 images are moving
+                    _sliderUI(),
 
-                  // viewHotels Button UI for click event
-                  _viewHotelsButton(_animationController),
+                    // viewHotels Button UI for click event
+                    _viewHotelsButton(_animationController),
 
-                  //just gradient for see the time and battry Icon on "TopBar"
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 80,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).colorScheme.surface.withOpacity(0.4),
-                          Theme.of(context).colorScheme.surface.withOpacity(0.0),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      )),
+                    //just gradient for see the time and battry Icon on "TopBar"
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                          colors: [
+                            Theme.of(context).colorScheme.surface.withOpacity(0.4),
+                            Theme.of(context).colorScheme.surface.withOpacity(0.0),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        )),
+                      ),
                     ),
-                  ),
-                  //   serachUI on Top  Positioned
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top,
-                    left: 0,
-                    right: 0,
-                    child: serachUI(),
-                  )
-                ],
+                    //   serachUI on Top  Positioned
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top,
+                      left: 0,
+                      right: 0,
+                      child: serachUI(),
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        } else if (state is GetHotelLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return const Center(
-            child: Text("An error has occured"),
-          );
-        }
-      },
+            );
+          } else if (state is GetHotelLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return const Center(
+              child: Text("An error has occured"),
+            );
+          }
+        },
+      ),
     );
   }
 

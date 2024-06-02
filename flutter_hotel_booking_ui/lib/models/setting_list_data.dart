@@ -35,7 +35,7 @@ class SettingsListData {
       iconData: FontAwesomeIcons.lock,
     ),
     SettingsListData(
-      titleTxt: 'invite_friend',
+      titleTxt: 'admin_page',
       isSelected: false,
       iconData: FontAwesomeIcons.userFriends,
     ),
@@ -50,6 +50,11 @@ class SettingsListData {
       iconData: FontAwesomeIcons.infoCircle,
     ),
     SettingsListData(
+      titleTxt: 'history_text',
+      isSelected: false,
+      iconData: Icons.history_sharp,
+    ),
+    SettingsListData(
       titleTxt: 'payment_text',
       isSelected: false,
       iconData: FontAwesomeIcons.wallet,
@@ -60,6 +65,40 @@ class SettingsListData {
       iconData: CupertinoIcons.square_arrow_right,
     )
   ];
+
+  static List<SettingsListData> adminSettingsList = [
+    SettingsListData(
+      titleTxt: 'change_password',
+      isSelected: false,
+      iconData: FontAwesomeIcons.lock,
+    ),
+    SettingsListData(
+      titleTxt: 'user_page',
+      isSelected: false,
+      iconData: Icons.pages_rounded,
+    ),
+    SettingsListData(
+      titleTxt: 'credit_coupons',
+      isSelected: false,
+      iconData: FontAwesomeIcons.gift,
+    ),
+    SettingsListData(
+      titleTxt: 'create_hotel',
+      isSelected: false,
+      iconData: FontAwesomeIcons.infoCircle,
+    ),
+    SettingsListData(
+      titleTxt: 'payment_text',
+      isSelected: false,
+      iconData: Icons.room_preferences,
+    ),
+    SettingsListData(
+      titleTxt: "Log out",
+      isSelected: false,
+      iconData: CupertinoIcons.square_arrow_right,
+    )
+  ];
+
   static List<SettingsListData> settingsList = [
     SettingsListData(
       titleTxt: 'Notifications',

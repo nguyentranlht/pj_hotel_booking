@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:hotel_repository/src/entities/data_text_entity.dart';
 import 'package:hotel_repository/src/entities/room_data_entity.dart';
-import 'package:hotel_repository/src/entities/peoplesleeps_entity.dart';
 import '../models/models.dart';
 
 class HotelEntity {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
@@ -15,6 +16,24 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
   String _errorConfirmPassword = '';
   TextEditingController _newController = TextEditingController();
   TextEditingController _confirmController = TextEditingController();
+  void changePassword() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String newPassword = _newController.text.trim();
+
+    try {
+      await user?.updatePassword(newPassword);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations(context).of("password_changed_success")),
+        backgroundColor: Colors.green,
+      ));
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations(context).of("password_change_failed")),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +130,7 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
     } else {
       _errorNewPassword = '';
     }
+
     if (_confirmController.text.trim().isEmpty) {
       _errorConfirmPassword =
           AppLocalizations(context).of('password_cannot_empty');
@@ -122,7 +142,13 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
     } else {
       _errorConfirmPassword = '';
     }
+
     setState(() {});
+
+    if (isValid) {
+      changePassword();
+    }
+
     return isValid;
   }
 }

@@ -1,27 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
 import '../user_repository.dart';
 
 abstract class UserRepository {
+  Stream<User?> get user;
 
-	Stream<User?> get user;
-	
-	Future<void> signIn(String email, String password);
+  Future<void> signIn(String email, String password);
 
   Future<void> signInGoogle();
 
-	Future<void> logOut();
+  Future<void> signInFacebook();
 
-	Future<MyUser> signUp(MyUser myUser, String password);
+  Future<void> logOut();
 
-	Future<void> resetPassword(String email);
+  Future<MyUser> signUp(MyUser myUser, String password);
 
-	Future<void> setUserData(MyUser user);
+  Future<void> resetPassword(String email);
 
-	Future<MyUser> getMyUser(String myUserId);
+  Future<void> setUserData(MyUser user);
 
-	Future<String> uploadPicture(String file, String userId);
+  Future<MyUser> getMyUser(String myUserId);
+
+  Future<String> uploadPicture(String file, String userId);
+
+  Future<void> showUserNameDialogAlert(BuildContext context, String name);
 
   Future<String?> getUserId();
 
@@ -34,5 +37,7 @@ abstract class UserRepository {
 
   Future<Stream<QuerySnapshot>> getRoomPayment(String id);
 
-}
+  Future<Map<String, dynamic>?> getPaymentForUser(String userId, String roomId);
 
+  Future<void> addPaymentToRoom(Map<String, dynamic> paymentData, String userId);
+}

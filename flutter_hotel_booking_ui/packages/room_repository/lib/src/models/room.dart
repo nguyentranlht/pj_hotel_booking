@@ -72,7 +72,6 @@ class Room {
   }
 
   // peopleSleeps: $peopleSleeps,
-   
   @override
   String toString() {
     return '''

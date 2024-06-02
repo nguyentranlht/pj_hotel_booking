@@ -4,7 +4,6 @@ import 'package:flutter_hotel_booking_ui/modules/hotel_detailes/room_book_view.d
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:room_repository/room_repository.dart';
 import '../../futures/get_room_bloc/get_room_bloc.dart';
-import '../../models/hotel_list_data.dart';
 
 class RoomBookingScreen extends StatefulWidget {
   final String hotelName;

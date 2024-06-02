@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/models/constants.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
-import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
+import 'dart:async';
 
-import 'package:flutter_hotel_booking_ui/utils/helper.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
-import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:one_context/one_context.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:intl/intl.dart';
+
 class RoomeBookView extends StatefulWidget {
   final Room room;
 
@@ -19,7 +18,6 @@ class RoomeBookView extends StatefulWidget {
   final Animation<double> animation;
   const RoomeBookView(
       {Key? key,
-
       required this.room,
       required this.animationController,
       required this.animation})
@@ -30,16 +28,26 @@ class RoomeBookView extends StatefulWidget {
 }
 
 class _RoomeBookViewState extends State<RoomeBookView> {
+  // DateTime _selectedDate = DateTime.now();
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
   var pageController = PageController(initialPage: 0);
-
-  int total = 0;
+  final oCcy = new NumberFormat("#,##0", "vi_VN");
   String? id;
+  List<DateTime> bookedDates = [];
 
-    getthesharedpref() async {
-      id = await FirebaseUserRepository().getUserId();
-      setState(() {});
+  String? formatDate(DateTime? date) {
+    if (date == null) return null;
+    return DateFormat('dd-MM-yyyy').format(date);
   }
 
+  @override
+  getthesharedpref() async {
+    id = await FirebaseUserRepository().getUserId();
+    setState(() {});
+  }
+
+  @override
   ontheload() async {
     await getthesharedpref();
     setState(() {});
@@ -48,8 +56,86 @@ class _RoomeBookViewState extends State<RoomeBookView> {
   @override
   void initState() {
     super.initState();
+    getBookedDates();
+    getthesharedpref();
     ontheload();
   }
+
+    // Hàm truy vấn Firebase
+  void getBookedDates() async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('rooms')
+      .doc(widget.room.roomId)
+      .collection('dateTime')
+      .get();
+  List<DateTime> dates = [];
+   DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+  querySnapshot.docs.forEach((doc) {
+    // Parse và lưu trữ các ngày đã đặt từ dữ liệu Firestore
+    String startDateString = doc['StartDate'];
+    String endDateString = doc['EndDate'];
+
+    DateTime startDate = dateFormat.parse(startDateString);
+    DateTime endDate = dateFormat.parse(endDateString);
+    // Thêm các ngày đã đặt vào danh sách bookedDates
+    while (startDate.isBefore(endDate.add(Duration(days: 1)))) {
+      dates.add(startDate);
+      startDate = startDate.add(Duration(days: 1));
+    }
+  });
+  setState(() {
+    bookedDates = dates;
+  });
+}
+
+
+bool isDateRangeBooked(DateTime start, DateTime end) {
+  for (DateTime date = start; date.isBefore(end.add(const Duration(days: 1))); date = date.add(const Duration(days: 1))) {
+    if (bookedDates.contains(date)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void showBookingAlert() {
+  if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Thông báo'),
+        content: Text(
+          "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Future<void> _selectDateRange(BuildContext context) async {
+  final DateTimeRange? picked = await showDateRangePicker(
+    context: context,
+    initialDateRange: _selectedStartDate != null && _selectedEndDate != null
+        ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
+        : null,
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(Duration(days: 15)),
+  );
+
+  if (picked != null) {
+    setState(() {
+      _selectedStartDate = picked.start;
+      _selectedEndDate = picked.end;
+    });
+    showBookingAlert();
+  }
+}
+
 
 
   @override
@@ -117,32 +203,84 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(child: SizedBox()),
-                          SizedBox(
-                            height: 38,
-                            child: CommonButton(                              
-                              onTap: () {
-                                openEdit();
-                              },
-                              //
-                              buttonTextWidget: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 16.0, right: 16.0, top: 4, bottom: 4),
-                                child: Text(
-                                  AppLocalizations(context).of("book_now"),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles(context).getRegularStyle(),
-                                 // onClick: 
-                                ),
-                              ),
-                            ),
-                          ),
+                          widget.room.isSelected == false
+                              ? SizedBox(
+                                  height: 38,
+                                  child: CommonButton(
+                                    onTap: () {
+                                      if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){      
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text('Thông báo'),
+                                            content: Text(
+                                              "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                child: Text("OK"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                      else if (_selectedStartDate != null &&
+                                          _selectedEndDate != null) {
+                                        openEdit();
+                                      } else{
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Thông báo"),
+                                              content: Text(
+                                                  "Vui lòng chọn cả ngày bắt đầu và ngày kết thúc."),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("OK"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                    //
+                                    buttonTextWidget: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                          right: 16.0,
+                                          top: 4,
+                                          bottom: 4),
+                                      child: Text(
+                                        AppLocalizations(context)
+                                            .of("book_now"),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyles(context)
+                                            .getRegularStyle(),
+                                        // onClick:
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  "Đã được đặt!",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "\$${widget.room.perNight}",
+                            "${oCcy.format(widget.room.perNight)} ₫",
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
@@ -163,41 +301,57 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          // Text(
-                          //   // Helper.getPeopleandChildren(
-                          //       // widget.roomData.roomData!),
-                          //   // "${widget.roomData.dateTxt}",
-                          //   // textAlign: TextAlign.left,
-                          //   // style: TextStyles(context).getDescriptionStyle(),
-                          // ),
                           InkWell(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(4.0)),
                             onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 4),
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 8, right: 4),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    AppLocalizations(context)
-                                        .of("more_details"),
-                                    style: TextStyles(context).getBoldStyle(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      // color: Theme.of(context).backgroundColor,
-                                      size: 24,
-                                    ),
-                                  )
-                                ],
                               ),
                             ),
                           ),
+                          widget.room.isSelected == false
+                              ? GestureDetector(
+                                  onTap: () {
+                                    _selectDateRange(context);
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.calendar_today,
+                                          color: Colors.black, size: 30.0),
+                                      SizedBox(width: 10.0),
+                                      if (_selectedStartDate != null &&
+                                          _selectedEndDate != null)
+                                        Text(
+                                          "Từ: ${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year} "
+                                          "   "
+                                          "Đến: ${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        )
+                                      else
+                                        Text(
+                                          "Chọn ngày",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w500,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                )
+                              : Container()
                         ],
                       ),
                     ],
@@ -234,7 +388,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                         ),
                         Center(
                           child: Text(
-                            'PAYMENT',
+                            '',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Color(0xFF008080),
@@ -242,22 +396,18 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                             ),
                           ),
                         )
-                        
                       ],
                     ),
                     SizedBox(
                       height: 20.0,
                     ),
                     Center(
-                      child: Text(
-                        "Go to Pay or Cancel",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                        )
-                        ),
+                      child: Text("Đi đến trang thanh toán hoặc hủy",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
                     ),
-                    
                     SizedBox(
                       height: 10.0,
                     ),
@@ -267,20 +417,28 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                     Center(
                       child: GestureDetector(
                         onTap: () async {
-                          Map<String, dynamic> addPaymentToRoom ={
-                                  "Name": widget.room.titleTxt,
-                                  "RoomId": widget.room.roomId,
-                                  "PerNight": widget.room.perNight,
-                                  "HotelId": widget.room.hotelId,
-                                  "Date": widget.room.date,
-                                  "isSelected": widget.room.isSelected, 
-                                  "People": widget.room.roomData.people,
-                                  "NumberRoom": widget.room.roomData.numberRoom,
-                                  "ImagePath": widget.room.imagePath,
-                                };
-                                await FirebaseUserRepository().addPaymentToRoom(addPaymentToRoom, id!);
-                              NavigationServices(context).gotoPayment();  
+                          if (id != null && !widget.room.isSelected) {
+                            Map<String, dynamic> addPaymentToRoom = {
+                              "Name": widget.room.titleTxt,
+                              "RoomId": widget.room.roomId,
+                              "PerNight": widget.room.perNight,
+                              "HotelId": widget.room.hotelId,
+                              "isSelected": widget.room.isSelected,
+                              "People": widget.room.roomData.people,
+                              "NumberRoom": widget.room.roomData.numberRoom,
+                              "ImagePath": widget.room.imagePath,
+                              "StartDate": formatDate(_selectedStartDate),
+                              "EndDate": formatDate(_selectedEndDate)
+                            };
+                            await FirebaseRoomRepo().clearUserPayments(id!);
+                            await FirebaseUserRepository().removeUserRoomId(id!);
+                            await FirebaseUserRepository()
+                                .addPaymentToRoom(addPaymentToRoom, id!);
+                            await FirebaseUserRepository()
+                                .updateUserRoomId(id!, widget.room.roomId);
+                          }
 
+                          NavigationServices(context).gotoPayment();
                         },
                         child: Container(
                           width: 100,
@@ -291,7 +449,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                           ),
                           child: Center(
                               child: Text(
-                            "Pay",
+                            "Thanh toán",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),
@@ -302,5 +460,4 @@ class _RoomeBookViewState extends State<RoomeBookView> {
               ),
             ),
           ));
-
 }

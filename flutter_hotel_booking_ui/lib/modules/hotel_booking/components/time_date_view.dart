@@ -20,7 +20,7 @@ class TimeDateView extends StatefulWidget {
 class _TimeDateViewState extends State<TimeDateView> {
   //RoomData _roomData;
   DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(Duration(days: 5));
+  DateTime endDate = DateTime.now().add(Duration(days: 10));
   LanguageType _languageType = applicationcontext == null
       ? LanguageType.en
       : applicationcontext!.read<ThemeProvider>().languageType;

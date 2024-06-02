@@ -1,9 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_hotel_booking_ui/service/database.dart';
-import 'package:flutter_hotel_booking_ui/service/share_pref.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
@@ -14,7 +10,6 @@ import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_text_field_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
-import 'package:random_string/random_string.dart';
 import 'package:user_repository/user_repository.dart';
 
 import '../../futures/sign_up_bloc/sign_up_bloc.dart';
@@ -27,9 +22,6 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
-  String email = "", password = "", first_name = "", last_name = " ";
-
   String _errorEmail = '';
   TextEditingController _emailController = TextEditingController();
   String _errorPassword = '';
@@ -38,10 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _fnameController = TextEditingController();
   String _errorLName = '';
   TextEditingController _lnameController = TextEditingController();
-  String _role ='';
-  TextEditingController _roleController = TextEditingController();
   bool signUpRequired = false;
-    final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return BlocListener<SignUpBloc, SignUpState>(
@@ -136,38 +125,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CommonButton(
                           padding:
                               EdgeInsets.only(left: 24, right: 24, bottom: 8),
-                              backgroundColor: Colors.lightGreen.shade700,
+                          backgroundColor: Colors.lightGreen.shade700,
                           buttonText: AppLocalizations(context).of("sign_up"),
-                          onTap: () async {
+                          onTap: () {
                             if (_allValidation()) {
                               MyUser myUser = MyUser.empty;
-                              myUser = myUser.copyWith(                                 
+                              myUser = myUser.copyWith(
                                   email: _emailController.text,
                                   firstname: _fnameController.text,
                                   lastname: _lnameController.text,
-                                  wallet: '0',                     
+                                  wallet: '0',
                                   role: "user");
                               setState(() {
                                 context.read<SignUpBloc>().add(SignUpRequired(
                                     myUser, _passwordController.text));
                               });
-                            };
-                            //khi da dang nhap
-                          //    String Id = randomAlphaNumeric(10);
-                          //    Map<String, dynamic> addUserInfo = {
-                          //   "FirstName": _fnameController.text,
-                          //   "LastName": _lnameController.text,
-                          //   "Email": _emailController.text,
-                          //   "wallet": "0",
-                          //   "Id": Id,
-                          //   "Role": "users",
-                          //  };
-                          // await DatabaseMethods().addUserDetail(addUserInfo, Id);
-                          // await SharedPreferenceHelper().saveFirstUserName(_fnameController.text);
-                          // await SharedPreferenceHelper().saveLastUserName(_lnameController.text);
-                          // await SharedPreferenceHelper().saveUserEmail(_emailController.text);
-                          // await SharedPreferenceHelper().saveUserWallet('0');
-                          // await SharedPreferenceHelper().saveUserId(Id);
+                            }
                           },
                         ),
                         Padding(

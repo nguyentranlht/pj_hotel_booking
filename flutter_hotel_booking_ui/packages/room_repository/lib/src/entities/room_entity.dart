@@ -13,7 +13,7 @@ class RoomEntity {
   String titleTxt;
   Timestamp date;
   String dataTxt;
- RoomData roomData;
+  RoomData roomData;
   int perNight;
   bool isSelected;
   // PeopleSleeps peopleSleeps;

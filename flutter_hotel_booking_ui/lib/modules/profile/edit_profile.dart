@@ -1,15 +1,16 @@
+import 'dart:io';
+
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/authentication_bloc/authentication_bloc.dart';
-import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/utils/localfiles.dart';
-import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
+import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
+import 'package:flutter_hotel_booking_ui/futures/update_profile_bloc/profile_controller.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
-import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
-import '../../futures/my_user_bloc/my_user_bloc.dart';
-import '../../models/setting_list_data.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
   @override
@@ -17,230 +18,264 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  List<SettingsListData> userInfoList = SettingsListData.userInfoList;
+  DatabaseReference ref = FirebaseDatabase.instance.ref().child('users');
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: AppTheme.scaffoldBackgroundColor,
+        body: ChangeNotifierProvider(
+          create: (_) => ProfileController(),
+          child: Consumer<ProfileController>(
+            builder: (context, provider, child) {
+              return SafeArea(
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: BlocProvider(
+                          create: (context) => MyUserBloc(
+                              myUserRepository: context
+                                  .read<AuthenticationBloc>()
+                                  .userRepository)
+                            ..add(GetMyUser(
+                                myUserId: context
+                                    .read<AuthenticationBloc>()
+                                    .state
+                                    .user!
+                                    .uid)),
+                          child: BlocBuilder<MyUserBloc, MyUserState>(
+                              builder: (context, state) {
+                            if (state.status == MyUserStatus.success) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  AppBar(
+                                    leading: GestureDetector(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Icon(
+                                          Icons.arrow_back_ios_new_outlined,
+                                          color: Color(0xFF373866),
+                                        )),
+                                    centerTitle: true,
+                                    title: Text(
+                                      'Chỉnh Sửa Thông Tin',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child: Center(
+                                            child: Container(
+                                          height: 130,
+                                          width: 130,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: AppTheme.primaryColor,
+                                                  width: 5)),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              child: provider.image == null
+                                                  ? state
+                                                              .user!.picture
+                                                              .toString() ==
+                                                          ""
+                                                      ? Icon(
+                                                          Icons.person,
+                                                          size: 40,
+                                                        )
+                                                      : Image(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              state
+                                                                  .user!.picture
+                                                                  .toString()),
+                                                          loadingBuilder: (context,
+                                                              child,
+                                                              loadingProgress) {
+                                                            if (loadingProgress ==
+                                                                null)
+                                                              return child;
+                                                            return Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                          },
+                                                          errorBuilder:
+                                                              (context, object,
+                                                                  stack) {
+                                                            return Container(
+                                                              child: Icon(
+                                                                Icons
+                                                                    .error_outline,
+                                                                color: AppTheme
+                                                                    .redErrorColor,
+                                                              ),
+                                                            );
+                                                          })
+                                                  : Image.file(
+                                                      File(provider.image!.path)
+                                                          .absolute)),
+                                        )),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          provider.pickeImage(
+                                              context, state.user!.userId);
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 14,
+                                          backgroundColor:
+                                              AppTheme.primaryColor,
+                                          child: Icon(
+                                            Icons.add,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 40,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      provider.showUserNameDialogAlert(
+                                          context,
+                                          state.user!.firstname,
+                                          state.user!.userId);
+                                    },
+                                    child: ReusbaleRow(
+                                        title: 'Họ',
+                                        iconData: Icons.person_outlined,
+                                        value: state.user!.firstname),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        provider.showUserLastNameDialogAlert(
+                                            context,
+                                            state.user!.lastname,
+                                            state.user!.userId);
+                                      },
+                                      child: ReusbaleRow(
+                                          title: 'Tên',
+                                          iconData: Icons.person_outlined,
+                                          value: state.user!.lastname)),
+                                  GestureDetector(
+                                      onTap: () {
+                                        provider.showUserNumberDialogAlert(
+                                            context,
+                                            state.user!.number,
+                                            state.user!.userId);
+                                      },
+                                      child: ReusbaleRow(
+                                          title: 'Số điện thoại',
+                                          iconData:
+                                              Icons.phone_android_outlined,
+                                          value: state.user!.number == ""
+                                              ? 'xxx-xxx-xxx'
+                                              : state.user!.number)),
+                                  GestureDetector(
+                                      onTap: () {
+                                        provider.showUserBirthDayDialogAlert(
+                                            context,
+                                            state.user!.birthday,
+                                            state.user!.userId);
+                                      },
+                                      child: ReusbaleRow(
+                                          title: 'Ngày sinh',
+                                          iconData: Icons.cake_outlined,
+                                          value: state.user!.birthday == ""
+                                              ? 'dd/MM/YYY'
+                                              : state.user!.birthday)),
+                                  ReusbaleRow(
+                                      title: 'Email',
+                                      iconData: Icons.email_outlined,
+                                      value: state.user!.email),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    width: 400,
+                                    height: 50,
+                                    child: TextButton(
+                                        onPressed: () {
+                                          NavigationServices(context)
+                                              .gotoLoginApp();
+                                        },
+                                        style: TextButton.styleFrom(
+                                            elevation: 3.0,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(60))),
+                                        child: const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 25, vertical: 5),
+                                          child: Text(
+                                            'Cập nhật thông tin',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                  )
+                                ],
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }))));
+            },
+          ),
+        ));
+  }
+}
+
+class ReusbaleRow extends StatelessWidget {
+  final String title, value;
+  final IconData iconData;
+  const ReusbaleRow(
+      {Key? key,
+      required this.title,
+      required this.iconData,
+      required this.value})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: AppTheme.scaffoldBackgroundColor,
-        body: RemoveFocuse(
-          onClick: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: BlocProvider(
-            create: (context) => MyUserBloc(
-                myUserRepository:
-                    context.read<AuthenticationBloc>().userRepository)
-              ..add(GetMyUser(
-                  myUserId:
-                      context.read<AuthenticationBloc>().state.user!.uid)),
-            child: BlocBuilder<MyUserBloc, MyUserState>(
-              builder: (context, state) {
-                if (state.status == MyUserStatus.success) {
-                  return Column(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      CommonAppbarView(
-                        iconData: Icons.arrow_back,
-                        titleText: AppLocalizations(context).of("edit_profile"),
-                        onBackClick: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              bottom:
-                                  16 + MediaQuery.of(context).padding.bottom),
-                          child: getProfileUI(state.user!.picture!)),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              bottom:
-                                  16 + MediaQuery.of(context).padding.bottom),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 16),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 16.0, bottom: 16, top: 16),
-                                          child: Text(
-                                            AppLocalizations(context)
-                                                .of(userInfoList[1].titleTxt),
-                                            style: TextStyles(context)
-                                                .getDescriptionStyle()
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 16.0, bottom: 16, top: 16),
-                                        child: Container(
-                                          child: Text(
-                                            "${state.user!.firstname} ${state.user!.lastname}",
-                                            style: TextStyles(context)
-                                                .getRegularStyle()
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(
-                                    height: 1,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              bottom:
-                                  16 + MediaQuery.of(context).padding.bottom),
-                          child: InkWell(
-                            onTap: () {},
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 16),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 16.0, bottom: 16, top: 16),
-                                          child: Text(
-                                            AppLocalizations(context)
-                                                .of(userInfoList[2].titleTxt),
-                                            style: TextStyles(context)
-                                                .getDescriptionStyle()
-                                                .copyWith(
-                                                  fontSize: 16,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 16.0, bottom: 16, top: 16),
-                                        child: Container(
-                                          child: Text(
-                                            "${state.user!.email}",
-                                            style: TextStyles(context)
-                                                .getRegularStyle()
-                                                .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 16,
-                                                ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
-                                  child: Divider(
-                                    height: 1,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )),
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
+          leading: Icon(iconData),
+          trailing: Text(value),
         ),
-      ),
-    );
-  }
-
-  Widget getProfileUI(String picture) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            width: 130,
-            height: 130,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
-                    shape: BoxShape.circle,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Theme.of(context).dividerColor,
-                        blurRadius: 8,
-                        offset: Offset(4, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(60.0)),
-                    child: Image.network(
-                      picture,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 6,
-                  right: 6,
-                  child: CommonCard(
-                    color: AppTheme.primaryColor,
-                    radius: 36,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.camera_alt,
-                            color: Theme.of(context).colorScheme.surface,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+        Divider(
+          color: AppTheme.fontcolor,
+        )
+      ],
     );
   }
 }

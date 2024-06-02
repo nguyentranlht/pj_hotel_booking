@@ -10,13 +10,23 @@ class GetRoomBloc extends Bloc<GetRoomEvent, GetRoomState> {
 
   GetRoomBloc(this._roomRepo) : super(GetRoomInitial()) {
     on<FetchRoomsByHotelId>((event, emit) async {
-  emit(GetRoomLoading());
-  try {
-    List<Room> rooms = await _roomRepo.getRoomsByHotelId(event.hotelId);
-    emit(RoomLoaded(rooms));  // You might need to convert RoomEntity to your desired Room model if necessary
-  } catch (error) {
-    emit(RoomError(error.toString()));
-  }
-});
+      emit(GetRoomLoading());
+      try {
+        List<Room> rooms = await _roomRepo.getRoomsByHotelId(event.hotelId);
+        emit(RoomLoaded(
+            rooms)); // You might need to convert RoomEntity to your desired Room model if necessary
+      } catch (error) {
+        emit(RoomError(error.toString()));
+      }
+    });
+     on<GetRooms>((event, emit) async {
+      emit(GetRoomLoading());
+      try {
+        List<Room> rooms = await _roomRepo.getRooms();
+        emit(RoomLoaded(rooms));
+      } catch (e) {
+        emit(GetRoomFailure());
+      }
+    });
   }
 }

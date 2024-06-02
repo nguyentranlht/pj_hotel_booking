@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/admin_profile_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/booking_room_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/explore/home_explore_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/my_trips_screen.dart';
@@ -79,11 +80,9 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
               animationController: _animationController,
             );
           });
-        } else if (tabType == BottomBarType.Trips) {
+        } else if (tabType == BottomBarType.Booking) {
           setState(() {
-            // _indexView = MyTripsScreen(
-            //   animationController: _animationController,
-            // );
+            _indexView = BookingRoomScreen();
           });
         } else if (tabType == BottomBarType.Setting) {
           setState(() {
@@ -105,11 +104,11 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
           Row(
             children: <Widget>[
               TabButtonUI(
-                icon: FontAwesomeIcons.heart,
-                isSelected: tabType == BottomBarType.Trips,
-                text: AppLocalizations(context).of("trips"),
+                icon: Icons.collections_bookmark_outlined,
+                isSelected: tabType == BottomBarType.Booking,
+                text: AppLocalizations(context).of("booking"),
                 onTap: () {
-                  tabClick(BottomBarType.Trips);
+                  tabClick(BottomBarType.Booking);
                 },
               ),
               TabButtonUI(
@@ -139,4 +138,4 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
   }
 }
 
-enum BottomBarType { Trips, HomeAdmin, Setting }
+enum BottomBarType { Booking, HomeAdmin, Setting }

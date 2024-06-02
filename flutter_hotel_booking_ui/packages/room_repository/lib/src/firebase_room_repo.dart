@@ -7,11 +7,12 @@ import 'dart:typed_data';
 
 class FirebaseRoomRepo implements RoomRepo {
   final roomCollection = FirebaseFirestore.instance.collection('rooms');
-
+  final CollectionReference roomCollection2 = FirebaseFirestore.instance.collection('rooms');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Future<List<Room>> getRooms() async {
     try {
-      return await roomCollection.get().then((value) => value.docs
+      return await roomCollection.where('isSelected', isEqualTo: true).get().then((value) => value.docs
           .map((e) => Room.fromEntity(RoomEntity.fromDocument(e.data())))
           .toList());
     } catch (e) {
@@ -64,5 +65,68 @@ class FirebaseRoomRepo implements RoomRepo {
       print(e.toString());
       throw Exception('Failed to load rooms');
     }
+  }
+
+  Future<String?> getRoomId(String userId) async {
+    // Giả sử rằng bạn có thông tin về phòng được thanh toán trong user document
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      return userDoc.get('roomId');
+    } else {
+      throw Exception('User not found.');
+    }
+  }
+
+  Future<void> updateIsSelected(String roomId, bool isSelected) async {
+    try {
+      // Cập nhật trạng thái của phòng
+      await roomCollection2.doc(roomId).update({'isSelected': isSelected});
+    } catch (error) {
+      throw Exception('Failed to update room status: $error');
+    }
+  }
+
+  Future<void> updateRoomData(String roomId, Map<String, dynamic> data) async {
+    try {
+      await roomCollection.doc(roomId).update(data);
+    } catch (e) {
+      print('Error updating room data: $e');
+      throw e;
+    }
+  }
+
+  Future<void> clearUserPayments(String userId) async {
+    try {
+      QuerySnapshot paymentCollectionSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .where('isSelected', isEqualTo: false)
+          .get();
+
+      for (QueryDocumentSnapshot doc in paymentCollectionSnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      print('Error clearing user payments: $e');
+      throw e;
+    }
+  }
+
+  Future<void> addDateToRoom(
+      Map<String, dynamic> dateTime, String roomId) async {
+    try {
+      CollectionReference roomsCollectionRef =
+          _firestore.collection('rooms').doc(roomId).collection('dateTime');
+
+      DocumentReference newRoomRef = roomsCollectionRef.doc();
+      String paymentId = newRoomRef.id; // Lấy ID tự sinh
+
+      // Thêm document với dữ liệu thanh toán và ID tự sinh
+      await newRoomRef.set({
+        ...dateTime,
+        'dateTimeId': paymentId // Lưu trữ paymentId trong document (nếu cần)
+      });
+    } catch (e) {}
   }
 }

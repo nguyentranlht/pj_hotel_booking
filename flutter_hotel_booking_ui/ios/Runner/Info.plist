@@ -12,13 +12,27 @@
 					<!-- TODO Replace this value: -->
 					<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
 					<string>com.googleusercontent.apps.144157197167-nd620f5qan1tmmbs6689st0d8mjc9m8h</string>
+					<string>fb370117512151998</string>
 				</array>
 			</dict>
 		</array>
+		<key>FacebookAppID</key>
+		<string>370117512151998</string>
+		<key>FacebookClientToken</key>
+		<string>e3b7dab98842902c435b3de653409fad</string>
+		<key>FacebookDisplayName</key>
+		<string>GoG</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>fbapi</string>
+			<string>fb-messenger-share-api</string>
+			<string>fbauth2</string>
+			<string>fbshareextension</string>
+		</array>
 		<key>NSCameraUsageDescription</key>
-		<string>Scan your card to add it automatically</string>
-		<key>NSCameraUsageDescription &lt;string&gt;To scan cards&lt;/string&gt;</key>
-		<string>To scan cards</string>
+		<string>To capture profile photo please grant camera access</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>App needs access to photo lib for profile images</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>

@@ -86,7 +86,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
                               if (index == 1) {
                                 NavigationServices(context)
-                                    .gotoTabScreen();
+                                    .gotoLoginApp();
                               }
                               if (index == 4) {
                                 NavigationServices(context).gotoWallet();

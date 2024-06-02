@@ -239,7 +239,7 @@ class _SearchScreenState extends State<SearchScreen> {
             initSearch(value); // Gọi hàm tìm kiếm
           },
           decoration: InputDecoration(
-            hintText: 'Search...',
+            hintText: 'Tìm kiếm...',
           ),
         ),
       ),
