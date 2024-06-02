@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/models/my_user.dart';
+import 'package:flutter_hotel_booking_ui/widgets/sendGridApiCancel.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -16,9 +17,17 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   String? userId, wallet;
+
+  String? customerEmail, customerName, nameHotel;
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
+  String? luu, luu2;
+  int? perNight,roomNumber;
+
   num total = 0;
   int note = 0;
   bool isSelected = false;
+
   final oCcy = NumberFormat("#,##0", "vi_VN");
 
   getthesharedpref() async {
@@ -29,14 +38,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   ontheload() async {
     await getthesharedpref();
+    var userInfo = await FirebaseUserRepository().getUserInfo(userId!);
+    String? email = userInfo['email'];
+    String? name = userInfo['firstname'];
+
     roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
-    setState(() {});
+    setState(() {
+      customerEmail = email;
+      customerName = name;
+    });
   }
 
   @override
   void initState() {
     ontheload();
     super.initState();
+  }
+    String? formatDate(DateTime? date) {
+    if (date == null) return null;
+    return DateFormat('dd-MM-yyyy').format(date);
   }
 
   Stream? roomStream;
@@ -145,6 +165,30 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             );
                             if (confirmDelete == true) {
                               await deleteItem(ds.id, ds["PerNight"],ds["RoomId"]);
+                              if (ds.id != null) {
+                              Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, ds.id);
+                                perNight = latestPaymentDetails['PerNight'];
+                                roomNumber = latestPaymentDetails['NumberRoom'];
+                                _selectedStartDate = latestPaymentDetails['StartDate'];
+                                _selectedEndDate = latestPaymentDetails['EndDate'];
+                                nameHotel = latestPaymentDetails['Name'];
+                                luu = formatDate(_selectedStartDate);
+                                luu2 = formatDate(_selectedEndDate);
+                                setState(() {});
+
+                            } else {
+                              print('No paymentIds found.');
+                            }
+                            await sendConfirmationEmailCancel(
+                              customerEmail ?? 'khachhang@example.com',
+                              customerName ?? 'Tên Khách Hàng',
+                              nameHotel ?? 'Khách sạn của bạn',
+                              roomNumber?.toString() ?? 'Số phòng của bạn',
+                              luu?.toString() ?? 'N/A',
+                              luu2?.toString() ?? 'N/A',
+                              "${oCcy.format(perNight)} ₫".toString(),
+                            );
+                            setState(() {});
                             }
                           },
                           backgroundColor: Colors.red,

@@ -377,7 +377,8 @@ class FirebaseUserRepository implements UserRepository {
       // Thêm document với dữ liệu thanh toán và ID tự sinh
       await newPaymentRef.set({
         ...paymentData,
-        'paymentId': paymentId // Lưu trữ paymentId trong document (nếu cần)
+        'paymentId': paymentId, // Lưu trữ paymentId trong document (nếu cần)
+        'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {}
   }
@@ -437,94 +438,28 @@ class FirebaseUserRepository implements UserRepository {
     }
   }
 
-  Future<String?> getPaymentId(String userId) async {
-    try {
-      CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('payment');
+Future<String?> getLatestPaymentId(String userId) async {
+  try {
+    CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('payment');
 
-      QuerySnapshot paymentSnapshot = await paymentsCollectionRef.get();
+    QuerySnapshot paymentSnapshot = await paymentsCollectionRef
+        .orderBy('createdAt', descending: true)
+        .limit(1)
+        .get();
 
-      if (paymentSnapshot.docs.isNotEmpty) {
-        return paymentSnapshot.docs.first
-            .id; // Lấy ID của tài liệu đầu tiên (có thể điều chỉnh theo yêu cầu)
-      } else {
-        return null; // Không có tài liệu thanh toán nào
-      }
-    } catch (e) {
-      print('Error getting paymentId: $e');
-      return null;
+    if (paymentSnapshot.docs.isNotEmpty) {
+      return paymentSnapshot.docs.first.id; // Lấy ID của tài liệu mới nhất
+    } else {
+      return null; // Không có tài liệu thanh toán nào
     }
+  } catch (e) {
+    print('Error getting latest paymentId: $e');
+    return null;
   }
-
-  Future<DateTime?> getStartDate(String userId, String paymentId) async {
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('payment')
-          .doc(paymentId)
-          .get();
-
-      if (userDoc.exists) {
-        String startDateString = userDoc.get('StartDate');
-        DateTime startDate = dateFormat.parse(startDateString);
-        return startDate;
-      } else {
-        print("khong thay gia tri StartDate");
-        return null;
-      }
-    } catch (e) {
-      print('Error getting StartDate: $e');
-      throw e;
-    }
-  }
-
-  Future<DateTime?> getEndDate(String userId, String paymentId) async {
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('payment')
-          .doc(paymentId)
-          .get();
-
-      if (userDoc.exists) {
-        String endDateString = userDoc.get('EndDate');
-        DateTime endDate = dateFormat.parse(endDateString);
-        return endDate;
-      } else {
-        print("khong thay gia tri EndDate");
-        return null;
-      }
-    } catch (e) {
-      print('Error getting EndDate: $e');
-      throw e;
-    }
-  }
-
-  Future<int?> getRoomNumberFromPayment(String userId, String paymentId) async {
-    try {
-      DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('payment')
-          .doc(paymentId)
-          .get();
-
-      if (paymentDoc.exists) {
-        int? roomNumber = paymentDoc.get('NumberRoom');
-        return roomNumber;
-      } else {
-        print("Không tìm thấy thông tin về số phòng trong payment.");
-        return null;
-      }
-    } catch (e) {
-      print('Lỗi khi lấy thông tin số phòng từ payment: $e');
-      throw e;
-    }
-  }
+}
 
   Future<Map<String, String?>> getUserInfo(String userId) async {
     try {
@@ -544,4 +479,43 @@ class FirebaseUserRepository implements UserRepository {
       return {'email': null, 'fristname': null};
     }
   }
+
+Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) async {
+  try {
+    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('payment')
+        .doc(paymentId)
+        .get();
+
+    if (paymentDoc.exists) {
+      String startDateString = paymentDoc.get('StartDate');
+      String endDateString = paymentDoc.get('EndDate');
+      String? name = paymentDoc.get('Name');
+      int? people = paymentDoc.get('People');
+      int? numberRoom = paymentDoc.get('NumberRoom');
+      int? perNight = paymentDoc.get('PerNight');
+
+      DateTime startDate = DateFormat('dd-MM-yyyy').parse(startDateString);
+      DateTime endDate = DateFormat('dd-MM-yyyy').parse(endDateString);
+
+      return {
+        'StartDate': startDate,
+        'EndDate': endDate,
+        'Name': name,
+        'People': people,
+        'NumberRoom': numberRoom,
+        'PerNight': perNight,
+      };
+    } else {
+      print("Không tìm thấy thông tin thanh toán.");
+      return {};
+    }
+  } catch (e) {
+    print('Lỗi khi lấy thông tin thanh toán: $e');
+    throw e;
+  }
+}
+
 }

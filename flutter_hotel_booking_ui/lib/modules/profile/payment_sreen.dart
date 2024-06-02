@@ -31,9 +31,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? luu, luu2;
   int? perNight;
   String? customerEmail;
-  String? customerName;
-
+  String? customerName, nameHotel, paymentIds;
   int? roomNumber;
+
+
   @override
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
@@ -74,12 +75,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
     await getthesharedpref();
 
     var userInfo = await FirebaseUserRepository().getUserInfo(userId!);
+    var paymentIdsluu = await FirebaseUserRepository().getLatestPaymentId(userId!);
     String? email = userInfo['email'];
     String? name = userInfo['firstname'];
 
     setState(() {
       customerEmail = email;
       customerName = name;
+      paymentIds = paymentIdsluu;
     });
 
     roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
@@ -307,36 +310,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       .updateUserWallet(userId!, amount.toString());
                   await FirebaseUserRepository()
                       .saveUserWallet(amount.toString());
-
+                   
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
-                    String? paymentId =
-                        await FirebaseUserRepository().getPaymentId(userId!);
-                    await updateRoomDataWithPayment(userId!, roomId!);
-                    await FirebaseUserRepository()
+                     await updateRoomDataWithPayment(userId!, roomId!);
+                     await FirebaseUserRepository()
                         .updateIsSelectedForUserPayments(userId!);
-                    if (paymentId != null) {
-                      perNight = await FirebaseUserRepository()
-                          .getAmountFromPayment(userId!, paymentId);
-                      roomNumber = await FirebaseUserRepository()
-                          .getRoomNumberFromPayment(userId!, paymentId);
-                      _selectedStartDate = await FirebaseUserRepository()
-                          .getStartDate(userId!, paymentId);
-                      _selectedEndDate = await FirebaseUserRepository()
-                          .getEndDate(userId!, paymentId);
+                  if (paymentIds != null) {
+                    Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, paymentIds!);
+                      perNight = latestPaymentDetails['PerNight'];
+                      roomNumber = latestPaymentDetails['NumberRoom'];
+                      _selectedStartDate = latestPaymentDetails['StartDate'];
+                      _selectedEndDate = latestPaymentDetails['EndDate'];
+                      nameHotel = latestPaymentDetails['Name'];
                       luu = formatDate(_selectedStartDate);
                       luu2 = formatDate(_selectedEndDate);
                       setState(() {});
-                    } else {
-                      print('No paymentId found.');
-                    }
+                  } else {
+                    print('No paymentIds found.');
                   }
+                }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
-
+                  
                   await sendConfirmationEmail(
                     customerEmail ?? 'khachhang@example.com',
                     customerName ?? 'Tên Khách Hàng',
-                    // hotelName ?? 'Khách sạn của bạn',
+                    nameHotel ?? 'Khách sạn của bạn',
                     roomNumber?.toString() ?? 'Số phòng của bạn',
                     luu?.toString() ?? 'N/A',
                     luu2?.toString() ?? 'N/A',

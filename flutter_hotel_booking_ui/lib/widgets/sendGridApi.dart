@@ -1,8 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<void> sendConfirmationEmail(String email, String firstname, String roomNumber, String startDate, String endDate, String totalAmount) async {
-  
+Future<void> sendConfirmationEmail(String email, String firstname, String hotelName, String roomNumber, String startDate, String endDate, String totalAmount) async {
 
   final response = await http.post(
     url,
@@ -23,7 +22,7 @@ Future<void> sendConfirmationEmail(String email, String firstname, String roomNu
       'content': [
         {
           'type': 'text/plain',
-          'value': 'Xin chào $firstname,\n\nCảm ơn bạn đã đặt phòng khách sạn tại ứng dụng. Chúng tôi rất vui mừng được phục vụ bạn!\n\nThông tin đơn hàng của bạn:\n- Số phòng: $roomNumber\n- Ngày bắt đầu: $startDate\n- Ngày kết thúc: $endDate\n- Tổng số tiền: $totalAmount\n\nChúng tôi mong bạn sẽ có một kỳ nghỉ tuyệt vời tại khách sạn của chúng tôi. Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào khác. Xin cảm ơn và chúc bạn một ngày tốt lành!'
+          'value': 'Xin chào $firstname,\n\nCảm ơn bạn đã đặt phòng khách sạn "$hotelName" tại ứng dụng. Chúng tôi rất vui mừng được phục vụ bạn!\n\nThông tin đơn hàng của bạn:\n- Số phòng: $roomNumber\n- Ngày bắt đầu: $startDate\n- Ngày kết thúc: $endDate\n- Tổng số tiền: $totalAmount\n\nChúng tôi mong bạn sẽ có một kỳ nghỉ tuyệt vời tại khách sạn. Hãy liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào khác. Xin cảm ơn và chúc bạn một ngày tốt lành!'
         }
       ]
     }),
