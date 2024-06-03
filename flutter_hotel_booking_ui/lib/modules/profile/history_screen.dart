@@ -102,7 +102,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã đặt phòng thành công'),
+          content: Text('Đã huỷ phòng thành công'),
         ),
       );
     } catch (error) {
