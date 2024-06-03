@@ -136,7 +136,24 @@ Future<void> _selectDateRange(BuildContext context) async {
   }
 }
 
+  Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
+    try {
+      var paymentData = await FirebaseUserRepository().getPaymentData(userId);
 
+      if (paymentData != null) {
+        Map<String, dynamic> addDateToRoom = {
+          "StartDate": paymentData['StartDate'],
+          "EndDate": paymentData['EndDate'],
+          "paymentId": paymentData['paymentId'],
+          "isSelected": paymentData['isSelected'],
+        };
+        await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
+      }
+    } catch (e) {
+      print('Error updating room data with payment: $e');
+      throw e;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,26 +224,49 @@ Future<void> _selectDateRange(BuildContext context) async {
                               ? SizedBox(
                                   height: 38,
                                   child: CommonButton(
-                                    onTap: () {
-                                      if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){      
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text('Thông báo'),
-                                            content: Text(
-                                              "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.of(context).pop(),
-                                                child: Text("OK"),
+                                    onTap: () async {
+                                      await FirebaseUserRepository().deleteDateTimeWithIsSelectedFalse(widget.room.roomId);
+                                      if (_selectedStartDate != null && _selectedEndDate != null ){ 
+                                        if (id != null && !widget.room.isSelected) {
+                                            Map<String, dynamic> addPaymentToRoom = {
+                                              "Name": widget.room.titleTxt,
+                                              "RoomId": widget.room.roomId,
+                                              "PerNight": widget.room.perNight,
+                                              "HotelId": widget.room.hotelId,
+                                              "isSelected": widget.room.isSelected,
+                                              "People": widget.room.roomData.people,
+                                              "NumberRoom": widget.room.roomData.numberRoom,
+                                              "ImagePath": widget.room.imagePath,
+                                              "StartDate": formatDate(_selectedStartDate),
+                                              "EndDate": formatDate(_selectedEndDate)
+                                            };
+                                            await FirebaseRoomRepo().clearUserPayments(id!);
+                                            await FirebaseUserRepository().removeUserRoomId(id!);
+                                            await FirebaseUserRepository()
+                                                .addPaymentToRoom(addPaymentToRoom, id!);
+                                            await FirebaseUserRepository()
+                                                .updateUserRoomId(id!, widget.room.roomId);
+                                          }
+
+                                          NavigationServices(context).gotoPayment();
+                                          await updateRoomDataWithPayment(id!, widget.room.roomId);
+
+                                          if(isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){
+                                                showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text('Thông báo'),
+                                                content: Text(
+                                                  "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(context).pop(),
+                                                    child: Text("OK"),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      else if (_selectedStartDate != null &&
-                                          _selectedEndDate != null) {
-                                        openEdit();
+                                            );
+                                          }
                                       } else{
                                         showDialog(
                                           context: context,

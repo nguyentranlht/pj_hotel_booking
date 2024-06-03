@@ -20,7 +20,7 @@ class CalendarPopupView extends StatefulWidget {
   final DateTime initialEndDate;
   final Function(DateTime, DateTime) onApplyClick;
   final Function onCancelClick;
-
+  
   const CalendarPopupView({
     Key? key,
     required this.initialStartDate,
@@ -30,6 +30,7 @@ class CalendarPopupView extends StatefulWidget {
     this.barrierDismissible = true,
     required this.minimumDate,
     required this.maximumDate,
+    
   }) : super(key: key);
   @override
   _CalendarPopupViewState createState() => _CalendarPopupViewState();

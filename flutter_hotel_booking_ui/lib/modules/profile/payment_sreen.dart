@@ -115,7 +115,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-
         WidgetsBinding.instance.addPostFrameCallback((_) {
           calculateTotal(snapshot);
           setState(() {});
@@ -305,6 +304,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   //khi wallet ít tiền hơn hóa đơn
                   return openError();
                 } else {
+
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
@@ -313,7 +313,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                    
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
-                     await updateRoomDataWithPayment(userId!, roomId!);
+                     await FirebaseUserRepository()
+                        .updateIsSelectedForDatime(roomId!);
                      await FirebaseUserRepository()
                         .updateIsSelectedForUserPayments(userId!);
                   if (paymentIds != null) {
@@ -331,7 +332,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   }
                 }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
-                  
                   await sendConfirmationEmail(
                     customerEmail ?? 'khachhang@example.com',
                     customerName ?? 'Tên Khách Hàng',
@@ -536,7 +536,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         onTap: () {
           Navigator.pop(context);
         },
-        child: Icon(
+        child: const Icon(
           Icons.arrow_back_ios_new_outlined,
           color: Color(0xFF373866),
         ),
@@ -560,7 +560,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Map<String, dynamic> addDateToRoom = {
           "StartDate": paymentData['StartDate'],
           "EndDate": paymentData['EndDate'],
-          "paymentId": paymentData['paymentId']
+          "paymentId": paymentData['paymentId'],
         };
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }

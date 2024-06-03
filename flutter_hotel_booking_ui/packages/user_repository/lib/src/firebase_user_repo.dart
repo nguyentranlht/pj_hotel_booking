@@ -517,5 +517,36 @@ Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) 
     throw e;
   }
 }
+ Future<void> deleteDateTimeWithIsSelectedFalse(String roomId) async {
+    try {
+      CollectionReference dateTimeCollectionRef = _firestore
+          .collection('rooms')
+          .doc(roomId)
+          .collection('dateTime');
 
+      QuerySnapshot querySnapshot = await dateTimeCollectionRef
+          .where('isSelected', isEqualTo: false)
+          .get();
+
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
+        print('DateTime with ID ${doc.id} and isSelected: false deleted successfully.');
+      }
+    } catch (e) {
+      print('Error deleting DateTime: $e');
+    }
+  }
+    Future<void> updateIsSelectedForDatime(String roomId) async {
+    var userDoc = FirebaseFirestore.instance.collection('rooms').doc(roomId);
+
+    var paymentCollection = userDoc.collection('dateTime');
+
+    var querySnapshot =
+        await paymentCollection.where('isSelected', isEqualTo: false).get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.update({'isSelected': true});
+    }
+  }
 }
+

@@ -165,6 +165,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             );
                             if (confirmDelete == true) {
                               await deleteItem(ds.id, ds["PerNight"],ds["RoomId"]);
+                              
                               if (ds.id != null) {
                               Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, ds.id);
                                 perNight = latestPaymentDetails['PerNight'];
