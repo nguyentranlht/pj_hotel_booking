@@ -7,17 +7,9 @@ import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart'
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
-import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
-import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/app_constant.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_search_bar.dart';
-import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../models/setting_list_data.dart';
 import 'package:http/http.dart' as http;

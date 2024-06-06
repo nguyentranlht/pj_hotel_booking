@@ -12,7 +12,7 @@ class FirebaseRoomRepo implements RoomRepo {
   @override
   Future<List<Room>> getRooms() async {
     try {
-      return await roomCollection.where('isSelected', isEqualTo: true).get().then((value) => value.docs
+      return await roomCollection.get().then((value) => value.docs
           .map((e) => Room.fromEntity(RoomEntity.fromDocument(e.data())))
           .toList());
     } catch (e) {
