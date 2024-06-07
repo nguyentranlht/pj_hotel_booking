@@ -112,6 +112,16 @@ class _BookRoomViewState extends State<BookRoomView> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(child: SizedBox()),
+                          
+                          Text(
+                                  widget.ds["StartDate"].toString() +
+                                        " - " +
+                                        widget.ds["EndDate"].toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
                         ],
                       ),
                       Row(
@@ -133,6 +143,7 @@ class _BookRoomViewState extends State<BookRoomView> {
                                   .copyWith(fontSize: 14),
                             ),
                           ),
+                          
                         ],
                       ),
                       Row(
@@ -146,35 +157,7 @@ class _BookRoomViewState extends State<BookRoomView> {
                           //   // textAlign: TextAlign.left,
                           //   // style: TextStyles(context).getDescriptionStyle(),
                           // ),
-                          InkWell(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    widget.ds["StartDate"].toString() +
-                                        " - " +
-                                        widget.ds["EndDate"].toString(),
-                                    style: TextStyles(context).getBoldStyle(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      // color: Theme.of(context).backgroundColor,
-                                      size: 24,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          
                         ],
                       ),
                     ],
