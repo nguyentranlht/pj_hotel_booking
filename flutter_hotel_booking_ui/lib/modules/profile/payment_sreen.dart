@@ -221,11 +221,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               SizedBox(width: 20.0),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(60),
-                                child: Image.network(
-                                  ds["ImagePath"],
+                                child: Container(
                                   height: 90,
                                   width: 90,
-                                  fit: BoxFit.cover,
+                                  child: PageView(
+                                    controller: PageController(),
+                                    pageSnapping: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                       for (var image in (ds["ImagePath"] as String).split(" "))
+                                        Image.network(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 20.0),
@@ -313,6 +323,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                    
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
+                     await updateRoomDataWithPayment(userId!, roomId!);
+
                      await FirebaseUserRepository()
                         .updateIsSelectedForDatime(roomId!);
                      await FirebaseUserRepository()
@@ -551,6 +563,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+  
 
   Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
     try {
@@ -561,6 +574,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           "StartDate": paymentData['StartDate'],
           "EndDate": paymentData['EndDate'],
           "paymentId": paymentData['paymentId'],
+          "isSelected": paymentData['isSelected'],
         };
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }

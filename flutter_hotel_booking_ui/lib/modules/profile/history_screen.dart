@@ -213,14 +213,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         SizedBox(width: 20.0),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.network(
-                            ds["ImagePath"],
-                            height: 90,
-                            width: 90,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                                borderRadius: BorderRadius.circular(60),
+                                child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  child: PageView(
+                                    controller: PageController(),
+                                    pageSnapping: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                       for (var image in (ds["ImagePath"] as String).split(" "))
+                                        Image.network(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                         SizedBox(width: 20.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

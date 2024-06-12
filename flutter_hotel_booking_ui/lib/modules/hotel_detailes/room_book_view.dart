@@ -136,25 +136,6 @@ Future<void> _selectDateRange(BuildContext context) async {
   }
 }
 
-  Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
-    try {
-      var paymentData = await FirebaseUserRepository().getPaymentData(userId);
-
-      if (paymentData != null) {
-        Map<String, dynamic> addDateToRoom = {
-          "StartDate": paymentData['StartDate'],
-          "EndDate": paymentData['EndDate'],
-          "paymentId": paymentData['paymentId'],
-          "isSelected": paymentData['isSelected'],
-        };
-        await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
-      }
-    } catch (e) {
-      print('Error updating room data with payment: $e');
-      throw e;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     List<String> images = widget.room.imagePath.split(" ");
@@ -249,7 +230,6 @@ Future<void> _selectDateRange(BuildContext context) async {
                                           }
 
                                           NavigationServices(context).gotoPayment();
-                                          await updateRoomDataWithPayment(id!, widget.room.roomId);
 
                                           if(isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){
                                                 showDialog(
@@ -356,7 +336,8 @@ Future<void> _selectDateRange(BuildContext context) async {
                           ),
                           widget.room.isSelected == false
                               ? GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
+                                    await FirebaseUserRepository().deleteDateTimeWithIsSelectedFalse(widget.room.roomId);
                                     _selectDateRange(context);
                                   },
                                   child: Row(

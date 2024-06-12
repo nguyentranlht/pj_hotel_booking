@@ -1,24 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
+import 'package:intl/intl.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:user_repository/user_repository.dart';
 
 class BookRoomView extends StatefulWidget {
   final Room room;
-
+  final DocumentSnapshot ds;
   final AnimationController animationController;
   final Animation<double> animation;
   const BookRoomView(
       {Key? key,
       required this.room,
+      required this.ds,
       required this.animationController,
       required this.animation})
       : super(key: key);
-
   @override
   _BookRoomViewState createState() => _BookRoomViewState();
 }
@@ -27,7 +29,7 @@ class _BookRoomViewState extends State<BookRoomView> {
   var pageController = PageController(initialPage: 0);
   int total = 0;
   String? id;
-
+  final oCcy = NumberFormat("#,##0", "vi_VN");
   getthesharedpref() async {
     id = await FirebaseUserRepository().getUserId();
     setState(() {});
@@ -38,6 +40,7 @@ class _BookRoomViewState extends State<BookRoomView> {
     setState(() {});
   }
 
+  Stream? roomStream;
   @override
   void initState() {
     super.initState();
@@ -109,13 +112,23 @@ class _BookRoomViewState extends State<BookRoomView> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Expanded(child: SizedBox()),
+                          
+                          Text(
+                                  widget.ds["StartDate"].toString() +
+                                        " - " +
+                                        widget.ds["EndDate"].toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "\$${widget.room.perNight}",
+                            "${oCcy.format(widget.room.perNight)} ₫",
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
@@ -130,6 +143,7 @@ class _BookRoomViewState extends State<BookRoomView> {
                                   .copyWith(fontSize: 14),
                             ),
                           ),
+                          
                         ],
                       ),
                       Row(
@@ -143,34 +157,7 @@ class _BookRoomViewState extends State<BookRoomView> {
                           //   // textAlign: TextAlign.left,
                           //   // style: TextStyles(context).getDescriptionStyle(),
                           // ),
-                          InkWell(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
-                            onTap: () {},
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    AppLocalizations(context)
-                                        .of("more_details"),
-                                    style: TextStyles(context).getBoldStyle(),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      // color: Theme.of(context).backgroundColor,
-                                      size: 24,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          
                         ],
                       ),
                     ],
