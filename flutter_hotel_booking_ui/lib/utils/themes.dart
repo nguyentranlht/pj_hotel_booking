@@ -80,7 +80,7 @@ class AppTheme {
   static Color getColor(ColorType _colordata) {
     switch (_colordata) {
       case ColorType.Verdigris:
-        return isLightMode ? Color(0xFF4FBE9F) : Color(0xFF4FBE9F);
+        return isLightMode ? Color(0xFF66BB6A) : Color(0xFF81C784);
       case ColorType.Malibu:
         return isLightMode ? Color(0xFF5DCAEC) : Color(0xFF5DCAEC);
       case ColorType.DarkSkyBlue:

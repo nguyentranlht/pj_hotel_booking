@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:hotel_repository/src/entities/room_data_entity.dart';
 import 'package:uuid/uuid.dart';
 import '../entities/entities.dart';
 import 'models.dart';
@@ -35,7 +33,6 @@ class Hotel {
     required this.perNight,
     required this.isSelected,
     // required this.peopleSleeps,
-    
   });
 
    static var empty = Hotel(
@@ -89,8 +86,6 @@ class Hotel {
       // peopleSleeps: entity.peopleSleeps,
     );
   }
-
-    
     // peopleSleeps: $peopleSleeps,
   @override
   String toString() {

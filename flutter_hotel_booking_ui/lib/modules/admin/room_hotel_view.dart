@@ -8,6 +8,7 @@ import 'package:flutter_hotel_booking_ui/utils/helper.dart';
 import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:hotel_repository/hotel_repository.dart';
+import 'package:intl/intl.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:one_context/one_context.dart';
@@ -34,6 +35,7 @@ class _RoomHotelViewState extends State<RoomHotelView> {
 
   int total = 0;
   String? id;
+  final oCcy = NumberFormat("#,##0", "vi_VN");
 
     getthesharedpref() async {
       id = await FirebaseUserRepository().getUserId();
@@ -141,7 +143,7 @@ class _RoomHotelViewState extends State<RoomHotelView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "\$${widget.room.perNight}",
+                            "${oCcy.format(widget.room.perNight)} ₫",
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()

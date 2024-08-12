@@ -203,7 +203,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                 child: CommonSearchBar(
                   enabled: true,
                   ishsow: false,
-                  text: "London...",
+                  text: "",
                 ),
               ),
             ),

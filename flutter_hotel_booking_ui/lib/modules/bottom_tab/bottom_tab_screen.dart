@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/motorcycle_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/explore/home_explore_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/my_trips_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/profile_screen.dart';
@@ -84,7 +85,13 @@ class _BottomTabScreenState extends State<BottomTabScreen>
               animationController: _animationController,
             );
           });
-        } else if (tabType == BottomBarType.Profile) {
+        } else if (tabType == BottomBarType.Motorcycle) {
+          setState(() {
+            _indexView = MotorcycleScreen(
+              animationController: _animationController,
+            );
+          });
+        }else if (tabType == BottomBarType.Profile) {
           setState(() {
             _indexView = ProfileScreen(
               animationController: _animationController,
@@ -120,6 +127,14 @@ class _BottomTabScreenState extends State<BottomTabScreen>
                 },
               ),
               TabButtonUI(
+                icon: FontAwesomeIcons.motorcycle,
+                isSelected: tabType == BottomBarType.Motorcycle,
+                text: AppLocalizations(context).of("books_motorcycle"),
+                onTap: () {
+                  tabClick(BottomBarType.Motorcycle);
+                },
+              ),
+              TabButtonUI(
                 icon: FontAwesomeIcons.user,
                 isSelected: tabType == BottomBarType.Profile,
                 text: AppLocalizations(context).of("profile"),
@@ -127,6 +142,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
                   tabClick(BottomBarType.Profile);
                 },
               ),
+              
             ],
           ),
           SizedBox(
@@ -138,4 +154,4 @@ class _BottomTabScreenState extends State<BottomTabScreen>
   }
 }
 
-enum BottomBarType { Explore, Trips, Profile }
+enum BottomBarType { Explore, Trips, Profile, Motorcycle}

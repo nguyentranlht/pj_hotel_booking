@@ -2,7 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<void> sendConfirmationEmailCancel(String email, String firstname, String hotelName, String roomNumber, String startDate, String endDate, String totalAmount) async {
-  
+
+
 
   final response = await http.post(
     url,

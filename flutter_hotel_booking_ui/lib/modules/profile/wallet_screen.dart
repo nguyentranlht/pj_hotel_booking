@@ -7,17 +7,10 @@ import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart'
 import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
-import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/app_constant.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
-import 'package:flutter_hotel_booking_ui/widgets/common_search_bar.dart';
-import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../../models/setting_list_data.dart';
 import 'package:http/http.dart' as http;
@@ -71,14 +64,14 @@ class _WalletScreenState extends State<WalletScreen> {
               body: wallet == null
                   ? CircularProgressIndicator()
                   : Container(
-                      margin: EdgeInsets.only(top: 20.0),
+                      margin: EdgeInsets.only(top: 10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Material(
                             elevation: 4.0,
                             child: Container(
-                              padding: EdgeInsets.only(bottom: 0.0),
+                              padding: EdgeInsets.only(bottom: 5.0),
                               child: _appBar(),
                             ),
                           ),
@@ -89,7 +82,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 10.0),
                             width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(color: Color(0xFFF2F2F2)),
+                            decoration: BoxDecoration(color:Color(0xFFF2F2F2)),
                             child: Row(
                               children: [
                                 Image.asset(
@@ -143,7 +136,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   makePayment('100000');
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(7),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Color.fromARGB(255, 80, 75, 75)),
@@ -160,7 +153,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   makePayment('200000');
                                 },
                                 child: Container(
-                                    padding: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color:
@@ -185,7 +178,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   makePayment('500000');
                                 },
                                 child: Container(
-                                    padding: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color:
@@ -202,7 +195,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   makePayment('1000000');
                                 },
                                 child: Container(
-                                    padding: EdgeInsets.all(5),
+                                    padding: EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color:
@@ -230,7 +223,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 padding: EdgeInsets.symmetric(vertical: 12.0),
                                 width: MediaQuery.of(context).size.width,
                                 decoration:
-                                    BoxDecoration(color: Color(0xFF008080)),
+                                    BoxDecoration(color: AppTheme.primaryColor),
                                 child: Center(
                                   child: Text("Thêm tiền vào ví",
                                       style: TextStyle(
@@ -294,7 +287,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 },
                                 child: Icon(
                                   Icons.check_circle,
-                                  color: Colors.lightGreen.shade700,
+                                  color: AppTheme.primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -304,7 +297,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                 child: Text(
                                   "Thanh toán thành công",
                                   style: TextStyle(
-                                    color: Colors.lightGreen.shade700,
+                                    color: AppTheme.primaryColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 22,
                                   ),
@@ -329,9 +322,9 @@ class _WalletScreenState extends State<WalletScreen> {
                               },
                               child: Container(
                                 width: 100,
-                                padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.all(7),
                                 decoration: BoxDecoration(
-                                  color: Color(0xFF008080),
+                                  color: AppTheme.primaryColor,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
@@ -399,22 +392,34 @@ class _WalletScreenState extends State<WalletScreen> {
 
   _appBar() {
     return AppBar(
+      backgroundColor: Color(0xFFDDDCDC),
       leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF373866),
+             color: Colors.black87,
+             size: 20,
           )),
-      centerTitle: true,
-      title: Text(
-        "Ví Tiền",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          centerTitle: true,
+          title: const Text(
+            "Ví Tiền",
+          style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black26,
+                    offset: Offset(0.5, 0.5),
+                  ),
+                ],
+              ),
       ),
     );
   }
-
   Future openEdit() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -474,7 +479,7 @@ class _WalletScreenState extends State<WalletScreen> {
                         },
                         child: Container(
                           width: 100,
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.all(7),
                           decoration: BoxDecoration(
                             color: Color(0xFF008080),
                             borderRadius: BorderRadius.circular(10),

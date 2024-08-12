@@ -172,16 +172,33 @@ class _MyTripsScreenState extends State<MyTripsScreen>
   Widget _getappBar() {
     return Padding(
       padding: const EdgeInsets.only(left: 24, top: 24 + 4.0, right: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(AppLocalizations(context).of("My_Trips"),
-              style: TextStyles(context).getBoldStyle().copyWith(fontSize: 22)),
-        ],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+            Icon(
+              Icons.beach_access,
+              color: Colors.black87,
+              size: 30,
+            ),
+            SizedBox(width: 20),
+            Text(AppLocalizations(context).of("My_Trips"),
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black26,
+                    offset: Offset(0.5, 0.5),
+                  ),
+                ],
+              ),
+            ),
+          ],
       ),
     );
   }
 }
-
 enum TopBarType { Upcomming, Finished, Favorites }

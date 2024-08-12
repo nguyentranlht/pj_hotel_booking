@@ -326,10 +326,10 @@ class FirebaseUserRepository implements UserRepository {
         .collection("payment")
         .snapshots();
   }
-
+  //update nhieu nguoi
   Future<void> updateIsSelectedForUserPayments(String userId) async {
     var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-
+    
     var paymentCollection = userDoc.collection('payment');
 
     var querySnapshot =
@@ -339,6 +339,35 @@ class FirebaseUserRepository implements UserRepository {
       await doc.reference.update({'isSelected': true});
     }
   }
+
+  //update 1 nguoi
+  @override
+  Future<void> updateIsSelectedForPayment(String userId, String paymentId) async {
+  try {
+    // Tham chiếu đến tài liệu user cụ thể
+    var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
+
+    // Tham chiếu đến collection 'payment' của user
+    var paymentCollection = userDoc.collection('payment');
+
+    // Truy vấn tài liệu có 'paymentId' trùng khớp
+    var querySnapshot = await paymentCollection.where('paymentId', isEqualTo: paymentId).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Cập nhật isSelected cho tài liệu trùng paymentId
+      var paymentDoc = querySnapshot.docs.first;
+      await paymentDoc.reference.update({'isSelected': true});
+    }
+
+    // Cập nhật isSelected cho tài liệu trùng paymentId trong collection 'payments'
+    var adminPaymentDoc = FirebaseFirestore.instance.collection('payments').doc(paymentId);
+    await adminPaymentDoc.update({'isSelected': true});
+
+  } catch (e) {
+    // Xử lý lỗi nếu cần
+    print('Error updating isSelected: $e');
+  }
+}
 
   @override
   Future<Map<String, dynamic>?> getPaymentForUser(
@@ -363,25 +392,75 @@ class FirebaseUserRepository implements UserRepository {
       rethrow;
     }
   }
-
   @override
-  Future<void> addPaymentToRoom(
-      Map<String, dynamic> paymentData, String userId) async {
+  Future<void> addPaymentToRoom(Map<String, dynamic> paymentData, String userId) async {
     try {
-      CollectionReference paymentsCollectionRef =
-          _firestore.collection('users').doc(userId).collection('payment');
+        // Lấy roomId, startDate và endDate từ paymentData
+      String roomId = paymentData['RoomId'];
+      String startDate = paymentData['StartDate'];
+      String endDate = paymentData['EndDate'];
 
-      DocumentReference newPaymentRef = paymentsCollectionRef.doc();
-      String paymentId = newPaymentRef.id; // Lấy ID tự sinh
+      // Kiểm tra xem phòng đã được đặt trong khoảng thời gian này chưa
+      bool isRoomBooked = await checkIfRoomIsBooked(roomId, startDate, endDate);
+      
+      if (isRoomBooked) {
+        // Nếu phòng đã được đặt, không thêm thanh toán và trả về lỗi hoặc thông báo
+        print('Room is already booked in the selected date range.');
+        return;
+      }
+      // 1. Tạo một ID cho payment trong collection 'payments' của admin trước
+      CollectionReference adminPaymentsCollectionRef = _firestore.collection('payments');
+      DocumentReference adminNewPaymentRef = adminPaymentsCollectionRef.doc();
+      String paymentId = adminNewPaymentRef.id; // Lấy ID tự sinh từ admin collection
 
-      // Thêm document với dữ liệu thanh toán và ID tự sinh
-      await newPaymentRef.set({
+      // 2. Lưu payment vào collection của user
+      CollectionReference userPaymentsCollectionRef = _firestore.collection('users').doc(userId).collection('payment');
+      DocumentReference userNewPaymentRef = userPaymentsCollectionRef.doc(paymentId); // Sử dụng paymentId đã tạo
+      await userNewPaymentRef.set({
         ...paymentData,
-        'paymentId': paymentId, // Lưu trữ paymentId trong document (nếu cần)
+        'paymentId': paymentId, // Lưu trữ paymentId
         'createdAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {}
+
+      // 3. Lưu payment vào collection 'payments' của admin
+      await adminNewPaymentRef.set({
+        ...paymentData,
+        'paymentId': paymentId, // Lưu trữ paymentId
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+    } catch (e) {
+      // Xử lý lỗi nếu cần
+      print('Error adding payment: $e');
+    }
   }
+  
+  @override
+  Future<bool> checkIfRoomIsBooked(String roomId, String startDate, String endDate) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('rooms')
+        .doc(roomId)
+        .collection('bookings')
+        .where('StartDate', isLessThanOrEqualTo: endDate)
+        .get();
+
+    // Lọc kết quả trong ứng dụng
+    bool isBooked = querySnapshot.docs.any((doc) {
+      String bookedStartDate = doc['StartDate'];
+      String bookedEndDate = doc['EndDate'];
+      
+      return bookedEndDate.compareTo(startDate) >= 0;
+    });
+
+    return isBooked;
+  } catch (e) {
+    print('Error checking room availability: $e');
+    return false;
+  }
+}
+
+
 
   @override
   Future<void> deletePaymentFromRoom(String userId, String paymentId) async {
@@ -517,5 +596,36 @@ Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) 
     throw e;
   }
 }
+@override
+ Future<void> deleteDateTimeWithIsSelectedFalse(String roomId) async {
+    try {
+      CollectionReference dateTimeCollectionRef = _firestore
+          .collection('rooms')
+          .doc(roomId)
+          .collection('dateTime');
 
+      QuerySnapshot querySnapshot = await dateTimeCollectionRef
+          .where('isSelected', isEqualTo: false)
+          .get();
+
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
+        print('DateTime with ID ${doc.id} and isSelected: false deleted successfully.');
+      }
+    } catch (e) {
+      print('Error deleting DateTime: $e');
+    }
+  }
+    Future<void> updateIsSelectedForDatime(String roomId) async {
+    var userDoc = FirebaseFirestore.instance.collection('rooms').doc(roomId);
+
+    var paymentCollection = userDoc.collection('dateTime');
+
+    var querySnapshot =
+        await paymentCollection.where('isSelected', isEqualTo: false).get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.update({'isSelected': true});
+    }
+  }
 }

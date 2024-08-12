@@ -37,6 +37,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Future<void> _selectDateRange(BuildContext context) async {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
       initialDateRange: _selectedStartDate != null && _selectedEndDate != null
@@ -115,7 +119,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-
         WidgetsBinding.instance.addPostFrameCallback((_) {
           calculateTotal(snapshot);
           setState(() {});
@@ -222,11 +225,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               SizedBox(width: 20.0),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(60),
-                                child: Image.network(
-                                  ds["ImagePath"],
+                                child: Container(
                                   height: 90,
                                   width: 90,
-                                  fit: BoxFit.cover,
+                                  child: PageView(
+                                    controller: PageController(),
+                                    pageSnapping: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                       for (var image in (ds["ImagePath"] as String).split(" "))
+                                        Image.network(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 20.0),
@@ -305,6 +318,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   //khi wallet ít tiền hơn hóa đơn
                   return openError();
                 } else {
+
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
@@ -314,8 +328,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
                      await updateRoomDataWithPayment(userId!, roomId!);
+
                      await FirebaseUserRepository()
-                        .updateIsSelectedForUserPayments(userId!);
+                        .updateIsSelectedForDatime(roomId!);
+                     await FirebaseUserRepository()
+                        .updateIsSelectedForPayment(userId!, paymentIds!);
                   if (paymentIds != null) {
                     Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, paymentIds!);
                       perNight = latestPaymentDetails['PerNight'];
@@ -331,7 +348,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   }
                 }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
-                  
                   await sendConfirmationEmail(
                     customerEmail ?? 'khachhang@example.com',
                     customerName ?? 'Tên Khách Hàng',
@@ -536,7 +552,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         onTap: () {
           Navigator.pop(context);
         },
-        child: Icon(
+        child: const Icon(
           Icons.arrow_back_ios_new_outlined,
           color: Color(0xFF373866),
         ),
@@ -551,6 +567,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
+  
 
   Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
     try {
@@ -560,7 +577,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Map<String, dynamic> addDateToRoom = {
           "StartDate": paymentData['StartDate'],
           "EndDate": paymentData['EndDate'],
-          "paymentId": paymentData['paymentId']
+          "paymentId": paymentData['paymentId'],
+          "isSelected": paymentData['isSelected'],
         };
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }

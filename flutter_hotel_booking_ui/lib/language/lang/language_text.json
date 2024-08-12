@@ -154,6 +154,13 @@
         "ja": "旅行"
     },
     {
+        "text_id": "books_motorcycle",
+        "en": "Đặt xe",
+        "fr": "voyages",
+        "ar": "رحلات",
+        "ja": "旅行"
+    },
+    {
         "text_id": "profile",
         "en": "Hồ sơ",
         "fr": "profil",
@@ -820,7 +827,7 @@
     },
     {
         "text_id": "history_text",
-        "en": "Lịch sử thanh toán",
+        "en": "Trạng thái thanh toán",
         "fr": "Paiement",
         "ar": "دفع",
         "ja": "支払い"

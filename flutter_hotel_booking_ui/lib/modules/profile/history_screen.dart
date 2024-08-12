@@ -102,7 +102,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã đặt phòng thành công'),
+          content: Text('Đã huỷ phòng thành công'),
         ),
       );
     } catch (error) {
@@ -165,6 +165,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             );
                             if (confirmDelete == true) {
                               await deleteItem(ds.id, ds["PerNight"],ds["RoomId"]);
+                              
                               if (ds.id != null) {
                               Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, ds.id);
                                 perNight = latestPaymentDetails['PerNight'];
@@ -212,14 +213,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         SizedBox(width: 20.0),
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.network(
-                            ds["ImagePath"],
-                            height: 90,
-                            width: 90,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                                borderRadius: BorderRadius.circular(60),
+                                child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  child: PageView(
+                                    controller: PageController(),
+                                    pageSnapping: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                       for (var image in (ds["ImagePath"] as String).split(" "))
+                                        Image.network(
+                                          image,
+                                          fit: BoxFit.cover,
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                         SizedBox(width: 20.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,22 +319,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   _appBar() {
     return AppBar(
+      backgroundColor: Color(0xFFDDDCDC),
       leading: GestureDetector(
         onTap: () {
           Navigator.pop(context);
         },
         child: Icon(
           Icons.arrow_back_ios_new_outlined,
-          color: Color(0xFF373866),
+          color: Colors.black87,
+          size: 20,
         ),
       ),
       centerTitle: true,
-      title: Text(
+      title: const Text(
         "Trạng thái thanh toán",
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 22,
-        ),
+        style:  TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Colors.black26,
+                    offset: Offset(0.5, 0.5),
+                  ),
+                ],
+              ),
       ),
     );
   }

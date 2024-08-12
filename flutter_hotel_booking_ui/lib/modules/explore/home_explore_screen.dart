@@ -200,10 +200,10 @@ class _HomeExploreScreenState extends State<HomeExploreScreen>
                 left: context.read<ThemeProvider>().languageType ==
                         LanguageType.ar
                     ? null
-                    : 24,
+                    : 28,
                 right: context.read<ThemeProvider>().languageType ==
                         LanguageType.ar
-                    ? 24
+                    ? 28
                     : null,
                 child: Opacity(
                   opacity: opecity,
@@ -215,7 +215,7 @@ class _HomeExploreScreenState extends State<HomeExploreScreen>
                     },
                     buttonTextWidget: Padding(
                       padding: const EdgeInsets.only(
-                          left: 24, right: 24, top: 8, bottom: 8),
+                          left: 28, right: 28, top: 8, bottom: 8),
                       child: Text(
                         AppLocalizations(context).of("view_hotel"),
                         style: TextStyles(context)

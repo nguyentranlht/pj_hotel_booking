@@ -13,12 +13,12 @@ import 'package:intl/intl.dart';
 
 class RoomeBookView extends StatefulWidget {
   final Room room;
-
+  
   final AnimationController animationController;
   final Animation<double> animation;
   const RoomeBookView(
       {Key? key,
-      required this.room,
+      required this.room, 
       required this.animationController,
       required this.animation})
       : super(key: key);
@@ -29,8 +29,16 @@ class RoomeBookView extends StatefulWidget {
 
 class _RoomeBookViewState extends State<RoomeBookView> {
   // DateTime _selectedDate = DateTime.now();
+   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
+
+  String? luuStart;
+  String? luuEnd;
+
+  TimeOfDay _selectedStartTime = TimeOfDay(hour: 14, minute: 0);
+  TimeOfDay _selectedEndTime = TimeOfDay(hour: 12, minute: 0);
+
   var pageController = PageController(initialPage: 0);
   final oCcy = new NumberFormat("#,##0", "vi_VN");
   String? id;
@@ -136,8 +144,6 @@ Future<void> _selectDateRange(BuildContext context) async {
   }
 }
 
-
-
   @override
   Widget build(BuildContext context) {
     List<String> images = widget.room.imagePath.split(" ");
@@ -207,27 +213,9 @@ Future<void> _selectDateRange(BuildContext context) async {
                               ? SizedBox(
                                   height: 38,
                                   child: CommonButton(
-                                    onTap: () {
-                                      if (_selectedStartDate != null && _selectedEndDate != null && isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){      
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => AlertDialog(
-                                            title: Text('Thông báo'),
-                                            content: Text(
-                                              "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.of(context).pop(),
-                                                child: Text("OK"),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      else if (_selectedStartDate != null &&
-                                          _selectedEndDate != null) {
-                                        openEdit();
-                                      } else{
+                                    onTap: () async {
+                                      await FirebaseUserRepository().deleteDateTimeWithIsSelectedFalse(widget.room.roomId);
+                                      if (_selectedStartDate == null && _selectedEndDate == null){
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -247,21 +235,64 @@ Future<void> _selectDateRange(BuildContext context) async {
                                           },
                                         );
                                       }
+                                      else if(isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)){
+                                                showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text('Thông báo'),
+                                                content: Text(
+                                                  "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(context).pop(),
+                                                    child: Text("OK"),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                      else if (_selectedStartDate != null && _selectedEndDate != null && id != null && !widget.room.isSelected ){
+                                        setState(() {
+                                          luuStart = formatDate(_selectedStartDate);
+                                          luuEnd = formatDate(_selectedEndDate);
+                                        }); 
+                                            Map<String, dynamic> addPaymentToRoom2 = {
+                                              "Name": widget.room.titleTxt,
+                                              "RoomId": widget.room.roomId,
+                                              "PerNight": widget.room.perNight,
+                                              "HotelId": widget.room.hotelId,
+                                              "isSelected": widget.room.isSelected,
+                                              "People": widget.room.roomData.people,
+                                              "NumberRoom": widget.room.roomData.numberRoom,
+                                              "ImagePath": widget.room.imagePath,
+                                              "StartDate": luuStart,
+                                              "EndDate": luuEnd
+                                            };
+                                            await FirebaseRoomRepo().clearUserPayments(id!);
+                                            await FirebaseUserRepository().removeUserRoomId(id!);
+                                            await FirebaseUserRepository()
+                                                .addPaymentToRoom(addPaymentToRoom2, id!);
+                                            await FirebaseUserRepository()
+                                                .updateUserRoomId(id!, widget.room.roomId);
+
+                                          NavigationServices(context).gotoPayment();
+                                          
+                                      }
                                     },
                                     //
                                     buttonTextWidget: Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 16.0,
-                                          right: 16.0,
-                                          top: 4,
-                                          bottom: 4),
+                                          left: 20.0,
+                                          right: 20.0,
+                                          top: 5,
+                                          bottom: 5),
                                       child: Text(
                                         AppLocalizations(context)
                                             .of("book_now"),
                                         textAlign: TextAlign.center,
                                         style: TextStyles(context)
                                             .getRegularStyle(),
-                                        // onClick:
+                                        // onlick:
                                       ),
                                     ),
                                   ),
@@ -284,7 +315,7 @@ Future<void> _selectDateRange(BuildContext context) async {
                             textAlign: TextAlign.left,
                             style: TextStyles(context)
                                 .getBoldStyle()
-                                .copyWith(fontSize: 22),
+                                .copyWith(fontSize: 20),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 0),
@@ -297,8 +328,9 @@ Future<void> _selectDateRange(BuildContext context) async {
                           ),
                         ],
                       ),
+                      SizedBox(height:10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           InkWell(
@@ -316,7 +348,8 @@ Future<void> _selectDateRange(BuildContext context) async {
                           ),
                           widget.room.isSelected == false
                               ? GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
+                                    await FirebaseUserRepository().deleteDateTimeWithIsSelectedFalse(widget.room.roomId);
                                     _selectDateRange(context);
                                   },
                                   child: Row(
@@ -328,12 +361,14 @@ Future<void> _selectDateRange(BuildContext context) async {
                                       if (_selectedStartDate != null &&
                                           _selectedEndDate != null)
                                         Text(
-                                          "Từ: ${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year} "
-                                          "   "
-                                          "Đến: ${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}",
+                                          "Từ: ${_selectedStartTime.format(context)} - "
+                                          "${_selectedStartDate!.day}/${_selectedStartDate!.month}/${_selectedStartDate!.year} "
+                                          "\n"
+                                          "Đến: ${_selectedEndTime.format(context)} - "
+                                          "${_selectedEndDate!.day}/${_selectedEndDate!.month}/${_selectedEndDate!.year}",
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 17.0,
+                                            fontSize: 18.5,
                                             fontWeight: FontWeight.w500,
                                             fontStyle: FontStyle.italic,
                                           ),
@@ -367,97 +402,4 @@ Future<void> _selectDateRange(BuildContext context) async {
       },
     );
   }
-
-  Future openEdit() => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            content: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Icon(Icons.cancel)),
-                        SizedBox(
-                          width: 60.0,
-                        ),
-                        Center(
-                          child: Text(
-                            '',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Color(0xFF008080),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Center(
-                      child: Text("Đi đến trang thanh toán hoặc hủy",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (id != null && !widget.room.isSelected) {
-                            Map<String, dynamic> addPaymentToRoom = {
-                              "Name": widget.room.titleTxt,
-                              "RoomId": widget.room.roomId,
-                              "PerNight": widget.room.perNight,
-                              "HotelId": widget.room.hotelId,
-                              "isSelected": widget.room.isSelected,
-                              "People": widget.room.roomData.people,
-                              "NumberRoom": widget.room.roomData.numberRoom,
-                              "ImagePath": widget.room.imagePath,
-                              "StartDate": formatDate(_selectedStartDate),
-                              "EndDate": formatDate(_selectedEndDate)
-                            };
-                            await FirebaseRoomRepo().clearUserPayments(id!);
-                            await FirebaseUserRepository().removeUserRoomId(id!);
-                            await FirebaseUserRepository()
-                                .addPaymentToRoom(addPaymentToRoom, id!);
-                            await FirebaseUserRepository()
-                                .updateUserRoomId(id!, widget.room.roomId);
-                          }
-
-                          NavigationServices(context).gotoPayment();
-                        },
-                        child: Container(
-                          width: 100,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF008080),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                              child: Text(
-                            "Thanh toán",
-                            style: TextStyle(color: Colors.white),
-                          )),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ));
 }

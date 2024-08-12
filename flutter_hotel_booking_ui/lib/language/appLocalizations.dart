@@ -24,6 +24,7 @@ class AppLocalizations {
       if (value is Map && value['text_id'] != null) {
         Map<String, String> texts = {};
         texts['text_id'] = value['text_id'] ?? '';
+        texts['vn'] = value['vn'] ?? '';
         texts['en'] = value['en'] ?? '';
         texts['fr'] = value['fr'] ?? '';
         texts['ar'] = value['ar'] ?? '';
@@ -69,7 +70,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'fr', 'ar'].contains(locale.languageCode);
+    return ['vn','en', 'fr', 'ar'].contains(locale.languageCode);
   }
 
   @override
