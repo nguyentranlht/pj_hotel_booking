@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/admin_profile_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/booking_room_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/admin/booking_motobike_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
-import 'package:flutter_hotel_booking_ui/modules/explore/home_explore_screen.dart';
-import 'package:flutter_hotel_booking_ui/modules/myTrips/my_trips_screen.dart';
-import 'package:flutter_hotel_booking_ui/modules/profile/profile_screen.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/providers/theme_provider.dart';
@@ -84,7 +81,13 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
           setState(() {
             _indexView = BookingRoomScreen();
           });
-        } else if (tabType == BottomBarType.Setting) {
+        }else if (tabType == BottomBarType.Motorcycle) {
+          setState(() {
+            _indexView = BookingMotobikeScreen(
+               animationController: _animationController,
+            );
+          });
+        }else if (tabType == BottomBarType.Setting) {
           setState(() {
             _indexView = AdminProfileScreen(
               animationController: _animationController,
@@ -120,6 +123,14 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
                 },
               ),
               TabButtonUI(
+                icon: Icons.motorcycle,
+                isSelected: tabType == BottomBarType.Motorcycle,
+                text: AppLocalizations(context).of("books_motorcycle"),
+                onTap: () {
+                  tabClick(BottomBarType.Motorcycle);
+                },
+              ),
+              TabButtonUI(
                 icon: Icons.settings,
                 isSelected: tabType == BottomBarType.Setting,
                 text: AppLocalizations(context).of("setting"),
@@ -138,4 +149,4 @@ class _BaseScreenState extends State<BaseScreen> with TickerProviderStateMixin {
   }
 }
 
-enum BottomBarType { Booking, HomeAdmin, Setting }
+enum BottomBarType { Booking, HomeAdmin, Motorcycle ,Setting }

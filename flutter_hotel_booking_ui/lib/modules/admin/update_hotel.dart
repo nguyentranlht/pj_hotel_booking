@@ -120,6 +120,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                             iconData: Icons.edit,
                             value: widget.hotel.titleTxt),
                       ),
+                      
                       SizedBox(
                         height: 30.0,
                       ),

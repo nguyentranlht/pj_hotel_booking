@@ -23,7 +23,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
   String typebike = '';
   bool returnToSameLocation = false;
 
-  final _locations = ['New York', 'Los Angeles', 'Chicago', 'Miami'];
+  final _locations = ['Đà Lạt', 'Nha Trang', 'Vũng Tàu', 'Mũi Né - Phan Thiết', 'Buôn Mê Thuộc', 'Đà Nẵng', 'Quy Nhơn', 'Huế'];
   final _typeBike = ['Xe Ga', 'Xe Số'];
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
@@ -37,19 +37,40 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
       setState(() {
         if (isStartDate) {
           startDate = picked;
+          // Kiểm tra và cập nhật endDate nếu cần thiết
+          if (endDate != null && endDate!.isBefore(startDate!.add(Duration(days: 1)))) {
+            endDate = null;  // Đặt lại endDate nếu không hợp lệ
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
+              ),
+            );
+          }
         } else {
-          endDate = picked;
+          // Ràng buộc endDate phải lớn hơn startDate ít nhất 1 ngày
+          if (picked.isBefore(startDate!.add(Duration(days: 1)))) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
+              ),
+            );
+          } else {
+            endDate = picked;
+          }
         }
       });
     }
   }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null) {
+  final TimeOfDay? picked = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+  );
+
+  if (picked != null) {
+    // Giới hạn thời gian từ 6:00 sáng đến 20:00 tối
+    if (picked.hour >= 6 && picked.hour <= 20) {
       setState(() {
         if (isStartTime) {
           startTime = picked;
@@ -57,8 +78,16 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
           endTime = picked;
         }
       });
+    } else {
+      // Hiển thị thông báo nếu thời gian đã chọn không nằm trong khoảng cho phép
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vui lòng chọn thời gian từ 6:00 sáng đến 20:00 tối'),
+        ),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

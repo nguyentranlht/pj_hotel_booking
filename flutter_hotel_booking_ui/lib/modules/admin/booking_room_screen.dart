@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/book_room_view.dart';
-import 'package:flutter_hotel_booking_ui/modules/hotel_detailes/room_book_view.dart';
-import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
 import 'package:room_repository/room_repository.dart';
 import '../../futures/get_room_bloc/get_room_bloc.dart';
 class BookingRoomScreen extends StatefulWidget {
