@@ -21,7 +21,11 @@ jobs:
 
       - name: Create a dummy dialog_flow_auth.json
         run: echo '{}' > flutter_hotel_booking_ui/assets/dialog_flow_auth.json
-
+      - name: Create dummy sendGridApi files
+        run: |
+          mkdir -p flutter_hotel_booking_ui/lib/widgets
+          echo '// Dummy sendGridApiCancel' > flutter_hotel_booking_ui/lib/widgets/sendGridApiCancel.dart
+          echo '// Dummy sendGridApi' > flutter_hotel_booking_ui/lib/widgets/sendGridApi.dart
       - name: Install dependencies
         run: flutter pub get
         working-directory: flutter_hotel_booking_ui
