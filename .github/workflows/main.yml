@@ -17,11 +17,14 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'
+          flutter-version: 'stable'
+
+      - name: Create a dummy dialog_flow_auth.json
+        run: echo '{}' > flutter_hotel_booking_ui/assets/dialog_flow_auth.json
 
       - name: Install dependencies
         run: flutter pub get
-        working-directory: flutter_hotel_booking_ui  # Đường dẫn tới thư mục gốc của dự án Flutter
+        working-directory: flutter_hotel_booking_ui
 
       - name: Run Flutter tests
         run: flutter test
