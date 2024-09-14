@@ -1,9 +1,11 @@
+import 'package:bike_repository/bike_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_date_pickers/flutter_date_pickers.dart' as DateRangePicker;
 import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
-import 'package:flutter_hotel_booking_ui/utils/text_styles.dart';
+import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:intl/intl.dart';
+import 'package:user_repository/user_repository.dart';
 
 class MotorcycleScreen extends StatefulWidget {
   final AnimationController animationController;
@@ -15,16 +17,28 @@ class MotorcycleScreen extends StatefulWidget {
 }
 
 class _MotorcycleScreenState extends State<MotorcycleScreen> {
+  late AnimationController tabAnimationController;
   DateTime? startDate;
   DateTime? endDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-  String location = '';
-  String typebike = '';
+
+  TimeOfDay? initTimeStart = const TimeOfDay(hour: 7, minute: 00);
+  TimeOfDay? initTimeEnd = const TimeOfDay(hour: 19, minute: 30);
   bool returnToSameLocation = false;
 
-  final _locations = ['Đà Lạt', 'Nha Trang', 'Vũng Tàu', 'Mũi Né - Phan Thiết', 'Buôn Mê Thuộc', 'Đà Nẵng', 'Quy Nhơn', 'Huế'];
-  final _typeBike = ['Xe Ga', 'Xe Số'];
+  String? selectedLocation;
+  String? selectedLocationNhanXe;
+  String? selectedXe;
+  String? locationId;
+  String? userId;
+
+  List<String> locations = [];
+  List<String> dsLocations = [];
+  List<String> typebikes = [];
+  Map<String, List<String>> cityLocationMap = {};
+
+  String? locationName, locationNhanXe, locationType;
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
@@ -37,21 +51,23 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
       setState(() {
         if (isStartDate) {
           startDate = picked;
-          // Kiểm tra và cập nhật endDate nếu cần thiết
-          if (endDate != null && endDate!.isBefore(startDate!.add(Duration(days: 1)))) {
-            endDate = null;  // Đặt lại endDate nếu không hợp lệ
+
+          if (endDate != null &&
+              endDate!.isBefore(startDate!.add(const Duration(days: 1)))) {
+            endDate = null; // Đặt lại endDate nếu không hợp lệ
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
+              const SnackBar(
+                content: Text(
+                    'Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
               ),
             );
           }
         } else {
-          // Ràng buộc endDate phải lớn hơn startDate ít nhất 1 ngày
-          if (picked.isBefore(startDate!.add(Duration(days: 1)))) {
+          if (picked.isBefore(startDate!.add(const Duration(days: 1)))) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
+              const SnackBar(
+                content: Text(
+                    'Ngày kết thúc phải lớn hơn ngày bắt đầu ít nhất 1 ngày'),
               ),
             );
           } else {
@@ -62,56 +78,132 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
     }
   }
 
-  Future<void> _selectTime(BuildContext context, bool isStartTime) async {
-  final TimeOfDay? picked = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.now(),
-  );
+  Future<void> _loadLocations() async {
+    final locationsSnapshot =
+        await FirebaseFirestore.instance.collection('locations').get();
+    final locationNames = locationsSnapshot.docs
+        .map((doc) => doc['locationName'] as String)
+        .toList();
+    setState(() {
+      locations.addAll(locationNames);
+    });
+  }
 
-  if (picked != null) {
-    // Giới hạn thời gian từ 6:00 sáng đến 20:00 tối
-    if (picked.hour >= 6 && picked.hour <= 20) {
-      setState(() {
-        if (isStartTime) {
-          startTime = picked;
-        } else {
-          endTime = picked;
+  Future<void> _loadChooseLocations() async {
+    try {
+      final locationsSnapshot2 =
+          await FirebaseFirestore.instance.collection('locations').get();
+      for (var doc in locationsSnapshot2.docs) {
+        final cityName = doc['locationName'] as String;
+        final Map<String, dynamic>? typeLocationMap =
+            doc['location'] as Map<String, dynamic>?;
+
+        if (typeLocationMap != null) {
+          for (var location in typeLocationMap.values) {
+            setState(() {
+              if (!cityLocationMap.containsKey(cityName)) {
+                cityLocationMap[cityName] = [];
+              }
+              cityLocationMap[cityName]!.add(location.toString());
+            });
+          }
         }
-      });
-    } else {
-      // Hiển thị thông báo nếu thời gian đã chọn không nằm trong khoảng cho phép
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Vui lòng chọn thời gian từ 6:00 sáng đến 20:00 tối'),
-        ),
-      );
+      }
+    } catch (e) {
+      print('Error loading locations: $e');
     }
   }
-}
+
+  Future<void> _loadChooseBikes() async {
+    try {
+      final locationsSnapshot2 =
+          await FirebaseFirestore.instance.collection('locations').get();
+      for (var doc in locationsSnapshot2.docs) {
+        final Map<String, dynamic>? typeTextMap =
+            doc['TypeText'] as Map<String, dynamic>?;
+        if (typeTextMap != null) {
+          typeTextMap.forEach((key, value) {
+            setState(() {
+              typebikes.add(value.toString());
+            });
+          });
+        }
+      }
+    } catch (e) {
+      print('Error loading bike types: $e');
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context, bool isStartTime) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (picked != null) {
+      // Giới hạn thời gian từ 6:00 sáng đến 20:00 tối
+      if (picked.hour >= 6 && picked.hour <= 20) {
+        setState(() {
+          if (isStartTime) {
+            startTime = picked;
+          } else {
+            endTime = picked;
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vui lòng chọn thời gian từ 7:00 sáng đến 20:00 tối'),
+          ),
+        );
+      }
+    }
+  }
+
+  getthesharedpref() async {
+    userId = await FirebaseUserRepository().getUserId();
+    setState(() {});
+  }
+
+  ontheload() async {
+    await getthesharedpref();
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    //widget.animationController.forward();
+    ontheload();
+    super.initState();
+    // Load locations from Firebase
+    _loadLocations();
+    _loadChooseLocations();
+    _loadChooseBikes();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFDDDCDC),
+        backgroundColor: const Color(0xFFDDDCDC),
         elevation: 0,
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-          ),
+          decoration: const BoxDecoration(),
         ),
-        title: const Row(
+        title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.directions_car,
+            const Icon(
+              Icons.motorcycle_rounded,
               color: Colors.black87,
-              size: 30,
+              size: 35,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Text(
-              'Thuê Xe',
-              style: TextStyle(
+              AppLocalizations(context).of("Rent_Motorcycle"),
+              style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -137,7 +229,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                 'Quay lại vị trí cũ',
                 style: TextStyle(
                   fontSize: 16,
-                  color:  AppTheme.fontcolor,
+                  color: AppTheme.fontcolor,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -149,23 +241,86 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
               },
               activeColor: AppTheme.primaryColor,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildLocationDropdown(),
-            SizedBox(height: 20.0),
-            _buildDateTimePicker(context, 'Ngày nhận xe', startDate, startTime, true),
-            SizedBox(height: 20.0),
-            _buildDateTimePicker(context, 'Ngày trả xe', endDate, endTime, false),
-            SizedBox(height: 20.0),
-            _buildTypeBike( ),
-            SizedBox(height: 40.0),
+            const SizedBox(height: 20.0),
+            _buildLocationNameDropdown(),
+            const SizedBox(height: 20.0),
+            _buildDateTimePicker(
+                context, 'Ngày nhận xe', startDate, startTime, true),
+            const SizedBox(height: 20.0),
+            _buildDateTimePicker(
+                context, 'Ngày trả xe', endDate, endTime, false),
+            const SizedBox(height: 20.0),
+            _buildTypeBike(),
+            const SizedBox(height: 40.0),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Xử lý logic tìm kiếm tại đây.
+                onPressed: () async {
+                  if ([
+                    locationName,
+                    locationNhanXe,
+                    locationType,
+                    startDate,
+                    endDate,
+                    startTime,
+                    endTime,
+                    locationId
+                  ].contains(null)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Vui lòng chọn đầy đủ thông tin'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  try {
+                    // Step 1: Fetch available bikes with no time overlap
+                    List<Map<String, dynamic>> availableBikes =
+                        await findAvailableBikes(
+                      locationId: locationId!,
+                      locationNhanXe: locationNhanXe!,
+                      typeBike: locationType!,
+                      startDate: startDate!,
+                      endDate: endDate!,
+                      startTime: startTime!,
+                      endTime: endTime!,
+                    );
+                    // Step 2: Handle cases where no bikes are available
+                    if (availableBikes.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Không có xe nào phù hợp.'),
+                        ),
+                      );
+                    } else {
+                      // Save search history and show available bikes
+                      Map<String, dynamic> dateSearch = {
+                        "startDate": startDate.toString(),
+                        "endDate": endDate.toString()
+                      };
+                      Map<String, dynamic> timeSearch = {
+                        "startTime": startTime.toString(),
+                        "endTime": endTime.toString()
+                      };
+
+                      await FirebaseBikeRepo().addHistorySearchToUser(
+                        availableBikes,
+                        userId!,
+                        dateSearch,
+                        timeSearch,
+                      );
+
+                      NavigationServices(context).gotoHistorySearch();
+                    }
+                  } catch (e) {
+                    debugPrint('Lỗi khi tìm kiếm xe: $e');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 14.0),
+                  padding: const EdgeInsets.symmetric(vertical: 14.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -176,71 +331,132 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color:  AppTheme.fontcolor,
+                    color: AppTheme.fontcolor,
                   ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
-  Widget _buildTypeBike(){
+
+  Widget _buildTypeBike() {
+    final uniqueBikeType = typebikes.toSet().toList();
+
+    if (!uniqueBikeType.contains(selectedXe)) {
+      selectedXe = null; // Or set it to a default value from uniqueLocations
+    }
     return DropdownButtonFormField(
       decoration: InputDecoration(
         labelText: 'Chọn loại xe',
         labelStyle: TextStyle(
-          color:  AppTheme.fontcolor,
+          color: AppTheme.fontcolor,
           fontWeight: FontWeight.w600,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      value: typebike.isEmpty ? null : typebike,
-      items: _typeBike.map((String value) {
+      value: selectedXe,
+      onChanged: (String? newValue) {
+        setState(() {
+          selectedXe = newValue!;
+          locationType = selectedXe;
+        });
+      },
+      items: uniqueBikeType.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
-      onChanged: (value) {
-        setState(() {
-          typebike = value.toString();
-        });
+    );
+  }
+
+  Widget _buildLocationNameDropdown() {
+    final filteredLocations = selectedLocation != null &&
+            cityLocationMap.containsKey(selectedLocation)
+        ? cityLocationMap[selectedLocation]!.toSet().toList()
+        : [];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return DropdownButtonFormField<String>(
+          isExpanded: true, // Ensure dropdown occupies full width
+          decoration: InputDecoration(
+            labelText: 'Địa Điểm Nhận Xe',
+            labelStyle: TextStyle(
+              color: AppTheme.fontcolor,
+              fontWeight: FontWeight.w600,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          value: selectedLocationNhanXe,
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedLocationNhanXe = newValue;
+              locationNhanXe = selectedLocationNhanXe;
+            });
+          },
+          items:
+              filteredLocations.map<DropdownMenuItem<String>>((dynamic value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              // ignore: sized_box_for_whitespace
+              child: Container(
+                width: constraints.maxWidth *
+                    0.9, // Adjust width to prevent overflow
+                child: Text(
+                  value,
+                  overflow: TextOverflow.ellipsis, // Prevent text overflow
+                ),
+              ),
+            );
+          }).toList(),
+        );
       },
     );
   }
 
   Widget _buildLocationDropdown() {
+    final uniqueLocations = locations.toSet().toList();
+
     return DropdownButtonFormField(
       decoration: InputDecoration(
-        labelText: 'Địa điểm nhận xe',
+        labelText: 'Chọn Thành Phố',
         labelStyle: TextStyle(
-          color:  AppTheme.fontcolor,
+          color: AppTheme.fontcolor,
           fontWeight: FontWeight.w600,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      value: location.isEmpty ? null : location,
-      items: _locations.map((String value) {
+      value: selectedLocation,
+      onChanged: (String? newValue) async {
+        setState(() {
+          selectedLocation = newValue!;
+          locationName = selectedLocation;
+          selectedLocationNhanXe = null;
+        });
+        locationId = await FirebaseBikeRepo().getLocationId(selectedLocation!);
+        print("locationId: $locationId");
+      },
+      items: uniqueLocations.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
-      onChanged: (value) {
-        setState(() {
-          location = value.toString();
-        });
-      },
     );
   }
 
-  Widget _buildDateTimePicker(BuildContext context, String label, DateTime? date, TimeOfDay? time, bool isStart) {
+  Widget _buildDateTimePicker(BuildContext context, String label,
+      DateTime? date, TimeOfDay? time, bool isStart) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -251,7 +467,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
               decoration: InputDecoration(
                 labelText: label,
                 labelStyle: TextStyle(
-                  color:  AppTheme.fontcolor,
+                  color: AppTheme.fontcolor,
                   fontWeight: FontWeight.w600,
                 ),
                 border: OutlineInputBorder(
@@ -262,15 +478,17 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    date == null ? 'Chọn ngày' : DateFormat('EEE, d MMM yyyy').format(date),
+                    date == null
+                        ? 'Chọn ngày'
+                        : DateFormat('EEE, d MMM yyyy').format(date),
                   ),
-                  Icon(Icons.calendar_today, color:  AppTheme.primaryColor),
+                  Icon(Icons.calendar_today, color: AppTheme.primaryColor),
                 ],
               ),
             ),
           ),
         ),
-        SizedBox(width: 8.0),
+        const SizedBox(width: 8.0),
         Expanded(
           child: InkWell(
             onTap: () => _selectTime(context, isStart),
@@ -278,7 +496,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
               decoration: InputDecoration(
                 labelText: 'Giờ',
                 labelStyle: TextStyle(
-                  color:  AppTheme.fontcolor,
+                  color: AppTheme.fontcolor,
                   fontWeight: FontWeight.w600,
                 ),
                 border: OutlineInputBorder(
@@ -299,5 +517,135 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
         ),
       ],
     );
+  }
+
+  Future<List<Map<String, dynamic>>> findAvailableBikes({
+    required String locationId,
+    required String locationNhanXe,
+    required String typeBike,
+    required DateTime startDate,
+    required DateTime endDate,
+    required TimeOfDay startTime,
+    required TimeOfDay endTime,
+  }) async {
+    List<Map<String, dynamic>> availableBikes = [];
+
+    try {
+      print('Start searching bikes...');
+
+      // Bước 1: Tìm các xe trùng với locationId, bikeType, và locationBike
+      QuerySnapshot<Map<String, dynamic>> bikesSnapshot =
+          await FirebaseFirestore.instance
+              .collection('locations')
+              .doc(locationId)
+              .collection('bikes')
+              .where('bikeType', isEqualTo: typeBike)
+              .where('locationBike', isEqualTo: locationNhanXe)
+              .get();
+
+      print('Bikes found: ${bikesSnapshot.docs.length}');
+
+      for (var bikeDoc in bikesSnapshot.docs) {
+        var bikeData = bikeDoc.data();
+        var bikeId = bikeData['bikeId'];
+        print('Checking bikeId: $bikeId');
+
+        // Lấy tất cả các hợp đồng để kiểm tra xe
+        QuerySnapshot<Map<String, dynamic>> contractsSnapshot =
+            await FirebaseFirestore.instance.collection('contracts').get();
+
+        print(
+            'Contracts found: ${contractsSnapshot.docs.length} for bikeId: $bikeId');
+
+        bool isAvailable = true;
+
+        for (var contractDoc in contractsSnapshot.docs) {
+          var contractData = contractDoc.data();
+          List bikesInContract =
+              contractData['bikes']; // Danh sách xe trong hợp đồng
+
+          // Kiểm tra nếu `bikeId` có trong danh sách xe
+          if (bikesInContract.any((bike) => bike['bikeId'] == bikeId)) {
+            if (contractData.containsKey('dateSearch') &&
+                contractData.containsKey('timeSearch')) {
+              // Chuyển đổi chuỗi ngày thành DateTime
+              DateTime contractStartDate =
+                  DateTime.parse(contractData['dateSearch']['startDate']);
+              DateTime contractEndDate =
+                  DateTime.parse(contractData['dateSearch']['endDate']);
+
+              TimeOfDay contractStartTime = TimeOfDay(
+                hour: int.parse(
+                    contractData['timeSearch']['startTime'].split(':')[0]),
+                minute: int.parse(
+                    contractData['timeSearch']['startTime'].split(':')[1]),
+              );
+              TimeOfDay contractEndTime = TimeOfDay(
+                hour: int.parse(
+                    contractData['timeSearch']['endTime'].split(':')[0]),
+                minute: int.parse(
+                    contractData['timeSearch']['endTime'].split(':')[1]),
+              );
+
+              print(
+                  "contractStartDate $contractStartDate, contractEndDate $contractEndDate");
+              print(
+                  "contractStartTime $contractStartTime, contractEndTime $contractEndTime");
+
+              print("startDate $startDate, endDate $endDate");
+              print("startTime $startTime, endTime $endTime");
+
+              // Kiểm tra sự trùng lặp về ngày
+              bool dateOverlap = !(contractEndDate.isBefore(startDate) ||
+                  contractStartDate.isAfter(endDate));
+
+              // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
+              bool timeOverlap = true;
+
+              // Chỉ kiểm tra thời gian nếu có sự trùng lặp về ngày
+              if (dateOverlap) {
+                // Nếu cùng ngày bắt đầu
+                if (startDate.isAtSameMomentAs(contractStartDate)) {
+                  timeOverlap = !((endTime.hour < contractStartTime.hour) ||
+                      (endTime.hour == contractStartTime.hour &&
+                          endTime.minute <= contractStartTime.minute));
+                }
+                // Nếu cùng ngày kết thúc
+                else if (endDate.isAtSameMomentAs(contractEndDate)) {
+                  timeOverlap = !((startTime.hour > contractEndTime.hour) ||
+                      (startTime.hour == contractEndTime.hour &&
+                          startTime.minute >= contractEndTime.minute));
+                }
+                // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
+                else if (startDate.isAtSameMomentAs(contractEndDate)) {
+                  if (contractEndTime.hour < startTime.hour ||
+                      (contractEndTime.hour == startTime.hour &&
+                          contractEndTime.minute < startTime.minute)) {
+                    timeOverlap = false;
+                  }
+                }
+              }
+              print('dateOverlap, timeOverlap: $dateOverlap, $timeOverlap');
+              // Nếu trùng lặp thời gian, đánh dấu xe là không khả dụng
+              if (dateOverlap && timeOverlap) {
+                print('Time overlap found for bikeId $bikeId');
+                isAvailable = false;
+                break;
+              }
+            }
+          }
+        }
+
+        if (isAvailable) {
+          availableBikes.add(bikeData);
+        }
+      }
+
+      print('Available bikes: ${availableBikes.length}');
+    } catch (e) {
+      print('Error fetching available bikes: $e');
+    }
+
+    return availableBikes;
   }
 }

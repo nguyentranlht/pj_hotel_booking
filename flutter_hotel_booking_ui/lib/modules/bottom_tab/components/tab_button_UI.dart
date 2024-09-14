@@ -18,7 +18,7 @@ class TabButtonUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _color =
+    final color =
         isSelected ? AppTheme.primaryColor : AppTheme.secondaryTextColor;
     return Expanded(
       child: Material(
@@ -29,16 +29,16 @@ class TabButtonUI extends StatelessWidget {
           onTap: onTap,
           child: Column(
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 4,
               ),
-              Container(
+              SizedBox(
                 width: 40,
                 height: 32,
                 child: Icon(
                   icon,
                   size: 26,
-                  color: _color,
+                  color: color,
                 ),
               ),
               Padding(
@@ -48,7 +48,7 @@ class TabButtonUI extends StatelessWidget {
                   child: Text(
                     text,
                     style: TextStyles(context).getDescriptionStyle().copyWith(
-                          color: _color,
+                          color: color,
                         ),
                   ),
                 ),

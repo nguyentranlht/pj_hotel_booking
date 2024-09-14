@@ -22,7 +22,7 @@ class CommonSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-      child: Container(
+      child: SizedBox(
         height: height,
         child: Center(
           child: Row(
@@ -34,12 +34,12 @@ class CommonSearchBar extends StatelessWidget {
                       size: 18,
                       color: Theme.of(context).primaryColor,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               ishsow == true
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 8,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               Expanded(
                 child: TextField(
                   controller: textEditingController,
@@ -47,8 +47,8 @@ class CommonSearchBar extends StatelessWidget {
                   enabled: enabled,
                   onChanged: (String txt) {},
                   cursorColor: Theme.of(context).primaryColor,
-                  decoration: new InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(0),
                       errorText: null,
                       border: InputBorder.none,
                       hintText: text,

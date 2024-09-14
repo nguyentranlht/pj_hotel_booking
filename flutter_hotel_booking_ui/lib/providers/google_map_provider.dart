@@ -21,8 +21,8 @@ class GoogleMapProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateHotelList(List<HotelListData> _list) {
-    _hotelList = _list;
+  void updateHotelList(List<HotelListData> list) {
+    _hotelList = list;
     notifyListeners();
   }
 

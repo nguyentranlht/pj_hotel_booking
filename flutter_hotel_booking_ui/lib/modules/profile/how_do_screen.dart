@@ -92,14 +92,13 @@ class _HowDoScreenState extends State<HowDoScreen> {
                             ),
                           ),
                           subHelpList[index].isSelected
-                              ? Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
+                              ? const Padding(
+                                  padding: EdgeInsets.only(left: 16, right: 16),
                                   child: Divider(
                                     height: 1,
                                   ),
                                 )
-                              : SizedBox()
+                              : const SizedBox()
                         ],
                       ),
                     );

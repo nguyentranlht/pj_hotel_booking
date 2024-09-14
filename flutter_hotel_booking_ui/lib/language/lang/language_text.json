@@ -434,6 +434,13 @@
         "ja": "私の旅行"
     },
     {
+        "text_id": "Rent_Motorcycle",
+        "en": "Thuê xe gắn máy",
+        "fr": "Mon voyage",
+        "ar": "رحلتي",
+        "ja": "私の旅行"
+    },
+    {
         "text_id": "upcoming",
         "en": "Sắp tới",
         "fr": "A venir",

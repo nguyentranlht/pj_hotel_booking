@@ -10,14 +10,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UpdateRoomController extends ChangeNotifier {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   final fnameFocusNode = FocusNode();
   final lnameFocusNode = FocusNode();
-  TextEditingController _capacityController = TextEditingController();
-  TextEditingController _reviewController = TextEditingController();
-  TextEditingController _peopleController = TextEditingController();
-  TextEditingController _numberRoomController = TextEditingController();
+  final TextEditingController _capacityController = TextEditingController();
+  final TextEditingController _reviewController = TextEditingController();
+  final TextEditingController _peopleController = TextEditingController();
+  final TextEditingController _numberRoomController = TextEditingController();
 
   final numberFocusNode = FocusNode();
   final birthdayFocusNode = FocusNode();
@@ -61,7 +61,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Container(
+            content: SizedBox(
               height: 120,
               child: Column(children: [
                 ListTile(
@@ -70,7 +70,7 @@ class UpdateRoomController extends ChangeNotifier {
                     pickCameraImage(context, roomId);
                   },
                   leading: Icon(Icons.camera, color: AppTheme.primaryColor),
-                  title: Text('Camera'),
+                  title: const Text('Camera'),
                 ),
                 ListTile(
                   onTap: () {
@@ -78,7 +78,7 @@ class UpdateRoomController extends ChangeNotifier {
                     pickGalleryImage(context, roomId);
                   },
                   leading: Icon(Icons.image, color: AppTheme.primaryColor),
-                  title: Text('Gallery'),
+                  title: const Text('Gallery'),
                 )
               ]),
             ),
@@ -110,7 +110,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật tên phòng')),
+            title: const Center(child: Text('Cập nhật tên phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -121,7 +121,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập tên phòng',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -131,7 +133,7 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
@@ -141,7 +143,7 @@ class UpdateRoomController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -154,7 +156,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật sức chứa')),
+            title: const Center(child: Text('Cập nhật sức chứa')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -165,7 +167,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập sức chứa',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -175,7 +179,7 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
@@ -185,7 +189,7 @@ class UpdateRoomController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -193,12 +197,12 @@ class UpdateRoomController extends ChangeNotifier {
 
   Future<void> showRoomPriceDialogAlert(
       BuildContext context, int name, String roomId) async {
-        _priceController.text = name.toString();
+    _priceController.text = name.toString();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật giá phòng')),
+            title: const Center(child: Text('Cập nhật giá phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -209,7 +213,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập giá phòng',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -219,7 +225,7 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
@@ -229,33 +235,32 @@ class UpdateRoomController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
   }
-  
+
   Future<void> showDeleteRoomDialogAlert(
       BuildContext context, String roomId) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Bạn có chắc muốn xoá!!')),
-            content: SingleChildScrollView(
-            ),
+            title: const Center(child: Text('Bạn có chắc muốn xoá!!')),
+            content: const SingleChildScrollView(),
             actions: [
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Không')),
+                  child: const Text('Không')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).delete();
                     NavigationServices(context).gotoBaseScreen();
                   },
-                  child: Text('Có'))
+                  child: const Text('Có'))
             ],
           );
         });
@@ -268,7 +273,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật đánh giá')),
+            title: const Center(child: Text('Cập nhật đánh giá')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -279,7 +284,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập đánh giá phòng',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -289,7 +296,7 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
@@ -299,11 +306,12 @@ class UpdateRoomController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
   }
+
   Future<void> showRoomNumberRoomDialogAlert(
       BuildContext context, int name, String roomId) async {
     _numberRoomController.text = name.toString();
@@ -311,7 +319,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật sô phòng')),
+            title: const Center(child: Text('Cập nhật sô phòng')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -322,7 +330,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập số phòng',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -332,17 +342,18 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
-                      'roomData.numberRoom': int.parse(_numberRoomController.text)
+                      'roomData.numberRoom':
+                          int.parse(_numberRoomController.text)
                     }).then((value) {
                       _numberRoomController.clear();
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -355,7 +366,7 @@ class UpdateRoomController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật số người')),
+            title: const Center(child: Text('Cập nhật số người')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -366,7 +377,9 @@ class UpdateRoomController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập số người',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -376,7 +389,7 @@ class UpdateRoomController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     roomsCollection.doc(roomId).update({
@@ -386,26 +399,24 @@ class UpdateRoomController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
   }
-
 
   Future<void> showConformDialogAlert(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Khởi động lại ứng dụng')),
+            title: const Center(child: Text('Khởi động lại ứng dụng')),
             actions: [
               TextButton(
                   onPressed: () {
-                    NavigationServices(context)
-                                    .gotoLoginApp();
+                    NavigationServices(context).gotoLoginApp();
                   },
-                  child: Text('Ok')),
+                  child: const Text('Ok')),
             ],
           );
         });

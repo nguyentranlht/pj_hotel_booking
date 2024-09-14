@@ -65,18 +65,18 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
           child: Consumer<UpdateHotelController>(
             builder: (context, provider, child) {
               return Scaffold(
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 appBar: AppBar(
                   leading: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios_new_outlined,
                         color: Color(0xFF373866),
                       )),
                   centerTitle: true,
-                  title: Text(
+                  title: const Text(
                     'Tạo Khách Sạn Mới !',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
@@ -145,7 +145,7 @@ class _CreateHotelScreenState extends State<CreateHotelScreen> {
                                                       .absolute),
                                               fit: BoxFit.cover)))),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30.0,
                         ),
                         Form(

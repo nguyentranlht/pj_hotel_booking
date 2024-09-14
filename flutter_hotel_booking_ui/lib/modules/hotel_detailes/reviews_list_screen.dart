@@ -4,6 +4,8 @@ import '../../models/hotel_list_data.dart';
 import 'review_data_view.dart';
 
 class ReviewsListScreen extends StatefulWidget {
+  const ReviewsListScreen({super.key});
+
   @override
   _ReviewsListScreenState createState() => _ReviewsListScreenState();
 }
@@ -15,7 +17,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
 
@@ -42,7 +44,7 @@ class _ReviewsListScreenState extends State<ReviewsListScreen>
           // animation of Review and feedback data
           Expanded(
             child: ListView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               padding: EdgeInsets.only(
                   top: 8, bottom: MediaQuery.of(context).padding.bottom + 8),
               itemCount: reviewsList.length,

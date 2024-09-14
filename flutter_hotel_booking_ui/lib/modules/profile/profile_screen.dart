@@ -56,8 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Expanded(
                       child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        padding: EdgeInsets.all(0.0),
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(0.0),
                         itemCount: userSettingsList.length,
                         itemBuilder: (context, index) {
                           return InkWell(
@@ -130,9 +130,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 16, right: 16),
                                   child: Divider(
                                     height: 1,
                                   ),
@@ -179,14 +178,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: <Widget>[
                           Text(
                             "${state.user!.firstname} ${state.user!.lastname}",
-                            style: new TextStyle(
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             AppLocalizations(context).of("view_edit"),
-                            style: new TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               color: Theme.of(context).disabledColor,
                             ),
@@ -211,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                       child: state.user!.picture == ""
-                          ? ClipRRect(
+                          ? const ClipRRect(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(40.0)),
                               child: Icon(CupertinoIcons.person,
@@ -219,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )
                           : ClipRRect(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0)),
+                                  const BorderRadius.all(Radius.circular(40.0)),
                               child: Image.network(
                                 state.user!.picture!,
                               ),
@@ -242,14 +241,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: <Widget>[
                           Text(
                             "User",
-                            style: new TextStyle(
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             AppLocalizations(context).of("view_edit"),
-                            style: new TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               color: Theme.of(context).disabledColor,
                             ),
@@ -273,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               blurRadius: 8),
                         ],
                       ),
-                      child: ClipRRect(
+                      child: const ClipRRect(
                         borderRadius: BorderRadius.all(Radius.circular(40.0)),
                         child: Icon(CupertinoIcons.person,
                             size: 75.0, color: Colors.white70),
@@ -303,11 +302,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Icon(Icons.cancel)),
-                        SizedBox(
+                            child: const Icon(Icons.cancel)),
+                        const SizedBox(
                           width: 30.0,
                         ),
-                        Center(
+                        const Center(
                           child: Text(
                             "Error!",
                             style: TextStyle(
@@ -318,20 +317,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
-                    Text("You do not have permission to access this resource!"),
-                    SizedBox(
+                    const Text(
+                        "You do not have permission to access this resource!"),
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black38, width: 2.0),
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
                     Center(
@@ -341,12 +341,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Container(
                           width: 100,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: Color(0xFF008080),
+                            color: const Color(0xFF008080),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
+                          child: const Center(
                               child: Text(
                             "Ok",
                             style: TextStyle(color: Colors.white),

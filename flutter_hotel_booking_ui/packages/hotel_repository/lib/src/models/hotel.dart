@@ -17,7 +17,6 @@ class Hotel {
   int perNight;
   bool isSelected;
   // PeopleSleeps peopleSleeps;
-  
 
   Hotel({
     required this.hotelId,
@@ -35,21 +34,20 @@ class Hotel {
     // required this.peopleSleeps,
   });
 
-   static var empty = Hotel(
-		hotelId: const Uuid().v1(),
-    imagePath: '',
-    titleTxt: '',
-    subTxt: '',
-    date: Timestamp.now(),
-    dateTxt: DateText.empty,
-    roomData: RoomData.empty,
-    // peopleSleeps: PeopleSleeps.empty,
-    perNight: 0,
-    reviews: 0,
-    dist: 0,
-    rating: 0,
-    isSelected: false
-	);
+  static var empty = Hotel(
+      hotelId: const Uuid().v1(),
+      imagePath: '',
+      titleTxt: '',
+      subTxt: '',
+      date: Timestamp.now(),
+      dateTxt: DateText.empty,
+      roomData: RoomData.empty,
+      // peopleSleeps: PeopleSleeps.empty,
+      perNight: 0,
+      reviews: 0,
+      dist: 0,
+      rating: 0,
+      isSelected: false);
 
   HotelEntity toEntity() {
     return HotelEntity(
@@ -86,7 +84,8 @@ class Hotel {
       // peopleSleeps: entity.peopleSleeps,
     );
   }
-    // peopleSleeps: $peopleSleeps,
+
+  // peopleSleeps: $peopleSleeps,
   @override
   String toString() {
     return '''

@@ -16,20 +16,25 @@ import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-class UiHelper{
-  static showAlertDialog(String message,{title = ''}){
-    
-    OneContext().showDialog(builder: (ctx){
-      return AlertDialog(   
-        title: Text(title),
-        content: Text(message),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(2.0))),
-        actions: [ElevatedButton(
-          onPressed: (){
-            OneContext().pop();
-            OnePlatform.app = () => BottomTabScreen();
-        }, child: Text('Ok'))],
-      );
-    },);
+class UiHelper {
+  static showAlertDialog(String message, {title = ''}) {
+    OneContext().showDialog(
+      builder: (ctx) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(2.0))),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  OneContext().pop();
+                  OnePlatform.app = () => BottomTabScreen();
+                },
+                child: const Text('Ok'))
+          ],
+        );
+      },
+    );
   }
 }

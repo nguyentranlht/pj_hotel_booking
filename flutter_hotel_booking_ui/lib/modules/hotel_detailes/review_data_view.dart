@@ -41,7 +41,8 @@ class ReviewsView extends StatelessWidget {
                       radius: 8,
                       color: AppTheme.whiteColor,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8.0)),
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: Image.asset(
@@ -67,7 +68,7 @@ class ReviewsView extends StatelessWidget {
                       children: [
                         Text(
                           AppLocalizations(context).of("last_update"),
-                          style: new TextStyles(context)
+                          style: TextStyles(context)
                               .getDescriptionStyle()
                               .copyWith(
                                 fontWeight: FontWeight.w100,
@@ -76,7 +77,7 @@ class ReviewsView extends StatelessWidget {
                         ),
                         Text(
                           reviewsList.dateTxt,
-                          style: new TextStyles(context)
+                          style: TextStyles(context)
                               .getDescriptionStyle()
                               .copyWith(
                                 fontWeight: FontWeight.w100,
@@ -89,9 +90,7 @@ class ReviewsView extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           "(${reviewsList.rating})",
-                          style: new TextStyles(context)
-                              .getRegularStyle()
-                              .copyWith(
+                          style: TextStyles(context).getRegularStyle().copyWith(
                                 fontWeight: FontWeight.w100,
                               ),
                         ),
@@ -127,7 +126,7 @@ class ReviewsView extends StatelessWidget {
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                     onTap: () {},
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8),
@@ -159,7 +158,7 @@ class ReviewsView extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(
+            const Divider(
               height: 1,
             )
           ],

@@ -11,7 +11,6 @@ import 'package:room_repository/room_repository.dart';
 import 'futures/authentication_bloc/authentication_bloc.dart';
 import 'modules/bottom_tab/bottom_tab_screen.dart';
 
-
 class LoginAppView extends StatelessWidget {
   const LoginAppView({super.key});
 
@@ -22,8 +21,8 @@ class LoginAppView extends StatelessWidget {
       title: 'flutter_hotel_booking_ui',
       theme: ThemeData(
         colorScheme: const ColorScheme.light(
-            background: Color.fromARGB(255, 221, 220, 220),
-            onBackground: Colors.black,
+            surface: Color.fromARGB(255, 221, 220, 220),
+            onSurface: Colors.black,
             primary: Color.fromARGB(255, 104, 159, 56),
             onPrimary: Colors.black,
             secondary: Color.fromRGBO(26, 19, 27, 1),

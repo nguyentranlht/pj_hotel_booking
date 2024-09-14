@@ -12,6 +12,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:provider/provider.dart';
 
 class BottomTabScreen extends StatefulWidget {
+  const BottomTabScreen({super.key});
+
   @override
   _BottomTabScreenState createState() => _BottomTabScreenState();
 }
@@ -25,10 +27,10 @@ class _BottomTabScreenState extends State<BottomTabScreen>
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
     _indexView = Container();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _startLoadScreen());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startLoadScreen());
     super.initState();
   }
 
@@ -40,7 +42,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
         animationController: _animationController,
       );
     });
-    _animationController..forward();
+    _animationController.forward();
   }
 
   @override
@@ -54,11 +56,11 @@ class _BottomTabScreenState extends State<BottomTabScreen>
     return Consumer<ThemeProvider>(
       builder: (_, provider, child) => Container(
         child: Scaffold(
-          bottomNavigationBar: Container(
+          bottomNavigationBar: SizedBox(
               height: 68 + MediaQuery.of(context).padding.bottom,
               child: getBottomBarUI(bottomBarType)),
           body: _isFirstTime
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                   ),
@@ -91,7 +93,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
               animationController: _animationController,
             );
           });
-        }else if (tabType == BottomBarType.Profile) {
+        } else if (tabType == BottomBarType.Profile) {
           setState(() {
             _indexView = ProfileScreen(
               animationController: _animationController,
@@ -142,7 +144,6 @@ class _BottomTabScreenState extends State<BottomTabScreen>
                   tabClick(BottomBarType.Profile);
                 },
               ),
-              
             ],
           ),
           SizedBox(
@@ -154,4 +155,4 @@ class _BottomTabScreenState extends State<BottomTabScreen>
   }
 }
 
-enum BottomBarType { Explore, Trips, Profile, Motorcycle}
+enum BottomBarType { Explore, Trips, Profile, Motorcycle }

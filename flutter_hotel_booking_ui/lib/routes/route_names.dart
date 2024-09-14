@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/login_app.dart';
-import 'package:flutter_hotel_booking_ui/models/hotel_list_data.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/booking_room_screen.dart';
-import 'package:flutter_hotel_booking_ui/modules/admin/home_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/room_hotel_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/update_hotel.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/update_room.dart';
 import 'package:flutter_hotel_booking_ui/modules/base/views/base_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/payment_motorcycle_sreen.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/create_hotel/blocs/create_hotel_bloc/create_hotel_bloc.dart';
 import 'package:flutter_hotel_booking_ui/modules/create_hotel/views/create_hotel_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/create_motorcycle/views/create_motorcycle_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/create_room/views/create_room_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/filter_screen/filters_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/hotel_booking/hotel_home_screen.dart';
@@ -30,14 +30,12 @@ import 'package:flutter_hotel_booking_ui/modules/profile/history_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/payment_sreen.dart';
-import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../futures/authentication_bloc/authentication_bloc.dart';
 import '../futures/sign_in_bloc/sign_in_bloc.dart';
-import '../futures/sign_up_bloc/sign_up_bloc.dart';
 import '../modules/profile/wallet_screen.dart';
 
 class NavigationServices {
@@ -65,6 +63,7 @@ class NavigationServices {
   }
 
   void gotoLoginApp() async {
+    // ignore: void_checks
     return await _pushMaterialPageRoute(LoginApp(FirebaseUserRepository()));
   }
 
@@ -90,19 +89,19 @@ class NavigationServices {
 
   Future<dynamic> gotoCreateHotelScreen() async {
     return await _pushMaterialPageRoute(
-    BlocProvider(
-      create: (context) => CreateHotelBloc(FirebaseHotelRepo()),
-      child: const CreateHotelScreen(),
-    ),
-  );
+      BlocProvider(
+        create: (context) => CreateHotelBloc(FirebaseHotelRepo()),
+        child: const CreateHotelScreen(),
+      ),
+    );
   }
 
   Future<dynamic> gotoHistory() async {
-    return await _pushMaterialPageRoute(HistoryScreen());
+    return await _pushMaterialPageRoute(const HistoryScreen());
   }
 
   Future<dynamic> gotoForgotPassword() async {
-    return await _pushMaterialPageRoute(ForgotPassword());
+    return await _pushMaterialPageRoute(const ForgotPassword());
   }
 
   Future<dynamic> gotoSearchScreen() async {
@@ -118,7 +117,7 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoWallet() async {
-    return await _pushMaterialPageRoute(WalletScreen());
+    return await _pushMaterialPageRoute(const WalletScreen());
   }
 
   Future<dynamic> gotoRoomBookingScreen(String hotelname, String hoteId) async {
@@ -127,8 +126,7 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoBookingRoomScreen() async {
-    return await _pushMaterialPageRoute(
-        BookingRoomScreen());
+    return await _pushMaterialPageRoute(const BookingRoomScreen());
   }
 
   Future<dynamic> gotoRoomHotelScreen(String hotelname, String hoteId) async {
@@ -137,8 +135,12 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoCreateRoomScreen(String hoteId) async {
+    return await _pushMaterialPageRoute(CreateRoomScreen(hotelId: hoteId));
+  }
+
+  Future<dynamic> gotoCreateMotorcycleScreen(String locationId) async {
     return await _pushMaterialPageRoute(
-        CreateRoomScreen(hotelId: hoteId));
+        CreateMotorcycleScreen(locationId: locationId));
   }
 
   Future<dynamic> gotoHotelDetailes(Hotel hotelData) async {
@@ -189,7 +191,11 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoPayment() async {
-    return await _pushMaterialPageRoute(PaymentScreen());
+    return await _pushMaterialPageRoute(const PaymentScreen());
+  }
+
+  Future<dynamic> gotoHistorySearch() async {
+    return await _pushMaterialPageRoute(const PaymentMotorcycleScreen());
   }
 
   Future<dynamic> gotoCountryScreen() async {
@@ -198,6 +204,6 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoHowDoScreen() async {
-    return await _pushMaterialPageRoute(HowDoScreen());
+    return await _pushMaterialPageRoute(const HowDoScreen());
   }
 }

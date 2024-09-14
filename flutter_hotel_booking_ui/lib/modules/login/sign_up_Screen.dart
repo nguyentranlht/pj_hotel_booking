@@ -23,13 +23,13 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   String _errorEmail = '';
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   String _errorPassword = '';
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String _errorFName = '';
-  TextEditingController _fnameController = TextEditingController();
+  final TextEditingController _fnameController = TextEditingController();
   String _errorLName = '';
-  TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _lnameController = TextEditingController();
   bool signUpRequired = false;
   @override
   Widget build(BuildContext context) {
@@ -123,8 +123,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _passwordController,
                         ),
                         CommonButton(
-                          padding:
-                              EdgeInsets.only(left: 24, right: 24, bottom: 8),
+                          padding: const EdgeInsets.only(
+                              left: 24, right: 24, bottom: 8),
                           backgroundColor: Colors.lightGreen.shade700,
                           buttonText: AppLocalizations(context).of("sign_up"),
                           onTap: () {
@@ -171,7 +171,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             InkWell(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(8)),
+                                  const BorderRadius.all(Radius.circular(8)),
                               onTap: () {
                                 NavigationServices(context).gotoLoginScreen();
                               },

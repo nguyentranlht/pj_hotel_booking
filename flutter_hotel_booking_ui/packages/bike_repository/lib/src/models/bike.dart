@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import '../entities/entities.dart';
 import 'package:uuid/uuid.dart';
 
@@ -10,9 +11,12 @@ class Bike {
   String bikeColor;             // Màu sắc của xe máy
   String bikeStatus;            // Trạng thái của xe máy (có sẵn, đã cho thuê, bảo trì)
   double bikeRentPricePerDay;   // Giá thuê mỗi ngày
-  double bikeRentPricePerHour;  // Giá thuê theo giờ
   String bikeFuelType;          // Loại nhiên liệu (xăng, điện)
-  
+  DateTime startDate;
+  DateTime endDate;
+  TimeOfDay startTime;
+  TimeOfDay endTime;
+  String locationId;
   Bike({
     required this.bikeId,
     required this.bikeName,
@@ -22,8 +26,12 @@ class Bike {
     required this.bikeColor,
     required this.bikeStatus,
     required this.bikeRentPricePerDay,
-    required this.bikeRentPricePerHour,
     required this.bikeFuelType,
+    required this.startDate,
+    required this.endDate,
+    required this.startTime,
+    required this.endTime,
+    required this.locationId,
     
   });    
   static var empty = Bike(
@@ -35,8 +43,12 @@ class Bike {
     bikeColor: '',
     bikeStatus: '',
     bikeRentPricePerDay: 0,
-    bikeRentPricePerHour: 0,
-    bikeFuelType: ''
+    bikeFuelType: '',
+    startDate: DateTime.now(), 
+    endDate: DateTime.now(),
+    startTime: TimeOfDay.now(), 
+    endTime: TimeOfDay.now(),
+    locationId: ''
   );
 
   BikeEntity toEntity() {
@@ -49,8 +61,12 @@ class Bike {
       bikeColor: bikeColor,
       bikeStatus: bikeStatus,
       bikeRentPricePerDay: bikeRentPricePerDay,
-      bikeRentPricePerHour: bikeRentPricePerHour,
-      bikeFuelType:bikeFuelType
+      bikeFuelType:bikeFuelType,
+      startDate:startDate,
+      endDate:endDate,
+      startTime:startTime,
+      endTime:endTime,
+      locationId:locationId,
     );
   }
   static Bike fromEntity(BikeEntity entity) {
@@ -63,8 +79,12 @@ class Bike {
       bikeColor: entity.bikeColor,
       bikeStatus: entity.bikeStatus,
       bikeRentPricePerDay: entity.bikeRentPricePerDay,
-      bikeRentPricePerHour: entity.bikeRentPricePerHour,
-      bikeFuelType: entity.bikeFuelType
+      bikeFuelType: entity.bikeFuelType,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
+      startTime:entity.startTime,
+      endTime: entity.endTime,
+      locationId: entity.locationId
     );
   }
 
@@ -79,8 +99,12 @@ class Bike {
       bikeColor: $bikeColor,
       bikeStatus: $bikeStatus,
       bikeRentPricePerDay: $bikeRentPricePerDay,
-      bikeRentPricePerHour: $bikeRentPricePerHour,
-      bikeFuelType: $bikeFuelType
+      bikeFuelType: $bikeFuelType,
+      startDate: $startDate,
+      endDate: $endDate,
+      startTime:$startTime,
+      endTime: $endTime,
+      locationId" $locationId
     ''';
   }
 }

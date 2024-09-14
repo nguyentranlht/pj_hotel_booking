@@ -51,7 +51,7 @@ class HotelListData {
       roomData: RoomData(1, 2),
       isSelected: true,
       date: DateText(1, 5),
-      location: LatLng(51.516898, -0.143377),
+      location: const LatLng(51.516898, -0.143377),
     ),
     HotelListData(
       imagePath: Localfiles.hotel_2,
@@ -64,7 +64,7 @@ class HotelListData {
       roomData: RoomData(1, 3),
       isSelected: false,
       date: DateText(2, 6),
-      location: LatLng(51.505799, -0.137904),
+      location: const LatLng(51.505799, -0.137904),
     ),
     HotelListData(
       imagePath: Localfiles.hotel_3,
@@ -77,7 +77,7 @@ class HotelListData {
       roomData: RoomData(2, 3),
       isSelected: false,
       date: DateText(5, 9),
-      location: LatLng(51.499162, -0.119788),
+      location: const LatLng(51.499162, -0.119788),
     ),
     HotelListData(
       imagePath: Localfiles.hotel_4,
@@ -90,7 +90,7 @@ class HotelListData {
       isSelected: false,
       roomData: RoomData(2, 2),
       date: DateText(1, 5),
-      location: LatLng(51.519541, -0.114503),
+      location: const LatLng(51.519541, -0.114503),
     ),
     HotelListData(
       imagePath: Localfiles.hotel_5,
@@ -103,7 +103,7 @@ class HotelListData {
       perNight: 200,
       roomData: RoomData(1, 7),
       date: DateText(1, 4),
-      location: LatLng(51.508383, -0.109502),
+      location: const LatLng(51.508383, -0.109502),
     ),
   ];
 

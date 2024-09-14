@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/sendGridApi.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:room_repository/room_repository.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../routes/route_names.dart';
-import 'package:intl/intl.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -19,10 +19,9 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   String? userId, wallet, paymentId, roomId;
-  DateTime _selectedDate = DateTime.now();
 
   num total = 0;
-  int amount2 = 0, note = 0, amount3 = 0;
+  int amount2 = 0, note = 0;
   Stream? roomStream;
   bool isSelectedRoom = false;
   final oCcy = NumberFormat("#,##0", "vi_VN");
@@ -34,31 +33,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? customerName, nameHotel, paymentIds;
   int? roomNumber;
 
-
-  @override
-  Future<void> _selectDateRange(BuildContext context) async {
-
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      initialDateRange: _selectedStartDate != null && _selectedEndDate != null
-          ? DateTimeRange(start: _selectedStartDate!, end: _selectedEndDate!)
-          : null,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null) {
-      setState(() {
-        _selectedStartDate = picked.start;
-        _selectedEndDate = picked.end;
-      });
-    }
-  }
-
   void startTimer() {
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       amount2 = int.parse(total.toString());
       setState(() {});
     });
@@ -79,7 +55,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     await getthesharedpref();
 
     var userInfo = await FirebaseUserRepository().getUserInfo(userId!);
-    var paymentIdsluu = await FirebaseUserRepository().getLatestPaymentId(userId!);
+    var paymentIdsluu =
+        await FirebaseUserRepository().getLatestPaymentId(userId!);
     String? email = userInfo['email'];
     String? name = userInfo['firstname'];
 
@@ -117,7 +94,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       stream: roomStream,
       builder: (context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           calculateTotal(snapshot);
@@ -136,7 +113,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 : Slidable(
                     key: Key(ds.id),
                     endActionPane: ActionPane(
-                      motion: ScrollMotion(),
+                      motion: const ScrollMotion(),
                       children: [
                         SlidableAction(
                           onPressed: (context) async {
@@ -144,20 +121,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Xác nhận xóa"),
-                                  content: Text("Bạn có chắc muốn xoá?"),
+                                  title: const Text("Xác nhận xóa"),
+                                  content: const Text("Bạn có chắc muốn xoá?"),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
-                                      child: Text("Huỷ"),
+                                      child: const Text("Huỷ"),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                       },
-                                      child: Text("Xoá"),
+                                      child: const Text("Xoá"),
                                     ),
                                   ],
                                 );
@@ -165,14 +142,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             );
                             if (confirmDelete == true) {
                               try {
-                                if (userId != null && ds.id != null) {
+                                if (userId != null) {
                                   await FirebaseUserRepository()
                                       .deletePaymentFromRoom(userId!, ds.id);
                                   await FirebaseUserRepository()
                                       .removeUserRoomId(userId!);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
                                           'Đã xóa khỏi thanh toán thành công'),
                                     ),
@@ -182,9 +159,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     snapshot.data.docs.removeAt(index);
                                     calculateTotal(snapshot);
                                   });
+                                  Navigator.pop(context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content:
                                           Text('User ID or Payment ID is null'),
                                       backgroundColor: Colors.red,
@@ -210,30 +188,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                     child: Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                           left: 20.0, right: 20.0, bottom: 10.0),
                       child: Material(
-                        elevation: 5.0,
+                        elevation: 10.0,
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(40),
                           child: Row(
                             children: [
-                              SizedBox(width: 20.0),
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Container(
-                                  height: 90,
-                                  width: 90,
+                                borderRadius: BorderRadius.circular(30),
+                                child: SizedBox(
+                                  height: 110,
+                                  width: 110,
                                   child: PageView(
                                     controller: PageController(),
                                     pageSnapping: true,
                                     scrollDirection: Axis.horizontal,
                                     children: <Widget>[
-                                       for (var image in (ds["ImagePath"] as String).split(" "))
+                                      for (var image
+                                          in (ds["ImagePath"] as String)
+                                              .split(" "))
                                         Image.network(
                                           image,
                                           fit: BoxFit.cover,
@@ -242,14 +221,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 20.0),
+                              const SizedBox(width: 20.0),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    ds["Name"],
-                                    style: AppWidget.semiBoldTextFeildStyle(),
-                                  ),
+                                  Text(ds["Name"],
+                                      style: TextStyle(
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppTheme.fontcolor,
+                                      )),
                                   Text(
                                     "${oCcy.format(ds["PerNight"])} ₫",
                                     style: AppWidget.semiBoldTextFeildStyle(),
@@ -272,7 +253,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: 2.0),
+        padding: const EdgeInsets.only(top: 2.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -280,21 +261,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Material(
               elevation: 4.0,
               child: Container(
-                padding: EdgeInsets.only(bottom: 1.0),
-                child: Center(),
+                padding: const EdgeInsets.only(bottom: 1.0),
+                child: const Center(),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height / 1.7,
               child: roomPayment(),
             ),
-            Spacer(),
-            Divider(),
+            const Spacer(),
+            const Divider(),
             Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              padding: const EdgeInsets.only(left: 25.0, right: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -304,12 +285,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   Text(
                     "${oCcy.format(amount2)} ₫",
-                    style: AppWidget.semiBoldTextFeildStyle(),
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.fontcolor,
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
             GestureDetector(
@@ -318,23 +303,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   //khi wallet ít tiền hơn hóa đơn
                   return openError();
                 } else {
-
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
                   await FirebaseUserRepository()
                       .saveUserWallet(amount.toString());
-                   
+
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
-                     await updateRoomDataWithPayment(userId!, roomId!);
+                    await updateRoomDataWithPayment(userId!, roomId!);
 
-                     await FirebaseUserRepository()
+                    await FirebaseUserRepository()
                         .updateIsSelectedForDatime(roomId!);
-                     await FirebaseUserRepository()
-                        .updateIsSelectedForPayment(userId!, paymentIds!);
-                  if (paymentIds != null) {
-                    Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, paymentIds!);
+                    await FirebaseUserRepository()
+                        .updateIsSelectedForUserPayments(userId!);
+                    if (paymentIds != null) {
+                      Map<String, dynamic> latestPaymentDetails =
+                          await FirebaseUserRepository()
+                              .getPaymentDetails(userId!, paymentIds!);
                       perNight = latestPaymentDetails['PerNight'];
                       roomNumber = latestPaymentDetails['NumberRoom'];
                       _selectedStartDate = latestPaymentDetails['StartDate'];
@@ -343,10 +329,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       luu = formatDate(_selectedStartDate);
                       luu2 = formatDate(_selectedEndDate);
                       setState(() {});
-                  } else {
-                    print('No paymentIds found.');
+                    } else {
+                      print('No paymentIds found.');
+                    }
                   }
-                }
                   await FirebaseUserRepository().removeUserRoomId(userId!);
                   await sendConfirmationEmail(
                     customerEmail ?? 'khachhang@example.com',
@@ -362,19 +348,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                margin: EdgeInsets.only(
-                    left: 30.0, right: 30.0, bottom: 60.0, top: 0.0),
-                child: Center(
+                margin: const EdgeInsets.only(
+                    left: 25.0, right: 25.0, bottom: 60.0, top: 5.0),
+                child: const Center(
                   child: Text(
                     "Thực hiện thanh toán",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -402,12 +388,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         onTap: () {
                           NavigationServices(context).gotoLoginApp();
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.check_circle,
                           color: Colors.green,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 16.0,
                       ),
                       Center(
@@ -423,20 +409,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
-                  Text(
+                  const Text(
                     "Cảm ơn",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Center(
@@ -446,12 +432,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       },
                       child: Container(
                         width: 100,
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Color(0xFF008080),
+                          color: const Color(0xFF008080),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             "Trang chủ",
                             style: TextStyle(color: Colors.white),
@@ -481,15 +467,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         onTap: () {
                           NavigationServices(context).gotoIntroductionScreen();
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.error,
                           color: Colors.red,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 16.0,
                       ),
-                      Center(
+                      const Center(
                         child: Text(
                           "Lỗi thanh toán",
                           textAlign: TextAlign.center,
@@ -502,20 +488,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20.0,
                   ),
-                  Text(
+                  const Text(
                     "Số dư không đủ",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Center(
@@ -525,12 +511,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       },
                       child: Container(
                         width: 100,
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.lightGreen.shade700,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             "Trang chủ",
                             style: TextStyle(color: Colors.white),
@@ -558,7 +544,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       ),
       centerTitle: true,
-      title: Text(
+      title: const Text(
         "Thanh Toán",
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -567,7 +553,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
-  
 
   Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
     try {
@@ -579,12 +564,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
           "EndDate": paymentData['EndDate'],
           "paymentId": paymentData['paymentId'],
           "isSelected": paymentData['isSelected'],
+          "userId": paymentData['userId'],
         };
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }
     } catch (e) {
       print('Error updating room data with payment: $e');
-      throw e;
+      rethrow;
     }
   }
 }

@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../models/hotel_list_data.dart';
 
 class SearchTypeListView extends StatefulWidget {
+  const SearchTypeListView({super.key});
+
   @override
   _SearchTypeListViewState createState() => _SearchTypeListViewState();
 }
@@ -18,7 +20,7 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
 
@@ -30,7 +32,7 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 114,
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 0, right: 16, left: 16),
@@ -51,8 +53,8 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
             builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                 opacity: animation,
-                child: new Transform(
-                  transform: new Matrix4.translationValues(
+                child: Transform(
+                  transform: Matrix4.translationValues(
                       50 * (1.0 - animation.value), 0.0, 0.0),
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -65,19 +67,19 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
                               width: 80,
                               decoration: BoxDecoration(
                                 color: Theme.of(context).primaryColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(80.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(80.0)),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
                                     color: Theme.of(context).dividerColor,
                                     blurRadius: 8,
-                                    offset: Offset(4, 4),
+                                    offset: const Offset(4, 4),
                                   ),
                                 ],
                               ),
                               child: ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(80.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(80.0)),
                                 child: AspectRatio(
                                   aspectRatio: 1,
                                   child: Image.asset(
@@ -90,8 +92,8 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
                             Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(80.0)),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(80.0)),
                                 highlightColor: Colors.transparent,
                                 splashColor: Theme.of(context)
                                     .primaryColor
@@ -117,8 +119,9 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
                                       child: Center(
                                         child: Icon(
                                           FontAwesomeIcons.check,
-                                          color:
-                                              Theme.of(context).colorScheme.surface,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surface,
                                         ),
                                       ),
                                     ),
@@ -134,7 +137,7 @@ class _SearchTypeListViewState extends State<SearchTypeListView>
                             AppLocalizations(context)
                                 .of(hotelTypeList[index].titleTxt),
                             maxLines: 2,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                         )
                       ],

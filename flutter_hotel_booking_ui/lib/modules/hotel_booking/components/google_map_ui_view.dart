@@ -15,7 +15,7 @@ class GoogleMapUIView extends StatefulWidget {
 
 class _GoogleMapUIViewState extends State<GoogleMapUIView> {
   GoogleMapController? _mapController;
-  GoogleMapProvider _googleMapProvider = GoogleMapProvider();
+  final GoogleMapProvider _googleMapProvider = GoogleMapProvider();
 
   @override
   void initState() {
@@ -42,15 +42,16 @@ class _GoogleMapUIViewState extends State<GoogleMapUIView> {
                 children: [
                   Container(),
                   GoogleMap(
-                    initialCameraPosition: CameraPosition(
+                    initialCameraPosition: const CameraPosition(
                       target: LatLng(51.507896, -0.128006),
                       zoom: 13,
                     ),
                     mapType: MapType.normal,
                     onCameraMove: (CameraPosition position) {
-                      if (_mapController != null)
+                      if (_mapController != null) {
                         _googleMapProvider
                             .updateGoogleMapController(_mapController!);
+                      }
                     },
                     mapToolbarEnabled: false,
                     compassEnabled: false,
@@ -74,7 +75,7 @@ class _GoogleMapUIViewState extends State<GoogleMapUIView> {
                   for (var item in context.watch<GoogleMapProvider>().hotelList)
                     item.screenMapPin != null
                         ? AnimatedPositioned(
-                            duration: Duration(milliseconds: 1),
+                            duration: const Duration(milliseconds: 1),
                             top: item.screenMapPin!.dy - 48,
                             left: item.screenMapPin!.dx - 40,
                             child: SizedBox(
@@ -88,13 +89,13 @@ class _GoogleMapUIViewState extends State<GoogleMapUIView> {
                                       color: item.isSelected
                                           ? AppTheme.primaryColor
                                           : AppTheme.backgroundColor,
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                           Radius.circular(24.0)),
                                       boxShadow: <BoxShadow>[
                                         BoxShadow(
                                           color: AppTheme.secondaryTextColor,
                                           blurRadius: 16,
-                                          offset: Offset(4, 4),
+                                          offset: const Offset(4, 4),
                                         ),
                                       ],
                                     ),
@@ -144,7 +145,7 @@ class _GoogleMapUIViewState extends State<GoogleMapUIView> {
                                   ),
                                   IgnorePointer(
                                     child: Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         color: Colors.black,
                                         shape: BoxShape.circle,
                                       ),
@@ -156,7 +157,7 @@ class _GoogleMapUIViewState extends State<GoogleMapUIView> {
                               ),
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                 ],
               );
             });

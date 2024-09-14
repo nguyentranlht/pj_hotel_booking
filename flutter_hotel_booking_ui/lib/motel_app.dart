@@ -15,6 +15,8 @@ import 'package:provider/provider.dart';
 BuildContext? applicationcontext;
 
 class MotelApp extends StatefulWidget {
+  const MotelApp({super.key});
+
   @override
   _MotelAppState createState() => _MotelAppState();
 }
@@ -26,27 +28,27 @@ class _MotelAppState extends State<MotelApp> {
       builder: (_, provider, child) {
         applicationcontext = context;
 
-        final ThemeData _theme = provider.themeData;
+        final ThemeData theme = provider.themeData;
         return MaterialApp(
-          localizationsDelegates: [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: [
-            const Locale('en'), // English
-            const Locale('fr'), //French
-            const Locale('ja'), // Japanises
-            const Locale('ar'), //Arebic
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('fr'), //French
+            Locale('ja'), // Japanises
+            Locale('ar'), //Arebic
           ],
           navigatorKey: navigatorKey,
           title: 'Hotel',
           debugShowCheckedModeBanner: false,
-          theme: _theme,
+          theme: theme,
           routes: _buildRoutes(),
           builder: (BuildContext context, Widget? child) {
-            _setFirstTimeSomeData(context, _theme);
+            _setFirstTimeSomeData(context, theme);
             return Directionality(
               textDirection:
                   context.read<ThemeProvider>().languageType == LanguageType.ar
@@ -56,13 +58,14 @@ class _MotelAppState extends State<MotelApp> {
                 builder: (BuildContext context) {
                   return MediaQuery(
                     data: MediaQuery.of(context).copyWith(
-                      textScaleFactor: MediaQuery.of(context).size.width > 360
-                          ? 1.0
-                          : MediaQuery.of(context).size.width >= 340
-                              ? 0.9
-                              : 0.8,
+                      textScaler: TextScaler.linear(
+                          MediaQuery.of(context).size.width > 360
+                              ? 1.0
+                              : MediaQuery.of(context).size.width >= 340
+                                  ? 0.9
+                                  : 0.8),
                     ),
-                    child: child ?? SizedBox(),
+                    child: child ?? const SizedBox(),
                   );
                 },
               ),

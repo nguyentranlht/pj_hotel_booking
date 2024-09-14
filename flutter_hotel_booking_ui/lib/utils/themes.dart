@@ -14,33 +14,34 @@ class AppTheme {
 
   // colors
   static Color get primaryColor {
-    ColorType _colortypedata = applicationcontext == null
+    ColorType colortypedata = applicationcontext == null
         ? ColorType.Verdigris
         : applicationcontext!.read<ThemeProvider>().colorType;
 
-    return getColor(_colortypedata);
+    return getColor(colortypedata);
   }
+
   static const Color grey = Color(0xFF3A5160);
   static Color get scaffoldBackgroundColor =>
-      isLightMode ? Color(0xFFF7F7F7) : Color(0xFF1A1A1A);
+      isLightMode ? const Color(0xFFF7F7F7) : const Color(0xFF1A1A1A);
 
   static Color get redErrorColor =>
-      isLightMode ? Color(0xFFAC0000) : Color(0xFFAC0000);
+      isLightMode ? const Color(0xFFAC0000) : const Color(0xFFAC0000);
 
   static Color get backgroundColor =>
-      isLightMode ? Color(0xFFFFFFFF) : Color(0xFF2C2C2C);
+      isLightMode ? const Color(0xFFFFFFFF) : const Color(0xFF2C2C2C);
 
   static Color get primaryTextColor =>
-      isLightMode ? Color(0xFF262626) : Color(0xFFFFFFFF);
+      isLightMode ? const Color(0xFF262626) : const Color(0xFFFFFFFF);
 
   static Color get secondaryTextColor =>
-      isLightMode ? Color(0xFFADADAD) : Color(0xFF6D6D6D);
+      isLightMode ? const Color(0xFFADADAD) : const Color(0xFF6D6D6D);
 
-  static Color get whiteColor => Color(0xFFFFFFFF);
-  static Color get backColor => Color(0xFF262626);
+  static Color get whiteColor => const Color(0xFFFFFFFF);
+  static Color get backColor => const Color(0xFF262626);
 
   static Color get fontcolor =>
-      isLightMode ? Color(0xFF1A1A1A) : Color(0xFFF7F7F7);
+      isLightMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F7F7);
 
   static ThemeData get getThemeData =>
       isLightMode ? _buildLightTheme() : _buildDarkTheme();
@@ -77,22 +78,22 @@ class AppTheme {
   }
 
 // we also get some Light and Dark color variants
-  static Color getColor(ColorType _colordata) {
-    switch (_colordata) {
+  static Color getColor(ColorType colordata) {
+    switch (colordata) {
       case ColorType.Verdigris:
-        return isLightMode ? Color(0xFF66BB6A) : Color(0xFF81C784);
+        return isLightMode ? const Color(0xFF66BB6A) : const Color(0xFF81C784);
       case ColorType.Malibu:
-        return isLightMode ? Color(0xFF5DCAEC) : Color(0xFF5DCAEC);
+        return isLightMode ? const Color(0xFF5DCAEC) : const Color(0xFF5DCAEC);
       case ColorType.DarkSkyBlue:
-        return isLightMode ? Color(0xFF458CEA) : Color(0xFF458CEA);
+        return isLightMode ? const Color(0xFF458CEA) : const Color(0xFF458CEA);
       case ColorType.BilobaFlower:
-        return isLightMode ? Color(0xFFff5f5f) : Color(0xFFff5f5f);
+        return isLightMode ? const Color(0xFFff5f5f) : const Color(0xFFff5f5f);
     }
   }
 
   static TextStyle getTextStyle(
-      FontFamilyType _fontFamilyType, TextStyle textStyle) {
-    switch (_fontFamilyType) {
+      FontFamilyType fontFamilyType, TextStyle textStyle) {
+    switch (fontFamilyType) {
       case FontFamilyType.Montserrat:
         return GoogleFonts.montserrat(textStyle: textStyle);
       case FontFamilyType.WorkSans:
@@ -121,7 +122,7 @@ class AppTheme {
       colorScheme: colorScheme,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-    //  backgroundColor: backgroundColor,
+      //  backgroundColor: backgroundColor,
       canvasColor: scaffoldBackgroundColor,
       buttonTheme: _buttonThemeData(colorScheme),
       dialogTheme: _dialogTheme(),
@@ -144,7 +145,7 @@ class AppTheme {
       colorScheme: colorScheme,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-    //  backgroundColor: backgroundColor,
+      //  backgroundColor: backgroundColor,
       canvasColor: scaffoldBackgroundColor,
       buttonTheme: _buttonThemeData(colorScheme),
       dialogTheme: _dialogTheme(),
@@ -191,28 +192,28 @@ class AppTheme {
 
   static get mapCardDecoration => BoxDecoration(
         color: AppTheme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(24.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
         boxShadow: <BoxShadow>[
           BoxShadow(
               color: Theme.of(applicationcontext!).dividerColor,
-              offset: Offset(4, 4),
+              offset: const Offset(4, 4),
               blurRadius: 8.0),
         ],
       );
   static get buttonDecoration => BoxDecoration(
         color: AppTheme.primaryColor,
-        borderRadius: BorderRadius.all(Radius.circular(24.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(24.0)),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Theme.of(applicationcontext!).dividerColor,
             blurRadius: 8,
-            offset: Offset(4, 4),
+            offset: const Offset(4, 4),
           ),
         ],
       );
   static get searchBarDecoration => BoxDecoration(
         color: AppTheme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(38)),
+        borderRadius: const BorderRadius.all(Radius.circular(38)),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Theme.of(applicationcontext!).dividerColor,
@@ -224,7 +225,7 @@ class AppTheme {
 
   static get boxDecoration => BoxDecoration(
         color: AppTheme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(16.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Theme.of(applicationcontext!).dividerColor,

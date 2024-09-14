@@ -13,6 +13,8 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
+
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -54,19 +56,19 @@ class _EditProfileState extends State<EditProfile> {
                                         onTap: () {
                                           Navigator.pop(context);
                                         },
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.arrow_back_ios_new_outlined,
                                           color: Color(0xFF373866),
                                         )),
                                     centerTitle: true,
-                                    title: Text(
+                                    title: const Text(
                                       'Chỉnh Sửa Thông Tin',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 22),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   Stack(
@@ -92,7 +94,7 @@ class _EditProfileState extends State<EditProfile> {
                                                               .user!.picture
                                                               .toString() ==
                                                           ""
-                                                      ? Icon(
+                                                      ? const Icon(
                                                           Icons.person,
                                                           size: 40,
                                                         )
@@ -106,9 +108,10 @@ class _EditProfileState extends State<EditProfile> {
                                                               child,
                                                               loadingProgress) {
                                                             if (loadingProgress ==
-                                                                null)
+                                                                null) {
                                                               return child;
-                                                            return Center(
+                                                            }
+                                                            return const Center(
                                                               child:
                                                                   CircularProgressIndicator(),
                                                             );
@@ -139,14 +142,14 @@ class _EditProfileState extends State<EditProfile> {
                                           radius: 14,
                                           backgroundColor:
                                               AppTheme.primaryColor,
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.add,
                                           ),
                                         ),
                                       )
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 40,
                                   ),
                                   GestureDetector(

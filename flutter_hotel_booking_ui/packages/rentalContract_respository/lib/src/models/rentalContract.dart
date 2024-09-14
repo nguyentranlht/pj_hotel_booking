@@ -1,25 +1,22 @@
-import 'dart:ffi';
-
 import 'package:uuid/uuid.dart';
 import '../models/date_text.dart';
 import '../models/time_text.dart';
 import '../entities/rentalContract_entity.dart';
 
-
 class RentalContract {
-  String contractId;            // ID hợp đồng thuê xe
-  String bikeId;                // ID của xe máy được thuê
-  String customerId;    
-        
+  String contractId; // ID hợp đồng thuê xe
+  String bikeId; // ID của xe máy được thuê
+  String customerId;
+
   DateText dateTxt;
   TimeText timeTxt;
 
-  double totalPrice;            // Tổng số tiền thuê
-  bool paymentStatus;         // Trạng thái thanh toán (chưa thanh toán, đã thanh toán)
-  double depositAmount;         // Số tiền đặt cọc
-  String pickupLocation;        // Địa điểm nhận xe
-  String returnLocation; 
-  
+  double totalPrice; // Tổng số tiền thuê
+  bool paymentStatus; // Trạng thái thanh toán (chưa thanh toán, đã thanh toán)
+  double depositAmount; // Số tiền đặt cọc
+  String pickupLocation; // Địa điểm nhận xe
+  String returnLocation;
+
   RentalContract({
     required this.contractId,
     required this.bikeId,
@@ -31,10 +28,9 @@ class RentalContract {
     required this.depositAmount,
     required this.pickupLocation,
     required this.returnLocation,
-    
-  });     
+  });
   static var empty = RentalContract(
-		contractId: const Uuid().v1(),
+    contractId: const Uuid().v1(),
     bikeId: '',
     customerId: '',
     dateTxt: DateText.empty,
@@ -44,20 +40,20 @@ class RentalContract {
     depositAmount: 0,
     pickupLocation: '',
     returnLocation: '',
-    );
+  );
 
   RentalContractEntity toEntity() {
     return RentalContractEntity(
-        contractId: contractId,
-        bikeId: bikeId,
-        customerId: customerId,
-        dateTxt: dateTxt,
-        timeTxt: timeTxt,
-        totalPrice: totalPrice,
-        paymentStatus: paymentStatus,
-        depositAmount: depositAmount,
-        pickupLocation: pickupLocation,
-        returnLocation: returnLocation,
+      contractId: contractId,
+      bikeId: bikeId,
+      customerId: customerId,
+      dateTxt: dateTxt,
+      timeTxt: timeTxt,
+      totalPrice: totalPrice,
+      paymentStatus: paymentStatus,
+      depositAmount: depositAmount,
+      pickupLocation: pickupLocation,
+      returnLocation: returnLocation,
     );
   }
 
@@ -76,7 +72,7 @@ class RentalContract {
     );
   }
 
-    @override
+  @override
   String toString() {
     return '''
     contractId: $contractId,
@@ -90,5 +86,5 @@ class RentalContract {
     pickupLocation: $contractId,
     returnLocation: $returnLocation,
     ''';
-    }
+  }
 }

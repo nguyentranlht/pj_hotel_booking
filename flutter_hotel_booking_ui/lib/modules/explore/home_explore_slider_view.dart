@@ -46,16 +46,16 @@ class _HomeExploreSliderViewState extends State<HomeExploreSliderView> {
       assetsImage: Localfiles.explore_3,
     ));
 
-    sliderTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+    sliderTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) if (currentShowIndex == 0) {
         pageController.animateTo(MediaQuery.of(context).size.width,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       } else if (currentShowIndex == 1) {
         pageController.animateTo(MediaQuery.of(context).size.width * 2,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       } else if (currentShowIndex == 2) {
         pageController.animateTo(0,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       }
     });
     super.initState();
@@ -124,14 +124,14 @@ class PagePopup extends StatelessWidget {
   final PageViewData imageData;
   final double opValue;
 
-  const PagePopup({Key? key, required this.imageData, this.opValue= 0.0})
+  const PagePopup({Key? key, required this.imageData, this.opValue = 0.0})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
+        SizedBox(
           height: (MediaQuery.of(context).size.width * 1.3),
           width: MediaQuery.of(context).size.width,
           child: Image.asset(
@@ -158,7 +158,7 @@ class PagePopup extends StatelessWidget {
                         .copyWith(color: AppTheme.whiteColor),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Container(
@@ -171,7 +171,7 @@ class PagePopup extends StatelessWidget {
                         color: AppTheme.whiteColor),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
               ],

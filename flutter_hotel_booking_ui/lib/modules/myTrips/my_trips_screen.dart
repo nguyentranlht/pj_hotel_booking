@@ -28,12 +28,12 @@ class _MyTripsScreenState extends State<MyTripsScreen>
 
   @override
   void initState() {
-    tabAnimationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+    tabAnimationController = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
     indexView = UpcomingListView(
       animationController: tabAnimationController,
     );
-    tabAnimationController..forward();
+    tabAnimationController.forward();
     widget.animationController.forward();
 
     super.initState();
@@ -149,7 +149,7 @@ class _MyTripsScreenState extends State<MyTripsScreen>
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(32.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(32.0)),
           highlightColor: Colors.transparent,
           splashColor: Theme.of(context).primaryColor.withOpacity(0.2),
           onTap: onTap,
@@ -176,29 +176,31 @@ class _MyTripsScreenState extends State<MyTripsScreen>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-            Icon(
-              Icons.beach_access,
+          const Icon(
+            Icons.beach_access,
+            color: Colors.black87,
+            size: 30,
+          ),
+          const SizedBox(width: 20),
+          Text(
+            AppLocalizations(context).of("My_Trips"),
+            style: const TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
               color: Colors.black87,
-              size: 30,
+              shadows: [
+                Shadow(
+                  blurRadius: 10.0,
+                  color: Colors.black26,
+                  offset: Offset(0.5, 0.5),
+                ),
+              ],
             ),
-            SizedBox(width: 20),
-            Text(AppLocalizations(context).of("My_Trips"),
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.black26,
-                    offset: Offset(0.5, 0.5),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
+        ],
       ),
     );
   }
 }
+
 enum TopBarType { Upcomming, Finished, Favorites }

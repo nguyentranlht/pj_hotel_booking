@@ -20,6 +20,8 @@ import '../../models/hotel_list_data.dart';
 import 'package:provider/provider.dart';
 
 class HotelHomeScreen extends StatefulWidget {
+  const HotelHomeScreen({super.key});
+
   @override
   _HotelHomeScreenState createState() => _HotelHomeScreenState();
 }
@@ -28,11 +30,11 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   late AnimationController _animationController;
-  ScrollController scrollController = new ScrollController();
+  ScrollController scrollController = ScrollController();
   int room = 1;
   int ad = 2;
   DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(Duration(days: 5));
+  DateTime endDate = DateTime.now().add(const Duration(days: 5));
   bool _isShowMap = false;
 
   final searchBarHieght = 158.0;
@@ -40,9 +42,9 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: Duration(milliseconds: 1000), vsync: this);
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 0), vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 0), vsync: this);
     scrollController.addListener(() {
       if (scrollController.offset <= 0) {
         _animationController.animateTo(0.0);
@@ -72,9 +74,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-										create: (context) => GetHotelBloc(
-											FirebaseHotelRepo()
-										)..add(GetHotel()),
+      create: (context) => GetHotelBloc(FirebaseHotelRepo())..add(GetHotel()),
       child: BlocBuilder<GetHotelBloc, GetHotelState>(
         builder: (context, state) {
           if (state is GetHotelSuccess) {
@@ -101,7 +101,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                                       child: ListView.builder(
                                         controller: scrollController,
                                         itemCount: state.hotels.length,
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                           top: 8 + 158 + 52.0,
                                         ),
                                         scrollDirection: Axis.vertical,
@@ -200,10 +200,10 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
               child: CommonCard(
                 color: AppTheme.backgroundColor,
                 radius: 36,
-                child: CommonSearchBar(
+                child: const CommonSearchBar(
                   enabled: true,
                   ishsow: false,
-                  text: "",
+                  text: "London...",
                 ),
               ),
             ),
@@ -248,14 +248,14 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(32.0),
                 ),
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Icon(Icons.arrow_back),
                 ),
               ),
@@ -269,7 +269,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: AppBar().preferredSize.height + 40,
             height: AppBar().preferredSize.height,
             child: Row(
@@ -279,12 +279,12 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(32.0),
                     ),
                     onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.favorite_border),
                     ),
                   ),
@@ -292,7 +292,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.all(
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(32.0),
                     ),
                     onTap: () {

@@ -55,8 +55,8 @@ class _BookRoomViewState extends State<BookRoomView> {
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
           opacity: widget.animation,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
+          child: Transform(
+            transform: Matrix4.translationValues(
                 0.0, 40 * (1.0 - widget.animation.value), 0.0),
             child: Column(
               children: <Widget>[
@@ -111,17 +111,14 @@ class _BookRoomViewState extends State<BookRoomView> {
                                 .copyWith(fontSize: 24),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Expanded(child: SizedBox()),
-                          
+                          const Expanded(child: SizedBox()),
                           Text(
-                                  widget.ds["StartDate"].toString() +
-                                        " - " +
-                                        widget.ds["EndDate"].toString(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
+                            "${widget.ds["StartDate"]} - ${widget.ds["EndDate"]}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
                         ],
                       ),
                       Row(
@@ -143,17 +140,25 @@ class _BookRoomViewState extends State<BookRoomView> {
                                   .copyWith(fontSize: 14),
                             ),
                           ),
-                          
                         ],
                       ),
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          // Text(
+                          //   // Helper.getPeopleandChildren(
+                          //       // widget.roomData.roomData!),
+                          //   // "${widget.roomData.dateTxt}",
+                          //   // textAlign: TextAlign.left,
+                          //   // style: TextStyles(context).getDescriptionStyle(),
+                          // ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                Divider(
+                const Divider(
                   height: 1,
                 )
               ],
@@ -163,4 +168,96 @@ class _BookRoomViewState extends State<BookRoomView> {
       },
     );
   }
+
+  Future openEdit() => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(Icons.cancel)),
+                        const SizedBox(
+                          width: 60.0,
+                        ),
+                        const Center(
+                          child: Text(
+                            'PAYMENT',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF008080),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Center(
+                      child: Text("Go to Pay or Cancel",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (id != null && !widget.room.isSelected) {
+                            /// String id2 = randomAlphaNumeric(10);
+                            Map<String, dynamic> addPaymentToRoom = {
+                              "Name": widget.room.titleTxt,
+                              "RoomId": widget.room.roomId,
+                              "PerNight": widget.room.perNight,
+                              "HotelId": widget.room.hotelId,
+                              "Date": widget.room.date,
+                              "isSelected": widget.room.isSelected,
+                              "People": widget.room.roomData.people,
+                              "NumberRoom": widget.room.roomData.numberRoom,
+                              "ImagePath": widget.room.imagePath,
+                              // "PaymentId": id2,
+                            };
+                            await FirebaseUserRepository()
+                                .addPaymentToUser(addPaymentToRoom, id!);
+                            await FirebaseUserRepository()
+                                .updateUserRoomId(id!, widget.room.roomId);
+                          }
+
+                          NavigationServices(context).gotoPayment();
+                        },
+                        child: Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF008080),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                              child: Text(
+                            "Pay",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ));
 }

@@ -66,19 +66,19 @@ class RatingView extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             getBarUI('room', 95.0, context),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             getBarUI('service', 80.0, context),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             getBarUI('location', 65.0, context),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             getBarUI('price', 85, context),
@@ -105,7 +105,7 @@ class RatingView extends StatelessWidget {
                 ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 8,
         ),
         Expanded(
@@ -125,7 +125,7 @@ class RatingView extends StatelessWidget {
               ),
               Expanded(
                 flex: 100 - percent.toInt(),
-                child: SizedBox(),
+                child: const SizedBox(),
               )
             ],
           ),

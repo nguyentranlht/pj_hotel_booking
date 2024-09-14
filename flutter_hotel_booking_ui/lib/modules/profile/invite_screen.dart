@@ -6,6 +6,8 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 
 class InviteFriend extends StatefulWidget {
+  const InviteFriend({super.key});
+
   @override
   _InviteFriendState createState() => _InviteFriendState();
 }
@@ -27,7 +29,7 @@ class _InviteFriendState extends State<InviteFriend> {
                   child: Image.asset(Localfiles.inviteImage),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     AppLocalizations(context).of("invite_your_friend"),
                     style: TextStyles(context).getBoldStyle().copyWith(
@@ -36,7 +38,7 @@ class _InviteFriendState extends State<InviteFriend> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 16, left: 24, right: 24),
+                  padding: const EdgeInsets.only(top: 16, left: 24, right: 24),
                   child: Text(
                     AppLocalizations(context).of("invite_friend_desc"),
                     textAlign: TextAlign.center,
@@ -57,7 +59,7 @@ class _InviteFriendState extends State<InviteFriend> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Icon(
+                              const Icon(
                                 Icons.share,
                                 color: Colors.white,
                                 size: 22,
@@ -96,21 +98,21 @@ class _InviteFriendState extends State<InviteFriend> {
     return SizedBox(
       height: AppBar().preferredSize.height,
       child: Padding(
-        padding: EdgeInsets.only(top: 8, left: 8),
-        child: Container(
+        padding: const EdgeInsets.only(top: 8, left: 8),
+        child: SizedBox(
           width: AppBar().preferredSize.height - 8,
           height: AppBar().preferredSize.height - 8,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(32.0),
               ),
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.arrow_back),
               ),
             ),

@@ -61,18 +61,18 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
           child: Consumer<UpdateRoomController>(
             builder: (context, provider, child) {
               return Scaffold(
-                backgroundColor: Theme.of(context).colorScheme.background,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 appBar: AppBar(
                   leading: GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios_new_outlined,
                         color: Color(0xFF373866),
                       )),
                   centerTitle: true,
-                  title: Text(
+                  title: const Text(
                     'Tạo phòng mới !',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
@@ -141,7 +141,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                                       .absolute),
                                               fit: BoxFit.cover)))),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 30.0,
                         ),
                         Form(
@@ -209,7 +209,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                         })
                                   ],
                                 ),
-                                
                                 const SizedBox(height: 10),
                                 SizedBox(
                                     width: 400,
@@ -265,7 +264,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                                           room.imagePath =
                                               'https://firebasestorage.googleapis.com/v0/b/db-hotel-booking.appspot.com/o/e36987e0-0e7a-1fe5-a909-09a5195b6bd2_lead?alt=media&token=${room.roomId}_lead';
                                           room.titleTxt = nameController.text;
-                                          room.dataTxt = capacityController.text;
+                                          room.dataTxt =
+                                              capacityController.text;
                                           room.perNight =
                                               int.parse(priceController.text);
                                           room.hotelId = widget.hotelId;

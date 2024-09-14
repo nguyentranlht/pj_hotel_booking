@@ -32,7 +32,7 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
   var currentMonthDate = DateTime.now();
   DateTime? startDate;
   DateTime? endDate;
-  LanguageType _languageType = applicationcontext == null
+  final LanguageType _languageType = applicationcontext == null
       ? LanguageType.en
       : applicationcontext!.read<ThemeProvider>().languageType;
 
@@ -132,15 +132,15 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
         height: 38,
         width: 38,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(24.0)),
-          border: new Border.all(
+          borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+          border: Border.all(
             color: Theme.of(context).dividerColor,
           ),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(24.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
             onTap: onTap,
             child: Icon(
               icon,
@@ -241,41 +241,41 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
                                             .languageType ==
                                         LanguageType.ar
                                     ? isEndDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0)
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0)
                                     : isStartDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0),
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0),
                                 topLeft: context
                                             .read<ThemeProvider>()
                                             .languageType ==
                                         LanguageType.ar
                                     ? isEndDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0)
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0)
                                     : isStartDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0),
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0),
                                 topRight: context
                                             .read<ThemeProvider>()
                                             .languageType ==
                                         LanguageType.ar
                                     ? isStartDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0)
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0)
                                     : isEndDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0),
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0),
                                 bottomRight: context
                                             .read<ThemeProvider>()
                                             .languageType ==
                                         LanguageType.ar
                                     ? isStartDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0)
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0)
                                     : isEndDateRadius(date)
-                                        ? Radius.circular(24.0)
-                                        : Radius.circular(0.0),
+                                        ? const Radius.circular(24.0)
+                                        : const Radius.circular(0.0),
                               ),
                             ),
                           ),
@@ -285,7 +285,8 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(32.0)),
                         onTap: () {
                           if (currentMonthDate.month == date.month) {
                             var newminimumDate = DateTime(
@@ -303,14 +304,14 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
                           }
                         },
                         child: Padding(
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                           child: Container(
                             decoration: BoxDecoration(
                               color: getIsItStartAndEndDate(date)
                                   ? Theme.of(context).primaryColor
                                   : Colors.transparent,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(32.0)),
+                                  const BorderRadius.all(Radius.circular(32.0)),
                               border: Border.all(
                                 color: getIsItStartAndEndDate(date)
                                     ? Colors.white
@@ -323,7 +324,7 @@ class _CustomCalendarViewState extends State<CustomCalendarView> {
                                           color:
                                               Theme.of(context).disabledColor,
                                           blurRadius: 4,
-                                          offset: Offset(0, 0)),
+                                          offset: const Offset(0, 0)),
                                     ]
                                   : null,
                             ),

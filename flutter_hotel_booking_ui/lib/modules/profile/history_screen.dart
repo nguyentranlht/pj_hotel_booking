@@ -22,7 +22,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
   String? luu, luu2;
-  int? perNight,roomNumber;
+  int? perNight, roomNumber;
 
   num total = 0;
   int note = 0;
@@ -54,7 +54,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     ontheload();
     super.initState();
   }
-    String? formatDate(DateTime? date) {
+
+  String? formatDate(DateTime? date) {
     if (date == null) return null;
     return DateFormat('dd-MM-yyyy').format(date);
   }
@@ -101,7 +102,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Đã huỷ phòng thành công'),
         ),
       );
@@ -120,9 +121,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
       stream: roomStream,
       builder: (context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
-
         return ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: snapshot.data.docs.length,
@@ -130,11 +130,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             DocumentSnapshot ds = snapshot.data.docs[index];
-
             return Slidable(
               key: Key(ds.id),
               endActionPane: ActionPane(
-                motion: ScrollMotion(),
+                motion: const ScrollMotion(),
                 children: [
                   ds["isSelected"] == false
                       ? Container()
@@ -144,52 +143,52 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Xác nhận huỷ phòng"),
-                                  content: Text("Bạn có chắc muốn huỷ?"),
+                                  title: const Text("Xác nhận huỷ phòng"),
+                                  content: const Text("Bạn có chắc muốn huỷ?"),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
-                                      child: Text("Thoát"),
+                                      child: const Text("Thoát"),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                       },
-                                      child: Text("Huỷ"),
+                                      child: const Text("Huỷ"),
                                     ),
                                   ],
                                 );
                               },
                             );
                             if (confirmDelete == true) {
-                              await deleteItem(ds.id, ds["PerNight"],ds["RoomId"]);
-                              
-                              if (ds.id != null) {
-                              Map<String, dynamic> latestPaymentDetails = await FirebaseUserRepository().getPaymentDetails(userId!, ds.id);
-                                perNight = latestPaymentDetails['PerNight'];
-                                roomNumber = latestPaymentDetails['NumberRoom'];
-                                _selectedStartDate = latestPaymentDetails['StartDate'];
-                                _selectedEndDate = latestPaymentDetails['EndDate'];
-                                nameHotel = latestPaymentDetails['Name'];
-                                luu = formatDate(_selectedStartDate);
-                                luu2 = formatDate(_selectedEndDate);
-                                setState(() {});
+                              await deleteItem(
+                                  ds.id, ds["PerNight"], ds["RoomId"]);
 
-                            } else {
-                              print('No paymentIds found.');
-                            }
-                            await sendConfirmationEmailCancel(
-                              customerEmail ?? 'khachhang@example.com',
-                              customerName ?? 'Tên Khách Hàng',
-                              nameHotel ?? 'Khách sạn của bạn',
-                              roomNumber?.toString() ?? 'Số phòng của bạn',
-                              luu?.toString() ?? 'N/A',
-                              luu2?.toString() ?? 'N/A',
-                              "${oCcy.format(perNight)} ₫".toString(),
-                            );
-                            setState(() {});
+                              Map<String, dynamic> latestPaymentDetails =
+                                  await FirebaseUserRepository()
+                                      .getPaymentDetails(userId!, ds.id);
+                              perNight = latestPaymentDetails['PerNight'];
+                              roomNumber = latestPaymentDetails['NumberRoom'];
+                              _selectedStartDate =
+                                  latestPaymentDetails['StartDate'];
+                              _selectedEndDate =
+                                  latestPaymentDetails['EndDate'];
+                              nameHotel = latestPaymentDetails['Name'];
+                              luu = formatDate(_selectedStartDate);
+                              luu2 = formatDate(_selectedEndDate);
+                              setState(() {});
+                              await sendConfirmationEmailCancel(
+                                customerEmail ?? 'khachhang@example.com',
+                                customerName ?? 'Tên Khách Hàng',
+                                nameHotel ?? 'Khách sạn của bạn',
+                                roomNumber?.toString() ?? 'Số phòng của bạn',
+                                luu?.toString() ?? 'N/A',
+                                luu2?.toString() ?? 'N/A',
+                                "${oCcy.format(perNight)} ₫".toString(),
+                              );
+                              setState(() {});
                             }
                           },
                           backgroundColor: Colors.red,
@@ -200,7 +199,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ],
               ),
               child: Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0),
+                margin: const EdgeInsets.only(
+                    left: 20.0, right: 20.0, bottom: 10.0),
                 child: Material(
                   elevation: 5.0,
                   borderRadius: BorderRadius.circular(10),
@@ -208,30 +208,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Row(
                       children: [
-                        SizedBox(width: 20.0),
+                        const SizedBox(width: 20.0),
                         ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Container(
-                                  height: 90,
-                                  width: 90,
-                                  child: PageView(
-                                    controller: PageController(),
-                                    pageSnapping: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: <Widget>[
-                                       for (var image in (ds["ImagePath"] as String).split(" "))
-                                        Image.network(
-                                          image,
-                                          fit: BoxFit.cover,
-                                        ),
-                                    ],
+                          borderRadius: BorderRadius.circular(60),
+                          child: SizedBox(
+                            height: 90,
+                            width: 90,
+                            child: PageView(
+                              controller: PageController(),
+                              pageSnapping: true,
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                for (var image
+                                    in (ds["ImagePath"] as String).split(" "))
+                                  Image.network(
+                                    image,
+                                    fit: BoxFit.cover,
                                   ),
-                                ),
-                              ),
-                        SizedBox(width: 20.0),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -244,15 +245,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               style: AppWidget.semiBoldTextFeildStyle(),
                             ),
                             Text(
-                              ds["StartDate"].toString() +
-                                  " - " +
-                                  ds["EndDate"].toString(),
+                              "${ds["StartDate"]} - ${ds["EndDate"]}",
                               style: AppWidget.semiBoldTextFeildStyle(),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(
+                                const Text(
                                   "Trạng thái: ",
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 108, 135, 85),
@@ -264,7 +263,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   ds["isSelected"] ? "Thành công" : "Thất bại",
                                   style: TextStyle(
                                     color: ds["isSelected"]
-                                        ? Color.fromARGB(255, 104, 159, 56)
+                                        ? const Color.fromARGB(
+                                            255, 104, 159, 56)
                                         : Colors.red,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal,
@@ -290,7 +290,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: 2.0),
+        padding: const EdgeInsets.only(top: 2.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -298,17 +298,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Material(
               elevation: 5.0,
               child: Container(
-                padding: EdgeInsets.only(bottom: 2.0),
+                padding: const EdgeInsets.only(bottom: 1.0),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height / 1.5,
               child: roomPayment(),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20.0,
             ),
           ],
@@ -319,12 +319,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   _appBar() {
     return AppBar(
-      backgroundColor: Color(0xFFDDDCDC),
+      backgroundColor: const Color(0xFFDDDCDC),
       leading: GestureDetector(
         onTap: () {
           Navigator.pop(context);
         },
-        child: Icon(
+        child: const Icon(
           Icons.arrow_back_ios_new_outlined,
           color: Colors.black87,
           size: 20,
@@ -333,18 +333,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
       centerTitle: true,
       title: const Text(
         "Trạng thái thanh toán",
-        style:  TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-                shadows: [
-                  Shadow(
-                    blurRadius: 10.0,
-                    color: Colors.black26,
-                    offset: Offset(0.5, 0.5),
-                  ),
-                ],
-              ),
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+          shadows: [
+            Shadow(
+              blurRadius: 10.0,
+              color: Colors.black26,
+              offset: Offset(0.5, 0.5),
+            ),
+          ],
+        ),
       ),
     );
   }

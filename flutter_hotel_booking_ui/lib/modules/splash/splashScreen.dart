@@ -9,6 +9,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -17,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool isLoadText = false;
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
         _loadAppLocalizations()); // call after first frame receiver so we have context
     super.initState();
   }
@@ -42,7 +44,10 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               foregroundDecoration: !appTheme.isLightMode
                   ? BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface.withOpacity(0.4))
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surface
+                          .withOpacity(0.4))
                   : null,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
@@ -50,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             Column(
               children: <Widget>[
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: SizedBox(),
                 ),
@@ -59,25 +64,25 @@ class _SplashScreenState extends State<SplashScreen> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(8.0),
                       ),
                       boxShadow: <BoxShadow>[
                         BoxShadow(
                             color: Theme.of(context).dividerColor,
-                            offset: Offset(1.1, 1.1),
+                            offset: const Offset(1.1, 1.1),
                             blurRadius: 10.0),
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(
+                      borderRadius: const BorderRadius.all(
                         Radius.circular(8.0),
                       ),
                       child: Image.asset(Localfiles.appIcon),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Text(
@@ -87,25 +92,25 @@ class _SplashScreenState extends State<SplashScreen> {
                         fontSize: 24,
                       ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 AnimatedOpacity(
                   opacity: isLoadText ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 420),
+                  duration: const Duration(milliseconds: 420),
                   child: Text(
                     AppLocalizations(context).of("best_hotel_deals"),
                     textAlign: TextAlign.left,
                     style: TextStyles(context).getRegularStyle().copyWith(),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 4,
                   child: SizedBox(),
                 ),
                 AnimatedOpacity(
                   opacity: isLoadText ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 680),
+                  duration: const Duration(milliseconds: 680),
                   child: CommonButton(
                     padding: const EdgeInsets.only(
                         left: 48, right: 48, bottom: 8, top: 8),
@@ -118,7 +123,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 AnimatedOpacity(
                   opacity: isLoadText ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 1200),
+                  duration: const Duration(milliseconds: 1200),
                   child: Padding(
                     padding: EdgeInsets.only(
                         bottom: 24.0 + MediaQuery.of(context).padding.bottom,

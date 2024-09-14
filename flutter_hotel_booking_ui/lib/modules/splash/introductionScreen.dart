@@ -11,6 +11,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class IntroductionScreen extends StatefulWidget {
+  const IntroductionScreen({super.key});
+
   @override
   _IntroductionScreenState createState() => _IntroductionScreenState();
 }
@@ -42,16 +44,16 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       assetsImage: Localfiles.introduction3,
     ));
 
-    sliderTimer = Timer.periodic(Duration(seconds: 4), (timer) {
+    sliderTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (currentShowIndex == 0) {
         pageController.animateTo(MediaQuery.of(context).size.width,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       } else if (currentShowIndex == 1) {
         pageController.animateTo(MediaQuery.of(context).size.width * 2,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       } else if (currentShowIndex == 2) {
         pageController.animateTo(0,
-            duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+            duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
       }
     });
     super.initState();
@@ -100,7 +102,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
           CommonButton(
             padding:
                 const EdgeInsets.only(left: 48, right: 48, bottom: 8, top: 32),
-                backgroundColor: Colors.lightGreen.shade700,
+            backgroundColor: Colors.lightGreen.shade700,
             buttonText: AppLocalizations(context).of("login"),
             onTap: () {
               NavigationServices(context).gotoLoginApp();

@@ -6,6 +6,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_appbar_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 
 class CountryScreen extends StatefulWidget {
+  const CountryScreen({super.key});
+
   @override
   _CountryScreenState createState() => _CountryScreenState();
 }
@@ -47,8 +49,8 @@ class _CountryScreenState extends State<CountryScreen> {
                 },
               ),
               Expanded(
-                child: countryList.length == 0
-                    ? Center(
+                child: countryList.isEmpty
+                    ? const Center(
                         child: SizedBox(
                           width: 40,
                           height: 40,
@@ -65,7 +67,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           return InkWell(
                             onTap: () {
                               Navigator.pop(
-                                  context, "${countryList[index].titleTxt}");
+                                  context, countryList[index].titleTxt);
                             },
                             child: Column(
                               children: <Widget>[
@@ -104,9 +106,8 @@ class _CountryScreenState extends State<CountryScreen> {
                                     ],
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, right: 16),
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 16, right: 16),
                                   child: Divider(
                                     height: 1,
                                   ),

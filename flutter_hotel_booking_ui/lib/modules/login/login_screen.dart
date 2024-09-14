@@ -19,11 +19,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   String _errorEmail = '';
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   String _errorPassword = '';
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool signInRequired = false;
 
   @override
@@ -45,7 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        
         body: RemoveFocuse(
           onClick: () {
             FocusScope.of(context).requestFocus(FocusNode());
@@ -105,9 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       _forgotYourPasswordUI(),
                       // Login button
                       CommonButton(
-                        padding:
-                            EdgeInsets.only(left: 24, right: 24, bottom: 16),
-                            backgroundColor: Colors.lightGreen.shade700,
+                        padding: const EdgeInsets.only(
+                            left: 24, right: 24, bottom: 16),
+                        backgroundColor: Colors.lightGreen.shade700,
                         buttonText: AppLocalizations(context).of("login"),
                         onTap: () {
                           if (_allValidation()) {
@@ -136,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           InkWell(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
             onTap: () {
               NavigationServices(context).gotoForgotPassword();
             },
