@@ -20,7 +20,7 @@ class CalendarPopupView extends StatefulWidget {
   final DateTime initialEndDate;
   final Function(DateTime, DateTime) onApplyClick;
   final Function onCancelClick;
-  
+
   const CalendarPopupView({
     Key? key,
     required this.initialStartDate,
@@ -30,7 +30,6 @@ class CalendarPopupView extends StatefulWidget {
     this.barrierDismissible = true,
     required this.minimumDate,
     required this.maximumDate,
-    
   }) : super(key: key);
   @override
   _CalendarPopupViewState createState() => _CalendarPopupViewState();
@@ -41,14 +40,14 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
   late AnimationController animationController;
   DateTime? startDate;
   DateTime? endDate;
-  LanguageType _languageType = applicationcontext == null
+  final LanguageType _languageType = applicationcontext == null
       ? LanguageType.en
       : applicationcontext!.read<ThemeProvider>().languageType;
 
   @override
   void initState() {
-    animationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
     startDate = widget.initialStartDate;
     endDate = widget.initialEndDate;
     animationController.forward();
@@ -69,7 +68,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
         animation: animationController,
         builder: (BuildContext context, Widget? child) {
           return AnimatedOpacity(
-            duration: Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 100),
             opacity: animationController.value,
             child: RemoveFocuse(
               onClick: () {
@@ -117,7 +116,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                             ),
                           ],
                         ),
-                        Divider(
+                        const Divider(
                           height: 1,
                         ),
                         //Custome calendar page view
@@ -173,7 +172,7 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                   fontSize: 16,
                 ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           Text(

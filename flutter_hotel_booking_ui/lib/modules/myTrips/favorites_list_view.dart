@@ -32,7 +32,7 @@ class _FavoritesListViewState extends State<FavoritesListView> {
             return Container(
               child: ListView.builder(
                 itemCount: state.hotels.length,
-                padding: EdgeInsets.only(top: 8, bottom: 8),
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   var count =

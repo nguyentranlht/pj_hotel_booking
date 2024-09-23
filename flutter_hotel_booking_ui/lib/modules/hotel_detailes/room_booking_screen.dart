@@ -12,6 +12,7 @@ class RoomBookingScreen extends StatefulWidget {
       {Key? key, required this.hotelName, required this.hotelId})
       : super(key: key);
   @override
+  // ignore: library_private_types_in_public_api
   _RoomBookingScreenState createState() => _RoomBookingScreenState();
 }
 
@@ -22,7 +23,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
   @override
   void initState() {
     animationController = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
     super.initState();
   }
 
@@ -40,7 +41,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
       child: BlocBuilder<GetRoomBloc, GetRoomState>(
         builder: (context, state) {
           if (state is GetRoomLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is RoomLoaded) {
             return Scaffold(
               body: Column(
@@ -48,7 +49,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
                   getAppBarUI(),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.all(0.0),
+                      padding: const EdgeInsets.all(0.0),
                       itemCount: state.rooms.length,
                       itemBuilder: (context, index) {
                         var count =
@@ -74,7 +75,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
           } else if (state is RoomError) {
             return Center(child: Text(state.message));
           } else {
-            return Center(child: Text('Start Searching Rooms'));
+            return const Center(child: Text('Start Searching Rooms'));
           }
         },
       ),
@@ -94,14 +95,14 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
           Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(32.0),
               ),
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.arrow_back),
               ),
             ),
@@ -119,12 +120,12 @@ class _RoomBookingScreenState extends State<RoomBookingScreen>
           Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(32.0),
               ),
               onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.favorite_border),
               ),
             ),

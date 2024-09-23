@@ -12,12 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ProfileController extends ChangeNotifier {
-  TextEditingController _fnameController = TextEditingController();
-  TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _fnameController = TextEditingController();
+  final TextEditingController _lnameController = TextEditingController();
   final fnameFocusNode = FocusNode();
   final lnameFocusNode = FocusNode();
-  TextEditingController _numberController = TextEditingController();
-  TextEditingController _birthdayController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
+  final TextEditingController _birthdayController = TextEditingController();
   final numberFocusNode = FocusNode();
   final birthdayFocusNode = FocusNode();
   final picker = ImagePicker();
@@ -60,7 +60,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Container(
+            content: SizedBox(
               height: 120,
               child: Column(children: [
                 ListTile(
@@ -69,7 +69,7 @@ class ProfileController extends ChangeNotifier {
                     pickCameraImage(context, userId);
                   },
                   leading: Icon(Icons.camera, color: AppTheme.primaryColor),
-                  title: Text('Camera'),
+                  title: const Text('Camera'),
                 ),
                 ListTile(
                   onTap: () {
@@ -77,7 +77,7 @@ class ProfileController extends ChangeNotifier {
                     pickGalleryImage(context, userId);
                   },
                   leading: Icon(Icons.image, color: AppTheme.primaryColor),
-                  title: Text('Gallery'),
+                  title: const Text('Gallery'),
                 )
               ]),
             ),
@@ -109,7 +109,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật họ')),
+            title: const Center(child: Text('Cập nhật họ')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -120,7 +120,9 @@ class ProfileController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập Ho',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -130,7 +132,7 @@ class ProfileController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     usersCollection.doc(userId).update({
@@ -140,7 +142,7 @@ class ProfileController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -153,7 +155,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật ngày sinh')),
+            title: const Center(child: Text('Cập nhật ngày sinh')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -164,7 +166,9 @@ class ProfileController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập ngày sinh',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -174,7 +178,7 @@ class ProfileController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     usersCollection.doc(userId).update({
@@ -184,7 +188,7 @@ class ProfileController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -197,7 +201,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật tên')),
+            title: const Center(child: Text('Cập nhật tên')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -208,7 +212,9 @@ class ProfileController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập tên',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -218,7 +224,7 @@ class ProfileController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     usersCollection.doc(userId).update({
@@ -228,7 +234,7 @@ class ProfileController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -241,7 +247,7 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Cập nhật số điện thoại')),
+            title: const Center(child: Text('Cập nhật số điện thoại')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -252,7 +258,9 @@ class ProfileController extends ChangeNotifier {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Nhập số điện thoại',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -262,7 +270,7 @@ class ProfileController extends ChangeNotifier {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     usersCollection.doc(userId).update({
@@ -272,7 +280,7 @@ class ProfileController extends ChangeNotifier {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -283,14 +291,13 @@ class ProfileController extends ChangeNotifier {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Khởi động lại ứng dụng')),
+            title: const Center(child: Text('Khởi động lại ứng dụng')),
             actions: [
               TextButton(
                   onPressed: () {
-                    NavigationServices(context)
-                                    .gotoLoginApp();
+                    NavigationServices(context).gotoLoginApp();
                   },
-                  child: Text('Ok')),
+                  child: const Text('Ok')),
             ],
           );
         });

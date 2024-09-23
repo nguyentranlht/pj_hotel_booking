@@ -11,8 +11,8 @@ import '../network_provider.dart';
 import 'firebase_authentication.dart';
 
 class FireBaseProvider extends NetworkProvider {
-  TextEditingController _fnameController = TextEditingController();
-  TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _fnameController = TextEditingController();
+  final TextEditingController _lnameController = TextEditingController();
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('User');
   final nameFocusNode = FocusNode();
   FireBaseProvider._privateConstructor();
@@ -64,7 +64,7 @@ class FireBaseProvider extends NetworkProvider {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Name')),
+            title: const Center(child: Text('Update User Name')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -75,7 +75,9 @@ class FireBaseProvider extends NetworkProvider {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Enter Name',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -85,7 +87,7 @@ class FireBaseProvider extends NetworkProvider {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     ref.child(SessionController().userId.toString()).update({
@@ -95,7 +97,7 @@ class FireBaseProvider extends NetworkProvider {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });

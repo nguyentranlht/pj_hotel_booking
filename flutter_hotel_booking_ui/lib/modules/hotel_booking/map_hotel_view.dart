@@ -19,12 +19,12 @@ class MapHotelListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 24, right: 8, top: 8, bottom: 16),
+      padding: const EdgeInsets.only(left: 24, right: 8, top: 8, bottom: 16),
       child: CommonCard(
         color: AppTheme.scaffoldBackgroundColor,
         radius: 16,
         child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           child: AspectRatio(
             aspectRatio: 2.7,
             child: Stack(
@@ -40,7 +40,7 @@ class MapHotelListView extends StatelessWidget {
                     ),
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +63,7 @@ class MapHotelListView extends StatelessWidget {
                                     fontSize: 14,
                                   ),
                             ),
-                            Expanded(
+                            const Expanded(
                               child: SizedBox(),
                             ),
                             Row(
@@ -109,7 +109,8 @@ class MapHotelListView extends StatelessWidget {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 4),
-                                        child: Helper.ratingStar(hotelData.rating),
+                                        child:
+                                            Helper.ratingStar(hotelData.rating),
                                       ),
                                     ],
                                   ),

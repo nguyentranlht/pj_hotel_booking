@@ -4,6 +4,7 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 
 class CustomDialog extends StatefulWidget {
   const CustomDialog({
+    super.key,
     required this.title,
     this.description = '',
     this.topWidget,
@@ -54,7 +55,7 @@ class _CustomDialogState extends State<CustomDialog>
         return ScaleTransition(
           scale: CurvedAnimation(
               parent: animationController!,
-              curve: Interval(0.0, 1.0, curve: Curves.easeOutBack)),
+              curve: const Interval(0.0, 1.0, curve: Curves.easeOutBack)),
           child: Dialog(
             clipBehavior: Clip.none,
             shape: RoundedRectangleBorder(

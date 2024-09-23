@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/motorcycle_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/explore/home_explore_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/myTrips/my_trips_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/profile_screen.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 import 'package:provider/provider.dart';
 
 class BottomTabScreen extends StatefulWidget {
+  const BottomTabScreen({super.key});
+
   @override
   _BottomTabScreenState createState() => _BottomTabScreenState();
 }
@@ -24,10 +27,10 @@ class _BottomTabScreenState extends State<BottomTabScreen>
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
     _indexView = Container();
-    WidgetsBinding.instance!.addPostFrameCallback((_) => _startLoadScreen());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startLoadScreen());
     super.initState();
   }
 
@@ -39,7 +42,7 @@ class _BottomTabScreenState extends State<BottomTabScreen>
         animationController: _animationController,
       );
     });
-    _animationController..forward();
+    _animationController.forward();
   }
 
   @override
@@ -53,11 +56,11 @@ class _BottomTabScreenState extends State<BottomTabScreen>
     return Consumer<ThemeProvider>(
       builder: (_, provider, child) => Container(
         child: Scaffold(
-          bottomNavigationBar: Container(
+          bottomNavigationBar: SizedBox(
               height: 68 + MediaQuery.of(context).padding.bottom,
               child: getBottomBarUI(bottomBarType)),
           body: _isFirstTime
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                   ),
@@ -81,6 +84,12 @@ class _BottomTabScreenState extends State<BottomTabScreen>
         } else if (tabType == BottomBarType.Trips) {
           setState(() {
             _indexView = MyTripsScreen(
+              animationController: _animationController,
+            );
+          });
+        } else if (tabType == BottomBarType.Motorcycle) {
+          setState(() {
+            _indexView = MotorcycleScreen(
               animationController: _animationController,
             );
           });
@@ -120,6 +129,14 @@ class _BottomTabScreenState extends State<BottomTabScreen>
                 },
               ),
               TabButtonUI(
+                icon: FontAwesomeIcons.motorcycle,
+                isSelected: tabType == BottomBarType.Motorcycle,
+                text: AppLocalizations(context).of("books_motorcycle"),
+                onTap: () {
+                  tabClick(BottomBarType.Motorcycle);
+                },
+              ),
+              TabButtonUI(
                 icon: FontAwesomeIcons.user,
                 isSelected: tabType == BottomBarType.Profile,
                 text: AppLocalizations(context).of("profile"),
@@ -138,4 +155,4 @@ class _BottomTabScreenState extends State<BottomTabScreen>
   }
 }
 
-enum BottomBarType { Explore, Trips, Profile }
+enum BottomBarType { Explore, Trips, Profile, Motorcycle }

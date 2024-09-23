@@ -1,12 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hotel_booking_ui/models/room_data.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Hotel{
+class Hotel {
   final String imagePath;
   final String titleTxt;
   final String subTxt;

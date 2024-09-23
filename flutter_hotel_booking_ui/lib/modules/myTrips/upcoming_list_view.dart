@@ -31,7 +31,7 @@ class _UpcomingListViewState extends State<UpcomingListView> {
             return Container(
               child: ListView.builder(
                 itemCount: state.hotels.length,
-                padding: EdgeInsets.only(top: 8, bottom: 16),
+                padding: const EdgeInsets.only(top: 8, bottom: 16),
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   var count =

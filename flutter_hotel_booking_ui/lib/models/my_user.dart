@@ -29,8 +29,8 @@ class MyUser {
       firstname: data?["firstname"],
       lastname: data?["lastname"],
       picture: data!["picture"],
-      number: data?["number"],
-      birthday: data!["birthday"],
+      number: data["number"],
+      birthday: data["birthday"],
       role: data["role"],
     );
   }

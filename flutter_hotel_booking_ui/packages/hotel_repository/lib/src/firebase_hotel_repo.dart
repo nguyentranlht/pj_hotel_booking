@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hotel_repository/hotel_repository.dart';
-import 'package:hotel_repository/src/entities/entities.dart';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -26,9 +25,7 @@ class FirebaseHotelRepo implements HotelRepo {
   Future<QuerySnapshot<Map<String, dynamic>>> getHotelByHotelId(
       String hotelId) async {
     try {
-      return await hotelCollection
-      .where('hotelId', isEqualTo: hotelId)
-      .get();
+      return await hotelCollection.where('hotelId', isEqualTo: hotelId).get();
     } catch (e) {
       print(e.toString());
       throw Exception('Failed to load hotel');

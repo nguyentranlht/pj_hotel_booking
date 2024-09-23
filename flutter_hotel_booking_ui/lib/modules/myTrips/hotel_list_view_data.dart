@@ -24,7 +24,7 @@ class HotelListViewData extends StatelessWidget {
       required this.animationController,
       required this.animation,
       required this.callback,
-      this.isShowDate= false})
+      this.isShowDate = false})
       : super(key: key);
 
   @override
@@ -33,9 +33,9 @@ class HotelListViewData extends StatelessWidget {
       animation: animation,
       animationController: animationController,
       child: Padding(
-        padding: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
         child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(16.0)),
           onTap: () {
             try {
               callback();
@@ -43,14 +43,14 @@ class HotelListViewData extends StatelessWidget {
           },
           child: Row(
             children: <Widget>[
-              isShowDate ? getUI(context) : SizedBox(),
+              isShowDate ? getUI(context) : const SizedBox(),
               CommonCard(
                 color: AppTheme.backgroundColor,
                 radius: 16,
                 child: SizedBox(
                   height: 150,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                     child: AspectRatio(
                       aspectRatio: 1.0,
                       child: Image.network(
@@ -61,7 +61,7 @@ class HotelListViewData extends StatelessWidget {
                   ),
                 ),
               ),
-              !isShowDate ? getUI(context) : SizedBox(),
+              !isShowDate ? getUI(context) : const SizedBox(),
             ],
           ),
         ),

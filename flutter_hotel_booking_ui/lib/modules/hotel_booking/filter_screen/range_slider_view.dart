@@ -31,9 +31,9 @@ class _RangeSliderViewState extends State<RangeSliderView> {
                 children: <Widget>[
                   Expanded(
                     flex: _values.start.round(),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
-                  Container(
+                  SizedBox(
                     width: 54,
                     child: Text(
                       "\$${_values.start.round()}",
@@ -42,7 +42,7 @@ class _RangeSliderViewState extends State<RangeSliderView> {
                   ),
                   Expanded(
                     flex: 1000 - _values.start.round(),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
                 ],
               ),
@@ -50,9 +50,9 @@ class _RangeSliderViewState extends State<RangeSliderView> {
                 children: <Widget>[
                   Expanded(
                     flex: _values.end.round(),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
-                  Container(
+                  SizedBox(
                     width: 54,
                     child: Text(
                       "\$${_values.end.round()}",
@@ -61,14 +61,14 @@ class _RangeSliderViewState extends State<RangeSliderView> {
                   ),
                   Expanded(
                     flex: 1000 - _values.end.round(),
-                    child: SizedBox(),
+                    child: const SizedBox(),
                   ),
                 ],
               ),
             ],
           ),
           SliderTheme(
-            data: SliderThemeData(
+            data: const SliderThemeData(
                 //   rangeThumbShape: CustomRangeThumbShape(),
                 ),
             child: RangeSlider(

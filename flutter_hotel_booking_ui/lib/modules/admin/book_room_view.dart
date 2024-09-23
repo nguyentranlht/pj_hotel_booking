@@ -55,8 +55,8 @@ class _BookRoomViewState extends State<BookRoomView> {
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
           opacity: widget.animation,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
+          child: Transform(
+            transform: Matrix4.translationValues(
                 0.0, 40 * (1.0 - widget.animation.value), 0.0),
             child: Column(
               children: <Widget>[
@@ -111,17 +111,14 @@ class _BookRoomViewState extends State<BookRoomView> {
                                 .copyWith(fontSize: 24),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Expanded(child: SizedBox()),
-                          
+                          const Expanded(child: SizedBox()),
                           Text(
-                                  widget.ds["StartDate"].toString() +
-                                        " - " +
-                                        widget.ds["EndDate"].toString(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
+                            "${widget.ds["StartDate"]} - ${widget.ds["EndDate"]}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
                         ],
                       ),
                       Row(
@@ -143,10 +140,9 @@ class _BookRoomViewState extends State<BookRoomView> {
                                   .copyWith(fontSize: 14),
                             ),
                           ),
-                          
                         ],
                       ),
-                      Row(
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -157,13 +153,12 @@ class _BookRoomViewState extends State<BookRoomView> {
                           //   // textAlign: TextAlign.left,
                           //   // style: TextStyles(context).getDescriptionStyle(),
                           // ),
-                          
                         ],
                       ),
                     ],
                   ),
                 ),
-                Divider(
+                const Divider(
                   height: 1,
                 )
               ],
@@ -188,11 +183,11 @@ class _BookRoomViewState extends State<BookRoomView> {
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            child: Icon(Icons.cancel)),
-                        SizedBox(
+                            child: const Icon(Icons.cancel)),
+                        const SizedBox(
                           width: 60.0,
                         ),
-                        Center(
+                        const Center(
                           child: Text(
                             'PAYMENT',
                             textAlign: TextAlign.center,
@@ -204,20 +199,20 @@ class _BookRoomViewState extends State<BookRoomView> {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
-                    Center(
+                    const Center(
                       child: Text("Go to Pay or Cancel",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black,
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20.0,
                     ),
                     Center(
@@ -238,7 +233,7 @@ class _BookRoomViewState extends State<BookRoomView> {
                               // "PaymentId": id2,
                             };
                             await FirebaseUserRepository()
-                                .addPaymentToRoom(addPaymentToRoom, id!);
+                                .addPaymentToUser(addPaymentToRoom, id!);
                             await FirebaseUserRepository()
                                 .updateUserRoomId(id!, widget.room.roomId);
                           }
@@ -247,12 +242,12 @@ class _BookRoomViewState extends State<BookRoomView> {
                         },
                         child: Container(
                           width: 100,
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            color: Color(0xFF008080),
+                            color: const Color(0xFF008080),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
+                          child: const Center(
                               child: Text(
                             "Pay",
                             style: TextStyle(color: Colors.white),

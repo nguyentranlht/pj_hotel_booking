@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TimeDateView extends StatefulWidget {
+  const TimeDateView({super.key});
+
   @override
   _TimeDateViewState createState() => _TimeDateViewState();
 }
@@ -20,14 +22,14 @@ class TimeDateView extends StatefulWidget {
 class _TimeDateViewState extends State<TimeDateView> {
   //RoomData _roomData;
   DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now().add(Duration(days: 10));
-  LanguageType _languageType = applicationcontext == null
+  DateTime endDate = DateTime.now().add(const Duration(days: 10));
+  final LanguageType _languageType = applicationcontext == null
       ? LanguageType.en
       : applicationcontext!.read<ThemeProvider>().languageType;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 16, bottom: 16, right: 16),
+      padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -57,7 +59,7 @@ class _TimeDateViewState extends State<TimeDateView> {
           Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(4.0),
               ),
               onTap: onTap,
@@ -75,7 +77,7 @@ class _TimeDateViewState extends State<TimeDateView> {
                           .getDescriptionStyle()
                           .copyWith(fontSize: 16),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     Text(

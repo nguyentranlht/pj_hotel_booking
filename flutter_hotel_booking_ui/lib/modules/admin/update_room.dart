@@ -31,12 +31,12 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios_new_outlined,
                 color: Color(0xFF373866),
               )),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Cập Nhật Phòng',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
@@ -105,7 +105,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                                                     .absolute),
                                             fit: BoxFit.cover)))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
@@ -118,7 +118,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                             iconData: Icons.edit,
                             value: widget.room.titleTxt),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
@@ -131,7 +131,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                             iconData: Icons.edit,
                             value: widget.room.dataTxt),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
@@ -144,7 +144,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                             iconData: Icons.edit,
                             value: widget.room.perNight.toString()),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       SizedBox(
@@ -174,7 +174,7 @@ class _UpdateRoomFormState extends State<UpdateRoomForm> {
                               ),
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       SizedBox(

@@ -37,9 +37,9 @@ class _RoomHotelViewState extends State<RoomHotelView> {
   String? id;
   final oCcy = NumberFormat("#,##0", "vi_VN");
 
-    getthesharedpref() async {
-      id = await FirebaseUserRepository().getUserId();
-      setState(() {});
+  getthesharedpref() async {
+    id = await FirebaseUserRepository().getUserId();
+    setState(() {});
   }
 
   ontheload() async {
@@ -61,8 +61,8 @@ class _RoomHotelViewState extends State<RoomHotelView> {
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
           opacity: widget.animation,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
+          child: Transform(
+            transform: Matrix4.translationValues(
                 0.0, 40 * (1.0 - widget.animation.value), 0.0),
             child: Column(
               children: <Widget>[
@@ -117,12 +117,13 @@ class _RoomHotelViewState extends State<RoomHotelView> {
                                 .copyWith(fontSize: 24),
                             overflow: TextOverflow.ellipsis,
                           ),
-                          Expanded(child: SizedBox()),
+                          const Expanded(child: SizedBox()),
                           SizedBox(
                             height: 38,
                             child: CommonButton(
                               onTap: () {
-                                NavigationServices(context).gotoUpdateRoom(widget.room);
+                                NavigationServices(context)
+                                    .gotoUpdateRoom(widget.room);
                               },
                               //
                               buttonTextWidget: Padding(
@@ -173,7 +174,7 @@ class _RoomHotelViewState extends State<RoomHotelView> {
                           // ),
                           InkWell(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
+                                const BorderRadius.all(Radius.circular(4.0)),
                             onTap: () {},
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8, right: 4),
@@ -187,8 +188,8 @@ class _RoomHotelViewState extends State<RoomHotelView> {
                                         .of("more_details"),
                                     style: TextStyles(context).getBoldStyle(),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 2),
                                     child: Icon(
                                       Icons.keyboard_arrow_down,
                                       // color: Theme.of(context).backgroundColor,
@@ -204,7 +205,7 @@ class _RoomHotelViewState extends State<RoomHotelView> {
                     ],
                   ),
                 ),
-                Divider(
+                const Divider(
                   height: 1,
                 )
               ],
@@ -214,5 +215,4 @@ class _RoomHotelViewState extends State<RoomHotelView> {
       },
     );
   }
-
 }

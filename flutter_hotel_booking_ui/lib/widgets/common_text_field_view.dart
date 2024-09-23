@@ -63,7 +63,7 @@ class CommonTextFieldView extends StatelessWidget {
                     onEditingComplete: () {
                       FocusScope.of(context).nextFocus();
                     },
-                    decoration: new InputDecoration(
+                    decoration: InputDecoration(
                       errorText: null,
                       border: InputBorder.none,
                       hintText: hintText,

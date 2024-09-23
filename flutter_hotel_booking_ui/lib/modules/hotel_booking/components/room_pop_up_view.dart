@@ -33,8 +33,8 @@ class _RoomPopupViewState extends State<RoomPopupView>
   RoomData? _roomData;
   @override
   void initState() {
-    animationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
 
     animationController.forward();
     _roomData = RoomData(
@@ -62,7 +62,7 @@ class _RoomPopupViewState extends State<RoomPopupView>
           animation: animationController,
           builder: (BuildContext context, Widget? child) {
             return AnimatedOpacity(
-              duration: Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 100),
               opacity: animationController.value,
               child: Center(
                 child: Padding(
@@ -84,7 +84,7 @@ class _RoomPopupViewState extends State<RoomPopupView>
                                 ),
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           height: 1,
                         ),
                         getRowView(AppLocalizations(context).of("number_room"),
@@ -136,7 +136,7 @@ class _RoomPopupViewState extends State<RoomPopupView>
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: <Widget>[
-                          Divider(
+                          const Divider(
                             height: 1,
                           ),
                           Expanded(

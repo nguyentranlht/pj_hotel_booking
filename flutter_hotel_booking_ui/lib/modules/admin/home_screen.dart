@@ -38,30 +38,29 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
   var sliderImageHieght = 0.0;
   @override
   void initState() {
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 0), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 0), vsync: this);
     widget.animationController.forward();
     controller = ScrollController(initialScrollOffset: 0.0);
-    controller
-      ..addListener(() {
-        if (mounted) {
-          if (controller.offset < 0) {
-            // we static set the just below half scrolling values
-            _animationController.animateTo(0.0);
-          } else if (controller.offset > 0.0 &&
-              controller.offset < sliderImageHieght) {
-            // we need around half scrolling values
-            if (controller.offset < ((sliderImageHieght / 1.5))) {
-              _animationController
-                  .animateTo((controller.offset / sliderImageHieght));
-            } else {
-              // we static set the just above half scrolling values "around == 0.64"
-              _animationController
-                  .animateTo((sliderImageHieght / 1.5) / sliderImageHieght);
-            }
+    controller.addListener(() {
+      if (mounted) {
+        if (controller.offset < 0) {
+          // we static set the just below half scrolling values
+          _animationController.animateTo(0.0);
+        } else if (controller.offset > 0.0 &&
+            controller.offset < sliderImageHieght) {
+          // we need around half scrolling values
+          if (controller.offset < ((sliderImageHieght / 1.5))) {
+            _animationController
+                .animateTo((controller.offset / sliderImageHieght));
+          } else {
+            // we static set the just above half scrolling values "around == 0.64"
+            _animationController
+                .animateTo((sliderImageHieght / 1.5) / sliderImageHieght);
           }
         }
-      });
+      }
+    });
     super.initState();
   }
 
@@ -107,8 +106,14 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).colorScheme.surface.withOpacity(0.4),
-                            Theme.of(context).colorScheme.surface.withOpacity(0.0),
+                            Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.4),
+                            Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.0),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -140,19 +145,19 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
     );
   }
 
-  Widget _viewHotelsButton(AnimationController _animationController) {
+  Widget _viewHotelsButton(AnimationController animationController) {
     return AnimatedBuilder(
-      animation: _animationController,
+      animation: animationController,
       builder: (BuildContext context, Widget? child) {
         var opecity = 1.0 -
-            (_animationController.value > 0.64
+            (animationController.value > 0.64
                 ? 1.0
-                : _animationController.value);
+                : animationController.value);
         return Positioned(
           left: 0,
           right: 0,
           top: 0,
-          height: sliderImageHieght * (1.0 - _animationController.value),
+          height: sliderImageHieght * (1.0 - animationController.value),
           child: Stack(
             children: <Widget>[
               Positioned(
@@ -203,11 +208,11 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
 
   Widget getDealListView(int index, List<Hotel> hotelList) {
     List<Widget> list = [];
-    hotelList.forEach((f) {
+    for (var f in hotelList) {
       var animation = Tween(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: widget.animationController,
-          curve: Interval(0, 1.0, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0, 1.0, curve: Curves.fastOutSlowIn),
         ),
       );
       list.add(
@@ -221,7 +226,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
           animationController: widget.animationController,
         ),
       );
-    });
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Column(
@@ -236,7 +241,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen>
       child: CommonCard(
         radius: 36,
         child: InkWell(
-          borderRadius: BorderRadius.all(Radius.circular(38)),
+          borderRadius: const BorderRadius.all(Radius.circular(38)),
           onTap: () {
             NavigationServices(context).gotoSearchScreen();
           },

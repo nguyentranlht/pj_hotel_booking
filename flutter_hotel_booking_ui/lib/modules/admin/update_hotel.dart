@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,11 @@ class UpdateHotelForm extends StatefulWidget {
 }
 
 class _UpdateHotelFormState extends State<UpdateHotelForm> {
+  String? luuTen, diachi, titleTxt, subTxt;
+  Timestamp? date;
+  int? reviews, perNight, startDate, endDate, numberRoom, people;
+  bool? isSelected;
+
   DatabaseReference ref = FirebaseDatabase.instance.ref().child('hotels');
   @override
   Widget build(BuildContext context) {
@@ -31,14 +37,14 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
         appBar: AppBar(
           leading: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                NavigationServices(context).gotoBaseScreen();
               },
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back_ios_new_outlined,
                 color: Color(0xFF373866),
               )),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Cập Nhật Khách Sạn',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
@@ -107,115 +113,197 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                                                     .absolute),
                                             fit: BoxFit.cover)))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelNameDialogAlert(context,
-                              widget.hotel.titleTxt, widget.hotel.hotelId);
+                        onTap: () async {
+                          String? newValue =
+                              await provider.showHotelNameDialogAlert(
+                            context,
+                            widget.hotel.titleTxt,
+                            widget.hotel.hotelId,
+                          );
+
+                          if (newValue != null &&
+                              newValue.isNotEmpty &&
+                              newValue != widget.hotel.titleTxt) {
+                            // Cập nhật giá trị mới nếu nó khác giá trị cũ
+                            setState(() {
+                              widget.hotel.titleTxt = newValue;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
-                            title: 'Tên khách sạn',
-                            iconData: Icons.edit,
-                            value: widget.hotel.titleTxt),
+                          title: 'Tên khách sạn',
+                          iconData: Icons.edit,
+                          value: widget.hotel.titleTxt,
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelAddressDialogAlert(context,
-                              widget.hotel.subTxt, widget.hotel.hotelId);
+                        onTap: () async {
+                          String? newValue =
+                              await provider.showHotelAddressDialogAlert(
+                            context,
+                            widget.hotel.subTxt,
+                            widget.hotel.hotelId,
+                          );
+
+                          if (newValue != null &&
+                              newValue.isNotEmpty &&
+                              newValue != widget.hotel.subTxt) {
+                            // Cập nhật giá trị mới nếu nó khác giá trị cũ
+                            setState(() {
+                              widget.hotel.subTxt = newValue;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
-                            title: 'Địa chỉ',
-                            iconData: Icons.edit,
-                            value: widget.hotel.subTxt),
+                          title: 'Địa chỉ',
+                          iconData: Icons.edit,
+                          value: widget.hotel.subTxt,
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelPriceDialogAlert(context,
-                              widget.hotel.perNight, widget.hotel.hotelId);
+                        onTap: () async {
+                          int? newPrice =
+                              await provider.showHotelPriceDialogAlert(
+                            context,
+                            widget.hotel.perNight,
+                            widget.hotel.hotelId,
+                          );
+
+                          if (newPrice != null &&
+                              newPrice != widget.hotel.perNight) {
+                            setState(() {
+                              widget.hotel.perNight = newPrice;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
-                            title: 'Giá',
-                            iconData: Icons.edit,
-                            value: widget.hotel.perNight.toString()),
+                          title: 'Giá',
+                          iconData: Icons.edit,
+                          value: widget.hotel.perNight.toString(),
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelDistDialogAlert(
-                              context, widget.hotel.dist, widget.hotel.hotelId);
+                        onTap: () async {
+                          double? newDist =
+                              await provider.showHotelDistDialogAlert(
+                            context,
+                            widget.hotel.dist,
+                            widget.hotel.hotelId,
+                          );
+
+                          if (newDist != null && newDist != widget.hotel.dist) {
+                            setState(() {
+                              widget.hotel.dist = newDist;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
-                            title: 'Khoảng cách tới thành phố',
-                            iconData: Icons.edit,
-                            value: widget.hotel.dist.toString()),
+                          title: 'Khoảng cách tới thành phố',
+                          iconData: Icons.edit,
+                          value: widget.hotel.dist.toString(),
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelRatingDialogAlert(context,
-                              widget.hotel.rating, widget.hotel.hotelId);
+                        onTap: () async {
+                          double? newRating =
+                              await provider.showHotelDistDialogAlert(context,
+                                  widget.hotel.rating, widget.hotel.hotelId);
+
+                          if (newRating != null &&
+                              newRating != widget.hotel.dist) {
+                            setState(() {
+                              widget.hotel.rating = newRating;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
                             title: 'Xếp hạng',
                             iconData: Icons.edit,
                             value: widget.hotel.rating.toString()),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelReviewsDialogAlert(context,
-                              widget.hotel.reviews, widget.hotel.hotelId);
+                        onTap: () async {
+                          int? newReviews =
+                              await provider.showHotelReviewsDialogAlert(
+                                  context,
+                                  widget.hotel.reviews,
+                                  widget.hotel.hotelId);
+                          if (newReviews != null &&
+                              newReviews != widget.hotel.dist) {
+                            setState(() {
+                              widget.hotel.reviews = newReviews;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
                             title: 'Đánh giá',
                             iconData: Icons.edit,
                             value: widget.hotel.reviews.toString()),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelNumberRoomDialogAlert(
-                              context,
-                              widget.hotel.roomData.numberRoom,
-                              widget.hotel.hotelId);
+                        onTap: () async {
+                          int? newNumberRoom =
+                              await provider.showHotelNumberRoomDialogAlert(
+                                  context,
+                                  widget.hotel.roomData.numberRoom,
+                                  widget.hotel.hotelId);
+                          if (newNumberRoom != null &&
+                              newNumberRoom != widget.hotel.dist) {
+                            setState(() {
+                              widget.hotel.roomData.numberRoom = newNumberRoom;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
                             title: 'Số phòng',
                             iconData: Icons.edit,
                             value: widget.hotel.roomData.numberRoom.toString()),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          provider.showHotelPeopleDialogAlert(
-                              context,
-                              widget.hotel.roomData.people,
-                              widget.hotel.hotelId);
+                        onTap: () async {
+                          int? newRoomPeople =
+                              await provider.showHotelPeopleDialogAlert(
+                                  context,
+                                  widget.hotel.roomData.people,
+                                  widget.hotel.hotelId);
+                          if (newRoomPeople != null &&
+                              newRoomPeople != widget.hotel.dist) {
+                            setState(() {
+                              widget.hotel.roomData.people = newRoomPeople;
+                            });
+                          }
                         },
                         child: ReusbaleRow(
                             title: 'Số người',
                             iconData: Icons.edit,
                             value: widget.hotel.roomData.people.toString()),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       SizedBox(
@@ -223,37 +311,8 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                         height: 50,
                         child: TextButton(
                             onPressed: () {
-                              NavigationServices(context).gotoBaseScreen();
-                            },
-                            style: TextButton.styleFrom(
-                                elevation: 3.0,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(60))),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 5),
-                              child: Text(
-                                'Cập nhật',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            )),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      SizedBox(
-                        width: 400,
-                        height: 50,
-                        child: TextButton(
-                            onPressed: () {
-                                NavigationServices(context).gotoCreateRoomScreen(widget.hotel.hotelId);
+                              NavigationServices(context)
+                                  .gotoCreateRoomScreen(widget.hotel.hotelId);
                             },
                             style: TextButton.styleFrom(
                                 elevation: 3.0,
@@ -275,7 +334,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               ),
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       SizedBox(
@@ -306,7 +365,7 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                               ),
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30.0,
                       ),
                       SizedBox(
@@ -336,7 +395,10 @@ class _UpdateHotelFormState extends State<UpdateHotelForm> {
                                     fontWeight: FontWeight.w600),
                               ),
                             )),
-                      )
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
                     ],
                   ),
                 ),

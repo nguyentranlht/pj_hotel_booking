@@ -18,17 +18,17 @@ class Helper {
   }
 
   static String getDateText(DateText dateText) {
-    LanguageType _languageType = applicationcontext == null
+    LanguageType languageType = applicationcontext == null
         ? LanguageType.en
         : applicationcontext!.read<ThemeProvider>().languageType;
-    return "0${dateText.startDate} ${DateFormat('MMM', _languageType.toString().split(".")[1]).format(DateTime.now())} - 0${dateText.endDate} ${DateFormat('MMM', _languageType.toString().split(".")[1]).format(DateTime.now().add(Duration(days: 2)))}";
+    return "0${dateText.startDate} ${DateFormat('MMM', languageType.toString().split(".")[1]).format(DateTime.now())} - 0${dateText.endDate} ${DateFormat('MMM', languageType.toString().split(".")[1]).format(DateTime.now().add(const Duration(days: 2)))}";
   }
 
   static String getLastSearchDate(DateText dateText) {
-    LanguageType _languageType = applicationcontext == null
+    LanguageType languageType = applicationcontext == null
         ? LanguageType.en
         : applicationcontext!.read<ThemeProvider>().languageType;
-    return "${dateText.startDate} - ${dateText.endDate} ${DateFormat('MMM', _languageType.toString().split(".")[1]).format(DateTime.now().add(Duration(days: 2)))}";
+    return "${dateText.startDate} - ${dateText.endDate} ${DateFormat('MMM', languageType.toString().split(".")[1]).format(DateTime.now().add(const Duration(days: 2)))}";
   }
 
   static String getPeopleandChildren(RoomData roomData) {

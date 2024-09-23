@@ -19,14 +19,14 @@ class HotelListViewPage extends StatelessWidget {
   final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
-  final oCcy = new NumberFormat("#,##0", "vi_VN");
+  final oCcy = NumberFormat("#,##0", "vi_VN");
   HotelListViewPage(
       {Key? key,
       required this.hotelData,
       required this.animationController,
       required this.animation,
       required this.callback,
-      this.isShowDate= false})
+      this.isShowDate = false})
       : super(key: key);
 
   @override
@@ -35,7 +35,7 @@ class HotelListViewPage extends StatelessWidget {
       animation: animation,
       animationController: animationController,
       child: Padding(
-        padding: EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
+        padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
         child: CommonCard(
           color: AppTheme.backgroundColor,
           child: ClipRRect(

@@ -32,7 +32,7 @@ class SerchView extends StatelessWidget {
             color: AppTheme.backgroundColor,
             radius: 16,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(16.0)),
               child: Column(
                 children: <Widget>[
                   AspectRatio(

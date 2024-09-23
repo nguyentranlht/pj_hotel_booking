@@ -4,6 +4,8 @@ import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_card.dart';
 
 class HotelRoomeList extends StatefulWidget {
+  const HotelRoomeList({super.key});
+
   @override
   _HotelRoomeListState createState() => _HotelRoomeListState();
 }
@@ -21,7 +23,7 @@ class _HotelRoomeListState extends State<HotelRoomeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 120,
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 0, bottom: 8, right: 16, left: 16),
@@ -34,7 +36,7 @@ class _HotelRoomeListState extends State<HotelRoomeList> {
               color: AppTheme.backgroundColor,
               radius: 8,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image.asset(

@@ -29,6 +29,6 @@ Widget _setAllProviders() {
         ),
       ),
     ],
-    child: MotelApp(),
+    child: const MotelApp(),
   );
 }

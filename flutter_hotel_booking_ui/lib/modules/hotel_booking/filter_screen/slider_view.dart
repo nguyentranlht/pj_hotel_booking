@@ -30,9 +30,9 @@ class _SliderViewState extends State<SliderView> {
             children: <Widget>[
               Expanded(
                 flex: distValue.round(),
-                child: SizedBox(),
+                child: const SizedBox(),
               ),
-              Container(
+              SizedBox(
                 width: 170,
                 child: Row(
                   children: [
@@ -43,7 +43,7 @@ class _SliderViewState extends State<SliderView> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, right: 4.0),
                       child: Text(
-                        "${(distValue / 10).toStringAsFixed(1)}",
+                        (distValue / 10).toStringAsFixed(1),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -56,7 +56,7 @@ class _SliderViewState extends State<SliderView> {
               ),
               Expanded(
                 flex: 100 - distValue.round(),
-                child: SizedBox(),
+                child: const SizedBox(),
               ),
             ],
           ),

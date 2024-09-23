@@ -154,6 +154,13 @@
         "ja": "旅行"
     },
     {
+        "text_id": "books_motorcycle",
+        "en": "Thuê xe",
+        "fr": "voyages",
+        "ar": "رحلات",
+        "ja": "旅行"
+    },
+    {
         "text_id": "profile",
         "en": "Hồ sơ",
         "fr": "profil",
@@ -422,6 +429,13 @@
     {
         "text_id": "My_Trips",
         "en": "Chuyến đi của tôi",
+        "fr": "Mon voyage",
+        "ar": "رحلتي",
+        "ja": "私の旅行"
+    },
+    {
+        "text_id": "Rent_Motorcycle",
+        "en": "Thuê xe gắn máy",
         "fr": "Mon voyage",
         "ar": "رحلتي",
         "ja": "私の旅行"

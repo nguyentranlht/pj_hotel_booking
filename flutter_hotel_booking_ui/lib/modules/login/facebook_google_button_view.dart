@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_hotel_booking_ui/widgets/common_button.dart';
 
 class FacebookGoogleButtonView extends StatelessWidget {
+  const FacebookGoogleButtonView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return _fTButtonUI(context);
@@ -15,20 +17,20 @@ class FacebookGoogleButtonView extends StatelessWidget {
     return Container(
       child: Row(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             width: 24,
           ),
           Expanded(
             child: CommonButton(
               padding: EdgeInsets.zero,
-              backgroundColor: Color(0x0FF3C5799),
+              backgroundColor: const Color(0xff3c5799),
               buttonTextWidget: _buttonTextUI(),
               onTap: () {
                 context.read<SignInBloc>().add(SignInWithFacebookRequested());
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 16,
           ),
           Expanded(
@@ -41,7 +43,7 @@ class FacebookGoogleButtonView extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 24,
           )
         ],
@@ -56,12 +58,12 @@ class FacebookGoogleButtonView extends StatelessWidget {
       children: <Widget>[
         Icon(isFacebook ? FontAwesomeIcons.facebookF : FontAwesomeIcons.google,
             size: 20, color: Colors.white),
-        SizedBox(
+        const SizedBox(
           width: 4,
         ),
         Text(
           isFacebook ? "Facebook" : "Google",
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),
         ),
       ],

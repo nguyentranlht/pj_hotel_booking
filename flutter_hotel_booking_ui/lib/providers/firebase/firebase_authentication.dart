@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../models/my_user.dart';

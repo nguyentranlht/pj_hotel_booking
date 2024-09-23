@@ -32,6 +32,6 @@ class InputTextField extends StatelessWidget {
         onFieldSubmitted: onFiledSubmittedValue,
         validator: onValidator,
         keyboardType: keyBoardType,
-        decoration: InputDecoration());
+        decoration: const InputDecoration());
   }
 }

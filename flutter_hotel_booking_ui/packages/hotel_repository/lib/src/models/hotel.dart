@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:hotel_repository/src/entities/room_data_entity.dart';
 import 'package:uuid/uuid.dart';
 import '../entities/entities.dart';
 import 'models.dart';
@@ -19,7 +17,6 @@ class Hotel {
   int perNight;
   bool isSelected;
   // PeopleSleeps peopleSleeps;
-  
 
   Hotel({
     required this.hotelId,
@@ -35,24 +32,22 @@ class Hotel {
     required this.perNight,
     required this.isSelected,
     // required this.peopleSleeps,
-    
   });
 
-   static var empty = Hotel(
-		hotelId: const Uuid().v1(),
-    imagePath: '',
-    titleTxt: '',
-    subTxt: '',
-    date: Timestamp.now(),
-    dateTxt: DateText.empty,
-    roomData: RoomData.empty,
-    // peopleSleeps: PeopleSleeps.empty,
-    perNight: 0,
-    reviews: 0,
-    dist: 0,
-    rating: 0,
-    isSelected: false
-	);
+  static var empty = Hotel(
+      hotelId: const Uuid().v1(),
+      imagePath: '',
+      titleTxt: '',
+      subTxt: '',
+      date: Timestamp.now(),
+      dateTxt: DateText.empty,
+      roomData: RoomData.empty,
+      // peopleSleeps: PeopleSleeps.empty,
+      perNight: 0,
+      reviews: 0,
+      dist: 0,
+      rating: 0,
+      isSelected: false);
 
   HotelEntity toEntity() {
     return HotelEntity(
@@ -90,8 +85,7 @@ class Hotel {
     );
   }
 
-    
-    // peopleSleeps: $peopleSleeps,
+  // peopleSleeps: $peopleSleeps,
   @override
   String toString() {
     return '''

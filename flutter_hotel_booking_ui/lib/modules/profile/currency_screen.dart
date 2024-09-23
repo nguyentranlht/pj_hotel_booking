@@ -5,6 +5,8 @@ import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 import '../../models/setting_list_data.dart';
 
 class CurrencyScreen extends StatefulWidget {
+  const CurrencyScreen({super.key});
+
   @override
   _CurrencyScreenState createState() => _CurrencyScreenState();
 }
@@ -39,7 +41,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.pop(context, "${currencyList[index].subTxt}");
+                        Navigator.pop(context, currencyList[index].subTxt);
                       },
                       child: Column(
                         children: <Widget>[
@@ -77,8 +79,8 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16, right: 16),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 16, right: 16),
                             child: Divider(
                               height: 1,
                             ),

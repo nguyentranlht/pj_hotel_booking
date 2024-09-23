@@ -12,12 +12,12 @@ class TitleView extends StatelessWidget {
 
   const TitleView(
       {Key? key,
-      this.titleTxt= "",
-      this.subTxt= "",
+      this.titleTxt = "",
+      this.subTxt = "",
       required this.animationController,
       required this.animation,
       required this.click,
-      this.isLeftButton= false})
+      this.isLeftButton = false})
       : super(key: key);
 
   @override
@@ -27,8 +27,8 @@ class TitleView extends StatelessWidget {
       builder: (BuildContext context, Widget? child) {
         return FadeTransition(
           opacity: animation,
-          child: new Transform(
-            transform: new Matrix4.translationValues(
+          child: Transform(
+            transform: Matrix4.translationValues(
                 0.0, 30 * (1.0 - animation.value), 0.0),
             child: Padding(
               padding: const EdgeInsets.only(left: 24, right: 24),
@@ -41,7 +41,7 @@ class TitleView extends StatelessWidget {
                           fontSize: 18,
                         ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: SizedBox(),
                   ),
                   isLeftButton
@@ -49,7 +49,7 @@ class TitleView extends StatelessWidget {
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(4.0)),
+                                const BorderRadius.all(Radius.circular(4.0)),
                             onTap: () {
                               return click();
                             },
@@ -81,7 +81,7 @@ class TitleView extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox()
+                      : const SizedBox()
                 ],
               ),
             ),

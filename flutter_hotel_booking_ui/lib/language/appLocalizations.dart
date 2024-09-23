@@ -20,22 +20,23 @@ class AppLocalizations {
           .loadString('lib/language/lang/language_text.json'),
     );
 
-    jsonData.forEach((value) {
+    for (var value in jsonData) {
       if (value is Map && value['text_id'] != null) {
         Map<String, String> texts = {};
         texts['text_id'] = value['text_id'] ?? '';
+        texts['vn'] = value['vn'] ?? '';
         texts['en'] = value['en'] ?? '';
         texts['fr'] = value['fr'] ?? '';
         texts['ar'] = value['ar'] ?? '';
         texts['ja'] = value['ja'] ?? '';
         allTexts.add(texts);
       }
-    });
+    }
     common.allTexts = allTexts;
   }
 
   String of(String textId) {
-    LanguageType _languageType = applicationcontext == null
+    LanguageType languageType = applicationcontext == null
         ? LanguageType.en
         : applicationcontext!.read<ThemeProvider>().languageType;
     final Locale myLocale = Localizations.localeOf(context);
@@ -46,7 +47,7 @@ class AppLocalizations {
             .indexWhere((element) => element['text_id'] == textId);
         if (index != -1) {
           newtext = common.allTexts![index]
-                  [_languageType.toString().split(".")[1]] ??
+                  [languageType.toString().split(".")[1]] ??
               '';
           if (newtext != '') return newtext;
         }
@@ -69,7 +70,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'fr', 'ar'].contains(locale.languageCode);
+    return ['vn', 'en', 'fr', 'ar'].contains(locale.languageCode);
   }
 
   @override

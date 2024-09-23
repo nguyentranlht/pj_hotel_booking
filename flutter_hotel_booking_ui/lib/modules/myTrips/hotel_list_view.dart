@@ -18,14 +18,14 @@ class HotelListView extends StatelessWidget {
   final Hotel hotelData;
   final AnimationController animationController;
   final Animation<double> animation;
-  final oCcy = new NumberFormat("#,##0", "vi_VN");
+  final oCcy = NumberFormat("#,##0", "vi_VN");
   HotelListView(
       {Key? key,
       required this.hotelData,
       required this.animationController,
       required this.animation,
       required this.callback,
-      this.isShowDate= false})
+      this.isShowDate = false})
       : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class HotelListView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          Helper.getDateText(hotelData.dateTxt) + ', ',
+                          '${Helper.getDateText(hotelData.dateTxt)}, ',
                           style: TextStyles(context)
                               .getRegularStyle()
                               .copyWith(fontSize: 14),
@@ -61,12 +61,12 @@ class HotelListView extends StatelessWidget {
                       ],
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             CommonCard(
               color: AppTheme.backgroundColor,
               radius: 16,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                 child: Stack(
                   children: <Widget>[
                     Column(
@@ -110,7 +110,7 @@ class HotelListView extends StatelessWidget {
                                             style: TextStyles(context)
                                                 .getDescriptionStyle(),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 4,
                                           ),
                                           Icon(
@@ -120,7 +120,7 @@ class HotelListView extends StatelessWidget {
                                                 Theme.of(context).primaryColor,
                                           ),
                                           Text(
-                                            "${hotelData.dist.toStringAsFixed(1)}",
+                                            hotelData.dist.toStringAsFixed(1),
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyles(context)
                                                 .getDescriptionStyle(),
@@ -206,7 +206,7 @@ class HotelListView extends StatelessWidget {
                           highlightColor: Colors.transparent,
                           splashColor:
                               Theme.of(context).primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(16.0),
                           ),
                           onTap: () {
@@ -227,7 +227,7 @@ class HotelListView extends StatelessWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.all(
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(32.0),
                             ),
                             onTap: () {},

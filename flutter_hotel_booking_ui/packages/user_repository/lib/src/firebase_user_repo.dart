@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,8 +14,7 @@ import 'models/input_textfield.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseUserRepository implements UserRepository {
-  TextEditingController _fnameController = TextEditingController();
-  TextEditingController _lnameController = TextEditingController();
+  final TextEditingController _fnameController = TextEditingController();
   final nameFocusNode = FocusNode();
   FirebaseUserRepository({
     FirebaseAuth? firebaseAuth,
@@ -33,7 +31,6 @@ class FirebaseUserRepository implements UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
-      final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
   /// Stream of [MyUser] which will emit the current user when
   /// the authentication state changes.
@@ -72,27 +69,29 @@ class FirebaseUserRepository implements UserRepository {
       rethrow;
     }
   }
-  Future<int?> getAmountFromPayment(String userId, String paymentId) async {
-  try {
-    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('payment')
-        .doc(paymentId)
-        .get();
 
-    if (paymentDoc.exists) {
-      int? PerNight = paymentDoc.get('PerNight');
-      return PerNight;
-    } else {
-      print("Không tìm thấy thông tin về gia tien trong payment.");
-      return null;
+  Future<int?> getAmountFromPayment(String userId, String paymentId) async {
+    try {
+      DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId)
+          .get();
+
+      if (paymentDoc.exists) {
+        int? PerNight = paymentDoc.get('PerNight');
+        return PerNight;
+      } else {
+        print("Không tìm thấy thông tin về gia tien trong payment.");
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi khi lấy thông tin gia tien từ payment: $e');
+      rethrow;
     }
-  } catch (e) {
-    print('Lỗi khi lấy thông tin gia tien từ payment: $e');
-    throw e;
   }
-}
+
   @override
   Future<void> signInGoogle() async {
     try {
@@ -196,7 +195,7 @@ class FirebaseUserRepository implements UserRepository {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Center(child: Text('Update User Name')),
+            title: const Center(child: Text('Update User Name')),
             content: SingleChildScrollView(
               child: Column(
                 children: [
@@ -207,7 +206,9 @@ class FirebaseUserRepository implements UserRepository {
                     keyBoardType: TextInputType.text,
                     obscureText: false,
                     hint: 'Enter Name',
-                    onValidator: (value) {},
+                    onValidator: (value) {
+                      return null;
+                    },
                   )
                 ],
               ),
@@ -217,7 +218,7 @@ class FirebaseUserRepository implements UserRepository {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel')),
+                  child: const Text('Cancel')),
               TextButton(
                   onPressed: () {
                     ref.child(SessionController().userId.toString()).update({
@@ -227,7 +228,7 @@ class FirebaseUserRepository implements UserRepository {
                     });
                     Navigator.pop(context);
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -286,6 +287,7 @@ class FirebaseUserRepository implements UserRepository {
       log('Error saving user wallet: $e');
       rethrow;
     }
+    return null;
   }
 
   @override
@@ -296,16 +298,12 @@ class FirebaseUserRepository implements UserRepository {
       if (userDoc.exists) {
         // Parse the wallet string to a double
         final newWallet = wallet;
-        if (newWallet != null) {
-          // Update the 'wallet' field in the user's document
-          await _firestore.collection('users').doc(userId).update({
-            'wallet': newWallet,
-          });
+        // Update the 'wallet' field in the user's document
+        await _firestore.collection('users').doc(userId).update({
+          'wallet': newWallet,
+        });
 
-          print('User wallet updated successfully.');
-        } else {
-          throw Exception('Invalid wallet format.');
-        }
+        print('User wallet updated successfully.');
       } else {
         throw Exception('User document not found.');
       }
@@ -313,14 +311,12 @@ class FirebaseUserRepository implements UserRepository {
       log('Error updating user wallet: $e');
       rethrow;
     }
+    return null;
   }
 
-  Future<Stream<QuerySnapshot>> GetMyUser(String name) async {
-    return await FirebaseFirestore.instance.collection(name).snapshots();
-  }
-
+  @override
   Future<Stream<QuerySnapshot>> getRoomPayment(String id) async {
-    return await FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("users")
         .doc(id)
         .collection("payment")
@@ -365,7 +361,7 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> addPaymentToRoom(
+  Future<void> addPaymentToUser(
       Map<String, dynamic> paymentData, String userId) async {
     try {
       CollectionReference paymentsCollectionRef =
@@ -383,7 +379,6 @@ class FirebaseUserRepository implements UserRepository {
     } catch (e) {}
   }
 
-  @override
   Future<void> deletePaymentFromRoom(String userId, String paymentId) async {
     try {
       DocumentReference paymentDocRef = _firestore
@@ -434,32 +429,32 @@ class FirebaseUserRepository implements UserRepository {
       }
     } catch (e) {
       print('Error getting payment data: $e');
-      throw e;
+      rethrow;
     }
   }
 
-Future<String?> getLatestPaymentId(String userId) async {
-  try {
-    CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('payment');
+  Future<String?> getLatestPaymentId(String userId) async {
+    try {
+      CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment');
 
-    QuerySnapshot paymentSnapshot = await paymentsCollectionRef
-        .orderBy('createdAt', descending: true)
-        .limit(1)
-        .get();
+      QuerySnapshot paymentSnapshot = await paymentsCollectionRef
+          .orderBy('createdAt', descending: true)
+          .limit(1)
+          .get();
 
-    if (paymentSnapshot.docs.isNotEmpty) {
-      return paymentSnapshot.docs.first.id; // Lấy ID của tài liệu mới nhất
-    } else {
-      return null; // Không có tài liệu thanh toán nào
+      if (paymentSnapshot.docs.isNotEmpty) {
+        return paymentSnapshot.docs.first.id; // Lấy ID của tài liệu mới nhất
+      } else {
+        return null; // Không có tài liệu thanh toán nào
+      }
+    } catch (e) {
+      print('Error getting latest paymentId: $e');
+      return null;
     }
-  } catch (e) {
-    print('Error getting latest paymentId: $e');
-    return null;
   }
-}
 
   Future<Map<String, String?>> getUserInfo(String userId) async {
     try {
@@ -480,49 +475,46 @@ Future<String?> getLatestPaymentId(String userId) async {
     }
   }
 
-Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) async {
-  try {
-    DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('payment')
-        .doc(paymentId)
-        .get();
-
-    if (paymentDoc.exists) {
-      String startDateString = paymentDoc.get('StartDate');
-      String endDateString = paymentDoc.get('EndDate');
-      String? name = paymentDoc.get('Name');
-      int? people = paymentDoc.get('People');
-      int? numberRoom = paymentDoc.get('NumberRoom');
-      int? perNight = paymentDoc.get('PerNight');
-
-      DateTime startDate = DateFormat('dd-MM-yyyy').parse(startDateString);
-      DateTime endDate = DateFormat('dd-MM-yyyy').parse(endDateString);
-
-      return {
-        'StartDate': startDate,
-        'EndDate': endDate,
-        'Name': name,
-        'People': people,
-        'NumberRoom': numberRoom,
-        'PerNight': perNight,
-      };
-    } else {
-      print("Không tìm thấy thông tin thanh toán.");
-      return {};
-    }
-  } catch (e) {
-    print('Lỗi khi lấy thông tin thanh toán: $e');
-    throw e;
-  }
-}
- Future<void> deleteDateTimeWithIsSelectedFalse(String roomId) async {
+  Future<Map<String, dynamic>> getPaymentDetails(
+      String userId, String paymentId) async {
     try {
-      CollectionReference dateTimeCollectionRef = _firestore
-          .collection('rooms')
-          .doc(roomId)
-          .collection('dateTime');
+      DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('payment')
+          .doc(paymentId)
+          .get();
+
+      if (paymentDoc.exists) {
+        String startDateString = paymentDoc.get('StartDate');
+        String endDateString = paymentDoc.get('EndDate');
+        String? name = paymentDoc.get('Name');
+        int? people = paymentDoc.get('People');
+        int? numberRoom = paymentDoc.get('NumberRoom');
+        int? perNight = paymentDoc.get('PerNight');
+
+        return {
+          'StartDate': startDateString,
+          'EndDate': endDateString,
+          'Name': name,
+          'People': people,
+          'NumberRoom': numberRoom,
+          'PerNight': perNight,
+        };
+      } else {
+        print("Không tìm thấy thông tin thanh toán.");
+        return {};
+      }
+    } catch (e) {
+      print('Lỗi khi lấy thông tin thanh toán: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteDateTimeWithIsSelectedFalse(String roomId) async {
+    try {
+      CollectionReference dateTimeCollectionRef =
+          _firestore.collection('rooms').doc(roomId).collection('dateTime');
 
       QuerySnapshot querySnapshot = await dateTimeCollectionRef
           .where('isSelected', isEqualTo: false)
@@ -530,13 +522,15 @@ Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) 
 
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         await doc.reference.delete();
-        print('DateTime with ID ${doc.id} and isSelected: false deleted successfully.');
+        print(
+            'DateTime with ID ${doc.id} and isSelected: false deleted successfully.');
       }
     } catch (e) {
       print('Error deleting DateTime: $e');
     }
   }
-    Future<void> updateIsSelectedForDatime(String roomId) async {
+
+  Future<void> updateIsSelectedForDatime(String roomId) async {
     var userDoc = FirebaseFirestore.instance.collection('rooms').doc(roomId);
 
     var paymentCollection = userDoc.collection('dateTime');
@@ -549,4 +543,3 @@ Future<Map<String, dynamic>> getPaymentDetails(String userId, String paymentId) 
     }
   }
 }
-

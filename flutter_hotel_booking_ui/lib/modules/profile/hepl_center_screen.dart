@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class HeplCenterScreen extends StatefulWidget {
+  const HeplCenterScreen({super.key});
+
   @override
   _HeplCenterScreenState createState() => _HeplCenterScreenState();
 }
@@ -56,9 +58,9 @@ class _HeplCenterScreenState extends State<HeplCenterScreen> {
                               ? Colors.white
                               : Colors.black,
                           fontFamily: 'Poppins'),
-                      decoration: new InputDecoration(
-                        enabledBorder: new OutlineInputBorder(
-                            borderSide: new BorderSide(
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
                                 color: themeValue == Brightness.dark
                                     ? Colors.white
                                     : Colors.black),
@@ -82,7 +84,7 @@ class _HeplCenterScreenState extends State<HeplCenterScreen> {
                     color: themeValue == Brightness.dark
                         ? Colors.white
                         : Colors.black,
-                    icon: Icon(Icons.send),
+                    icon: const Icon(Icons.send),
                     onPressed: () {
                       sendMessage(messageController.text);
                       messageController.clear();
@@ -129,6 +131,7 @@ class _HeplCenterScreenState extends State<HeplCenterScreen> {
     super.dispose();
   }
 }
+
 class Body extends StatelessWidget {
   final List<Map<String, dynamic>> messages;
 
@@ -180,7 +183,7 @@ class _MessageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(maxWidth: 250),
+      constraints: const BoxConstraints(maxWidth: 250),
       child: LayoutBuilder(
         builder: (context, constrains) {
           return Container(
@@ -191,7 +194,7 @@ class _MessageContainer extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Text(
               message.text?.text?[0] ?? '',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
               ),
             ),

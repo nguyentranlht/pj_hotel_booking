@@ -14,7 +14,7 @@ class PagePopup extends StatelessWidget {
         Expanded(
           flex: 8,
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width - 120,
               child: AspectRatio(
                 aspectRatio: 1,
@@ -49,7 +49,7 @@ class PagePopup extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
+        const Expanded(
           flex: 1,
           child: SizedBox(),
         ),

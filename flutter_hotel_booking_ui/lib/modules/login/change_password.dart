@@ -7,6 +7,8 @@ import 'package:flutter_hotel_booking_ui/widgets/common_text_field_view.dart';
 import 'package:flutter_hotel_booking_ui/widgets/remove_focuse.dart';
 
 class ChangepasswordScreen extends StatefulWidget {
+  const ChangepasswordScreen({super.key});
+
   @override
   _ChangepasswordScreenState createState() => _ChangepasswordScreenState();
 }
@@ -14,8 +16,8 @@ class ChangepasswordScreen extends StatefulWidget {
 class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
   String _errorNewPassword = '';
   String _errorConfirmPassword = '';
-  TextEditingController _newController = TextEditingController();
-  TextEditingController _confirmController = TextEditingController();
+  final TextEditingController _newController = TextEditingController();
+  final TextEditingController _confirmController = TextEditingController();
   void changePassword() async {
     User? user = FirebaseAuth.instance.currentUser;
     String newPassword = _newController.text.trim();
@@ -80,7 +82,8 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
                     CommonTextFieldView(
                       controller: _newController,
                       titleText: AppLocalizations(context).of("new_password"),
-                      padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                      padding: const EdgeInsets.only(
+                          left: 24, right: 24, bottom: 16),
                       hintText:
                           AppLocalizations(context).of('enter_new_password'),
                       keyboardType: TextInputType.visiblePassword,
@@ -92,7 +95,8 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
                       controller: _confirmController,
                       titleText:
                           AppLocalizations(context).of("confirm_password"),
-                      padding: EdgeInsets.only(left: 24, right: 24, bottom: 24),
+                      padding: const EdgeInsets.only(
+                          left: 24, right: 24, bottom: 24),
                       hintText: AppLocalizations(context)
                           .of("enter_confirm_password"),
                       keyboardType: TextInputType.visiblePassword,
@@ -101,7 +105,8 @@ class _ChangepasswordScreenState extends State<ChangepasswordScreen> {
                       errorText: _errorConfirmPassword,
                     ),
                     CommonButton(
-                      padding: EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                      padding: const EdgeInsets.only(
+                          left: 24, right: 24, bottom: 16),
                       buttonText: AppLocalizations(context).of("Apply_text"),
                       onTap: () {
                         if (_allValidation()) {

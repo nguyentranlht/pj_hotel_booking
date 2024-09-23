@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
 
 part 'create_room_event.dart';

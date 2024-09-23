@@ -37,13 +37,13 @@ class _HotelDetailesState extends State<HotelDetailes>
   late AnimationController animationController;
   var imageHieght = 0.0;
   late AnimationController _animationController;
-  final oCcy = new NumberFormat("#,##0", "vi_VN");
+  final oCcy = NumberFormat("#,##0", "vi_VN");
   @override
   void initState() {
     animationController = AnimationController(
-        duration: Duration(milliseconds: 2000), vsync: this);
-    _animationController =
-        AnimationController(duration: Duration(milliseconds: 0), vsync: this);
+        duration: const Duration(milliseconds: 2000), vsync: this);
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 0), vsync: this);
     animationController.forward();
     scrollController.addListener(() {
       if (mounted) {
@@ -90,8 +90,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                   // Hotel title and animation view
                   child: getHotelDetails(isInList: true),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
                   child: Divider(
                     height: 1,
                   ),
@@ -113,8 +113,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                   ),
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.only(left: 24, right: 24, top: 4, bottom: 8),
+                  padding: const EdgeInsets.only(
+                      left: 24, right: 24, top: 4, bottom: 8),
                   child: RichText(
                     textAlign: TextAlign.justify,
                     text: TextSpan(
@@ -126,7 +126,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                               .copyWith(
                                 fontSize: 14,
                               ),
-                          recognizer: new TapGestureRecognizer()..onTap = () {},
+                          recognizer: TapGestureRecognizer()..onTap = () {},
                         ),
                         TextSpan(
                           text: !isReadless
@@ -134,7 +134,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                               : AppLocalizations(context).of("less"),
                           style: TextStyles(context).getRegularStyle().copyWith(
                               color: AppTheme.primaryColor, fontSize: 14),
-                          recognizer: new TapGestureRecognizer()
+                          recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               setState(() {
                                 isReadless = !isReadless;
@@ -174,7 +174,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                     callback: () {},
                   ),
 
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 Stack(
@@ -210,8 +210,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                   child: CommonButton(
                     buttonText: AppLocalizations(context).of("book_now"),
                     onTap: () {
-                      NavigationServices(context)
-                          .gotoRoomBookingScreen(widget.hotelData.titleTxt, widget.hotelData.hotelId);
+                      NavigationServices(context).gotoRoomBookingScreen(
+                          widget.hotelData.titleTxt, widget.hotelData.hotelId);
                     },
                   ),
                 ),
@@ -229,7 +229,7 @@ class _HotelDetailesState extends State<HotelDetailes>
           // Arrow back Ui
           Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Container(
+            child: SizedBox(
               height: AppBar().preferredSize.height,
               child: Row(
                 children: <Widget>[
@@ -237,13 +237,13 @@ class _HotelDetailesState extends State<HotelDetailes>
                       Icons.arrow_back, AppTheme.backgroundColor, () {
                     if (scrollController.offset != 0.0) {
                       scrollController.animateTo(0.0,
-                          duration: Duration(milliseconds: 480),
+                          duration: const Duration(milliseconds: 480),
                           curve: Curves.easeInOutQuad);
                     } else {
                       Navigator.pop(context);
                     }
                   }),
-                  Expanded(
+                  const Expanded(
                     child: SizedBox(),
                   ),
                   // like and unlike view
@@ -269,7 +269,7 @@ class _HotelDetailesState extends State<HotelDetailes>
     return SizedBox(
       height: AppBar().preferredSize.height,
       child: Padding(
-        padding: EdgeInsets.only(top: 8, left: 8, right: 8),
+        padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
         child: Container(
           width: AppBar().preferredSize.height - 8,
           height: AppBar().preferredSize.height - 8,
@@ -277,7 +277,7 @@ class _HotelDetailesState extends State<HotelDetailes>
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(32.0),
               ),
               onTap: onTap,
@@ -310,7 +310,7 @@ class _HotelDetailesState extends State<HotelDetailes>
           Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
               onTap: onTap,
               child: Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -371,7 +371,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                           left: 0,
                           right: 0,
                           top: 0,
-                          child: Container(
+                          child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Image.network(
                               hotelData.imagePath,
@@ -392,18 +392,19 @@ class _HotelDetailesState extends State<HotelDetailes>
                     child: Column(
                       children: <Widget>[
                         Container(
-                          padding: EdgeInsets.only(left: 24, right: 24),
+                          padding: const EdgeInsets.only(left: 24, right: 24),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(24)),
-                            child: new BackdropFilter(
-                              filter: new ImageFilter.blur(
-                                  sigmaX: 10.0, sigmaY: 10.0),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(24)),
+                            child: BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                               child: Container(
                                 color: Colors.black12,
                                 padding: const EdgeInsets.all(4.0),
                                 child: Column(
                                   children: <Widget>[
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 4,
                                     ),
                                     Padding(
@@ -423,7 +424,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                                           onTap: () {
                                             NavigationServices(context)
                                                 .gotoRoomBookingScreen(
-                                                    widget.hotelData.titleTxt, widget.hotelData.hotelId);
+                                                    widget.hotelData.titleTxt,
+                                                    widget.hotelData.hotelId);
                                           }),
                                     ),
                                   ],
@@ -432,15 +434,16 @@ class _HotelDetailesState extends State<HotelDetailes>
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Center(
                           child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(24)),
-                            child: new BackdropFilter(
-                              filter: new ImageFilter.blur(
-                                  sigmaX: 10.0, sigmaY: 10.0),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(24)),
+                            child: BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                               child: Container(
                                 color: Colors.black12,
                                 child: Material(
@@ -449,8 +452,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                                     splashColor: Theme.of(context)
                                         .primaryColor
                                         .withOpacity(0.2),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(38)),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(38)),
                                     onTap: () {
                                       try {
                                         scrollController.animateTo(
@@ -459,8 +462,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                                                         .size
                                                         .height /
                                                     5,
-                                            duration:
-                                                Duration(milliseconds: 500),
+                                            duration: const Duration(
+                                                milliseconds: 500),
                                             curve: Curves.fastOutSlowIn);
                                       } catch (e) {}
                                     },
@@ -486,9 +489,8 @@ class _HotelDetailesState extends State<HotelDetailes>
                                                   color: Colors.white,
                                                 ),
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2),
+                                          const Padding(
+                                            padding: EdgeInsets.only(top: 2),
                                             child: Icon(
                                               Icons.keyboard_arrow_down,
                                               color: Colors.white,
@@ -547,7 +549,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                               : Colors.white,
                         ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                   ),
                   Icon(
@@ -556,7 +558,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                     color: Theme.of(context).primaryColor,
                   ),
                   Text(
-                    "${widget.hotelData.dist.toStringAsFixed(1)}",
+                    widget.hotelData.dist.toStringAsFixed(1),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyles(context).getRegularStyle().copyWith(
                           fontSize: 14,
@@ -582,7 +584,7 @@ class _HotelDetailesState extends State<HotelDetailes>
                 ],
               ),
               isInList
-                  ? SizedBox()
+                  ? const SizedBox()
                   : Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(

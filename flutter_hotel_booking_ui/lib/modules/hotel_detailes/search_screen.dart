@@ -17,6 +17,8 @@ import 'package:hotel_repository/hotel_repository.dart';
 import 'room_booking_screen.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -25,7 +27,7 @@ class SearchScreen extends StatefulWidget {
 //   // with TickerProviderStateMixin {
 //   // List<HotelListData> lastsSearchesList = HotelListData.lastsSearchesList;
 
-  // late AnimationController animationController;
+// late AnimationController animationController;
 //   // final myController = TextEditingController();
 
 //   Future<QuerySnapshot>? postDocumentLists;
@@ -204,22 +206,22 @@ class SearchScreen extends StatefulWidget {
 //   }
 // }
 class _SearchScreenState extends State<SearchScreen> {
-  
   late AnimationController animationController;
   Future<QuerySnapshot>? postDocumentLists;
   String hotelNameText = "";
 
-  initSearch(String textEntered){
+  initSearch(String textEntered) {
     String searchText = textEntered.toLowerCase();
     postDocumentLists = FirebaseFirestore.instance
-      .collection("hotels")
-      .where('titleTxt', isGreaterThanOrEqualTo: textEntered)
-      .get();
+        .collection("hotels")
+        .where('titleTxt', isGreaterThanOrEqualTo: textEntered)
+        .get();
 
-  setState(() {
-    postDocumentLists;
-  });
+    setState(() {
+      postDocumentLists;
+    });
   }
+
   // @override
   // void initState() {
   //   animationController = AnimationController(
@@ -238,21 +240,19 @@ class _SearchScreenState extends State<SearchScreen> {
             });
             initSearch(value); // Gọi hàm tìm kiếm
           },
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Tìm kiếm...',
           ),
         ),
       ),
       body: FutureBuilder(
         future: FirebaseFirestore.instance
-          .collection("hotels")
-          .orderBy("titleTxt")
-          .startAt([hotelNameText])
-          .endAt([hotelNameText + "\uf8ff"])
-          .get(),
+            .collection("hotels")
+            .orderBy("titleTxt")
+            .startAt([hotelNameText]).endAt(["$hotelNameText\uf8ff"]).get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
@@ -262,17 +262,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   // Hiển thị kết quả tìm kiếm
                   return ListTile(
                     onTap: () {
-                        // Truyền dữ liệu hotelData khi người dùng nhấp vào ListTile
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RoomBookingScreen(
-                              hotelName: document['titleTxt'],
-                              hotelId: document['hotelId'] ,
-                            ),
+                      // Truyền dữ liệu hotelData khi người dùng nhấp vào ListTile
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RoomBookingScreen(
+                            hotelName: document['titleTxt'],
+                            hotelId: document['hotelId'],
                           ),
-                        );
-                      },
+                        ),
+                      );
+                    },
                     title: Text(document['titleTxt']),
                     subtitle: Text(document['subTxt']),
                   );
