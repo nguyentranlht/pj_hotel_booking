@@ -12,6 +12,4 @@ abstract class BikeRepo {
     String locationId,
     Bike bike,
   );
-
-  Future<List<Bike>> getBikesByLocationId(String locationId);
 }

@@ -75,7 +75,7 @@ class FirebaseUserRepository implements UserRepository {
       DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .doc(paymentId)
           .get();
 
@@ -83,11 +83,11 @@ class FirebaseUserRepository implements UserRepository {
         int? PerNight = paymentDoc.get('PerNight');
         return PerNight;
       } else {
-        print("Không tìm thấy thông tin về gia tien trong payment.");
+        print("Không tìm thấy thông tin về gia tien trong PaymentRoom.");
         return null;
       }
     } catch (e) {
-      print('Lỗi khi lấy thông tin gia tien từ payment: $e');
+      print('Lỗi khi lấy thông tin gia tien từ PaymentRoom: $e');
       rethrow;
     }
   }
@@ -319,14 +319,14 @@ class FirebaseUserRepository implements UserRepository {
     return FirebaseFirestore.instance
         .collection("users")
         .doc(id)
-        .collection("payment")
+        .collection("PaymentRoom")
         .snapshots();
   }
 
   Future<void> updateIsSelectedForUserPayments(String userId) async {
     var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
 
-    var paymentCollection = userDoc.collection('payment');
+    var paymentCollection = userDoc.collection('PaymentRoom');
 
     var querySnapshot =
         await paymentCollection.where('isSelected', isEqualTo: false).get();
@@ -343,7 +343,7 @@ class FirebaseUserRepository implements UserRepository {
       DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .doc(roomId)
           .get();
 
@@ -355,7 +355,7 @@ class FirebaseUserRepository implements UserRepository {
         return null;
       }
     } catch (e) {
-      print('Lỗi khi tìm kiếm payment: $e');
+      print('Lỗi khi tìm kiếm PaymentRoom: $e');
       rethrow;
     }
   }
@@ -365,7 +365,7 @@ class FirebaseUserRepository implements UserRepository {
       Map<String, dynamic> paymentData, String userId) async {
     try {
       CollectionReference paymentsCollectionRef =
-          _firestore.collection('users').doc(userId).collection('payment');
+          _firestore.collection('users').doc(userId).collection('PaymentRoom');
 
       DocumentReference newPaymentRef = paymentsCollectionRef.doc();
       String paymentId = newPaymentRef.id; // Lấy ID tự sinh
@@ -376,7 +376,9 @@ class FirebaseUserRepository implements UserRepository {
         'paymentId': paymentId, // Lưu trữ paymentId trong document (nếu cần)
         'createdAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {}
+    } catch (e) {
+      print("can't add PaymentRoom because: $e");
+    }
   }
 
   Future<void> deletePaymentFromRoom(String userId, String paymentId) async {
@@ -384,15 +386,15 @@ class FirebaseUserRepository implements UserRepository {
       DocumentReference paymentDocRef = _firestore
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .doc(paymentId);
 
       // Xóa document
       await paymentDocRef.delete();
 
-      print('Payment with ID $paymentId deleted successfully.');
+      print('PaymentRoom with ID $paymentId deleted successfully.');
     } catch (e) {
-      print('Error deleting payment: $e');
+      print('Error deleting PaymentRoom: $e');
     }
   }
 
@@ -417,7 +419,7 @@ class FirebaseUserRepository implements UserRepository {
       var paymentQuerySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .where('isSelected', isEqualTo: false)
           .limit(1)
           .get();
@@ -438,7 +440,7 @@ class FirebaseUserRepository implements UserRepository {
       CollectionReference paymentsCollectionRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('payment');
+          .collection('PaymentRoom');
 
       QuerySnapshot paymentSnapshot = await paymentsCollectionRef
           .orderBy('createdAt', descending: true)
@@ -481,7 +483,7 @@ class FirebaseUserRepository implements UserRepository {
       DocumentSnapshot paymentDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .doc(paymentId)
           .get();
 

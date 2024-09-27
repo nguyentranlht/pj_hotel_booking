@@ -102,7 +102,7 @@ class FirebaseRoomRepo implements RoomRepo {
       QuerySnapshot paymentCollectionSnapshot = await _firestore
           .collection('users')
           .doc(userId)
-          .collection('payment')
+          .collection('PaymentRoom')
           .where('isSelected', isEqualTo: false)
           .get();
 

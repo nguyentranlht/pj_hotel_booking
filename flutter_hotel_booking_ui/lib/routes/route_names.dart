@@ -6,6 +6,7 @@ import 'package:flutter_hotel_booking_ui/modules/admin/room_hotel_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/update_hotel.dart';
 import 'package:flutter_hotel_booking_ui/modules/admin/update_room.dart';
 import 'package:flutter_hotel_booking_ui/modules/base/views/base_screen.dart';
+import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/motorcycle_market.dart';
 import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/payment_motorcycle.dart';
 import 'package:flutter_hotel_booking_ui/modules/book_motorcycle/search_motorcycle_sreen.dart';
 import 'package:flutter_hotel_booking_ui/modules/bottom_tab/bottom_tab_screen.dart';
@@ -203,8 +204,12 @@ class NavigationServices {
     return await _pushMaterialPageRoute(const PaymentMotorcycleScreen());
   }
 
+  Future<dynamic> gotoMarketMotorcycle() async {
+    return await _pushMaterialPageRoute(const MotorcycleMarketScreen());
+  }
+
   Future<dynamic> gotoCountryScreen() async {
-    return await _pushMaterialPageRoute(CountryScreen(),
+    return await _pushMaterialPageRoute(const CountryScreen(),
         fullscreenDialog: true);
   }
 

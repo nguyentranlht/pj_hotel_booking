@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:bike_repository/bike_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
@@ -63,11 +64,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       amount2 = int.parse(total.toString());
       setState(() {});
     });
-  }
-
-  String? formatDate(DateTime? date) {
-    if (date == null) return null;
-    return DateFormat('dd-MM-yyyy').format(date);
   }
 
   getthesharedpref() async {
@@ -356,77 +352,84 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future openEdit() => showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
+        barrierDismissible:
+            false, // Ngăn người dùng tắt dialog bằng cách nhấn bên ngoài
+        builder: (context) => WillPopScope(
+          onWillPop: () async =>
+              false, // Ngăn người dùng tắt dialog bằng nút back
+          child: AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            NavigationServices(context).gotoLoginApp();
+                          },
+                          child: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16.0,
+                        ),
+                        Center(
+                          child: Text(
+                            "Thanh toán thành công",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.lightGreen.shade700,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text(
+                      "Cảm ơn",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
                         onTap: () {
+                          // Điều hướng về trang chủ
                           NavigationServices(context).gotoLoginApp();
                         },
-                        child: const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16.0,
-                      ),
-                      Center(
-                        child: Text(
-                          "Thanh toán thành công",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.lightGreen.shade700,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                        child: Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF008080),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    "Cảm ơn",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationServices(context).gotoLoginApp();
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF008080),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Trang chủ",
-                            style: TextStyle(color: Colors.white),
+                          child: const Center(
+                            child: Text(
+                              "Trang chủ",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -435,77 +438,84 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Future openError() => showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          NavigationServices(context).gotoIntroductionScreen();
-                        },
-                        child: const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16.0,
-                      ),
-                      const Center(
-                        child: Text(
-                          "Lỗi thanh toán",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+        barrierDismissible:
+            false, // Ngăn người dùng tắt dialog bằng cách nhấn ra ngoài
+        builder: (context) => WillPopScope(
+          onWillPop: () async =>
+              false, // Ngăn người dùng tắt dialog bằng nút back
+          child: AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            NavigationServices(context)
+                                .gotoIntroductionScreen();
+                          },
+                          child: const Icon(
+                            Icons.error,
                             color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    "Số dư không đủ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationServices(context).gotoLoginApp();
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Colors.lightGreen.shade700,
-                          borderRadius: BorderRadius.circular(10),
+                        const SizedBox(
+                          width: 16.0,
                         ),
-                        child: const Center(
+                        const Center(
                           child: Text(
-                            "Trang chủ",
-                            style: TextStyle(color: Colors.white),
+                            "Lỗi thanh toán",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text(
+                      "Số dư không đủ",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          NavigationServices(context).gotoLoginApp();
+                        },
+                        child: Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.lightGreen.shade700,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Trang chủ",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -577,63 +587,137 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 );
               },
             );
-            // Lấy thời gian delay ngẫu nhiên từ hàm getRandomDelayTime
-            int randomDelay = await getRandomDelayTime();
-
-            // Đợi thời gian ngẫu nhiên để giả lập quá trình thanh toán
-            await Future.delayed(Duration(seconds: randomDelay));
-            print("randomDelay: $randomDelay");
 
             if (confirmPayment == true) {
-              if (int.parse(wallet!) < amount2) {
-                // Khi wallet ít tiền hơn hóa đơn
-                return openError();
-              } else {
-                print("userId: $userId");
-                int amount = int.parse(wallet!) - amount2;
-                await FirebaseUserRepository()
-                    .updateUserWallet(userId!, amount.toString());
-                await FirebaseUserRepository()
-                    .saveUserWallet(amount.toString());
+              try {
+                // Hiển thị loading indicator trước khi thực hiện các hành động async
+                showDialog(
+                  // ignore: use_build_context_synchronously
+                  context: Navigator.of(context, rootNavigator: true)
+                      .context, // Sử dụng rootNavigator để đảm bảo lấy đúng context
+                  barrierDismissible: false,
+                  builder: (BuildContext dialogContext) {
+                    // ignore: deprecated_member_use
+                    return WillPopScope(
+                      onWillPop: () async =>
+                          false, // Ngăn người dùng đóng dialog bằng nút back
+                      child: const AlertDialog(
+                        content: Row(
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(width: 20),
+                            Text("Đang xử lý thanh toán..."),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+                // Lấy thời gian delay ngẫu nhiên từ hàm getRandomDelayTime
+                int randomDelay = await getRandomDelayTime();
 
-                roomId = await FirebaseRoomRepo().getRoomId(userId!);
-                if (roomId != null) {
-                  await updateRoomDataWithPayment(userId!, roomId!);
+                // Đợi thời gian ngẫu nhiên để giả lập quá trình thanh toán
+                await Future.delayed(Duration(seconds: randomDelay));
+                print("randomDelay: $randomDelay");
 
+                // Kiểm tra nếu widget vẫn mounted trước khi tắt dialog
+                if (mounted) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context, rootNavigator: true)
+                      .pop(); // Tắt dialog loading
+                }
+                bool isBikeBooked = false;
+                if (!isBikeBooked) {
+                  print("userId: $userId");
+                  int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
-                      .updateIsSelectedForDatime(roomId!);
+                      .updateUserWallet(userId!, amount.toString());
                   await FirebaseUserRepository()
-                      .updateIsSelectedForUserPayments(userId!);
+                      .saveUserWallet(amount.toString());
 
-                  if (paymentIds != null) {
-                    Map<String, dynamic> latestPaymentDetails =
-                        await FirebaseUserRepository()
-                            .getPaymentDetails(userId!, paymentIds!);
-                    perNight = latestPaymentDetails['PerNight'];
-                    roomNumber = latestPaymentDetails['NumberRoom'];
-                    _selectedStartDate = latestPaymentDetails['StartDate'];
-                    _selectedEndDate = latestPaymentDetails['EndDate'];
-                    nameHotel = latestPaymentDetails['Name'];
-                    luu = formatDate(DateTime.parse(_selectedStartDate!));
-                    luu2 = formatDate(DateTime.parse(_selectedEndDate!));
-                    setState(() {});
+                  roomId = await FirebaseRoomRepo().getRoomId(userId!);
+                  if (roomId != null) {
+                    await updateRoomDataWithPayment(userId!, roomId!);
+
+                    await FirebaseUserRepository()
+                        .updateIsSelectedForDatime(roomId!);
+                    await FirebaseUserRepository()
+                        .updateIsSelectedForUserPayments(userId!);
+
+                    if (paymentIds != null) {
+                      Map<String, dynamic> latestPaymentDetails =
+                          await FirebaseUserRepository()
+                              .getPaymentDetails(userId!, paymentIds!);
+                      perNight = latestPaymentDetails['PerNight'];
+                      roomNumber = latestPaymentDetails['NumberRoom'];
+                      _selectedStartDate = latestPaymentDetails['StartDate'];
+                      _selectedEndDate = latestPaymentDetails['EndDate'];
+                      nameHotel = latestPaymentDetails['Name'];
+                      luu = _selectedStartDate;
+                      luu2 = _selectedEndDate;
+                      setState(() {});
+
+                      await FirebaseUserRepository().removeUserRoomId(userId!);
+                      await sendConfirmationEmail(
+                        customerEmail ?? 'khachhang@example.com',
+                        customerName ?? 'Tên Khách Hàng',
+                        nameHotel ?? 'Khách sạn của bạn',
+                        roomNumber?.toString() ?? 'Số phòng của bạn',
+                        luu?.toString() ?? 'N/A',
+                        luu2?.toString() ?? 'N/A',
+                        "${oCcy.format(perNight)} ₫".toString(),
+                      );
+                      setState(() {});
+                      openEdit();
+                    } else {
+                      print('No paymentIds found.');
+                    }
                   } else {
-                    print('No paymentIds found.');
+                    // Nếu xe đã được đặt, hiển thị dialog thông báo
+                    // List<Map<String, dynamic>> bookedBikes =
+                    //     await FirebaseBikeRepo()
+                    //         .getBookedBikes(userId!, sessionId!);
+
+                    // if (bookedBikes.isNotEmpty && mounted) {
+                    //   String bikeDetails = '';
+                    //   for (var bike in bookedBikes) {
+                    //     String bikeName = bike['bikeName'] ?? 'Không có tên';
+                    //     String bikeLicensePlate =
+                    //         bike['bikeLicensePlate'] ?? 'Không có biển số';
+                    //     bikeDetails +=
+                    //         'Tên xe: $bikeName\nBiển số: $bikeLicensePlate\n';
+                    //   }
+
+                    if (mounted) {
+                      showDialog(
+                        context: Navigator.of(context, rootNavigator: true)
+                            .context, // Sử dụng rootNavigator
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: const Text('Thông báo'),
+                            content: Text('Xe đã được đặt:\n'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                },
+                                child: const Text('Đóng'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   }
                 }
+              } catch (e) {
+                print("Lỗi khi xử lý thanh toán: $e");
 
-                await FirebaseUserRepository().removeUserRoomId(userId!);
-                await sendConfirmationEmail(
-                  customerEmail ?? 'khachhang@example.com',
-                  customerName ?? 'Tên Khách Hàng',
-                  nameHotel ?? 'Khách sạn của bạn',
-                  roomNumber?.toString() ?? 'Số phòng của bạn',
-                  luu?.toString() ?? 'N/A',
-                  luu2?.toString() ?? 'N/A',
-                  "${oCcy.format(perNight)} ₫".toString(),
-                );
-                setState(() {});
-                openEdit();
+                // Đảm bảo dialog được đóng nếu có lỗi
+                if (mounted) {
+                  Navigator.of(context, rootNavigator: true)
+                      .pop(); // Tắt dialog loading nếu có lỗi
+                }
               }
             }
           }

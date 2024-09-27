@@ -61,22 +61,6 @@ class FirebaseBikeRepo implements BikeRepo {
     }
   }
 
-  @override
-  Future<List<Bike>> getBikesByLocationId(String locationId) async {
-    try {
-      return await bikeCollection
-          .where('hotelId', isEqualTo: locationId)
-          .get()
-          .then((result) => result.docs
-              .map(
-                  (doc) => Bike.fromEntity(BikeEntity.fromDocument(doc.data())))
-              .toList());
-    } catch (e) {
-      print(e.toString());
-      throw Exception('Failed to load bike');
-    }
-  }
-
   Future<String?> getBikeId(String userId) async {
     // Giả sử rằng bạn có thông tin về phòng được thanh toán trong user document
     DocumentSnapshot userDoc =
@@ -85,15 +69,6 @@ class FirebaseBikeRepo implements BikeRepo {
       return userDoc.get('roomId');
     } else {
       throw Exception('User not found.');
-    }
-  }
-
-  Future<void> updateBikeData(String bikeId, Map<String, dynamic> data) async {
-    try {
-      await bikeCollection.doc(bikeId).update(data);
-    } catch (e) {
-      print('Error updating room data: $e');
-      rethrow;
     }
   }
 
@@ -137,26 +112,42 @@ class FirebaseBikeRepo implements BikeRepo {
     }
   }
 
-  Stream<List<Map<String, dynamic>>> getLatestHistorySearchBikesToUser(
-      String userId) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .collection('HistorySearch')
-        .orderBy('createdAt',
-            descending: true) // Sắp xếp theo thời gian tạo mới nhất trước
-        .limit(1) // Giới hạn chỉ lấy 1 tài liệu mới nhất
-        .snapshots()
-        .map((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        // Lấy tài liệu mới nhất và danh sách 'bikes' từ tài liệu đó
-        var document = snapshot.docs.first;
-        List<Map<String, dynamic>> bikes =
-            List<Map<String, dynamic>>.from(document.data()['bikes'] ?? []);
-        return bikes;
+  Future<void> addHistorySearchToFirebase(
+    List<Map<String, dynamic>> availableBikes, // List<Map<String, dynamic>>
+    String userId,
+    Map dateSearch,
+    Map timeSearch,
+  ) async {
+    String sessionId = const Uuid().v4(); // Tạo sessionId mới
+    try {
+      // Lấy giá trị từ Map dateSearch và timeSearch
+
+      List<String> bikeIds = [];
+      for (var bike in availableBikes) {
+        if (bike.containsKey('bikeId')) {
+          bikeIds.add(bike['bikeId']);
+        }
       }
-      return [];
-    });
+
+      CollectionReference paymentsCollectionRef =
+          FirebaseFirestore.instance.collection('HistorySearch');
+
+      DocumentReference newHistoryRef = paymentsCollectionRef.doc();
+      String historySearchId = newHistoryRef.id; // Lấy ID tự sinh
+
+      // Thêm document với dữ liệu và ID tự sinh
+      await newHistoryRef.set({
+        'bikes': availableBikes, // Dùng danh sách dữ liệu xe trực tiếp
+        'historySearchId':
+            historySearchId, // Lưu trữ historySearchId trong document
+        'dateSearch': dateSearch,
+        'timeSearch': timeSearch,
+        'sessionId': sessionId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Lỗi khi thêm lịch sử tìm kiếm: $e');
+    }
   }
 
   Future<String?> getLocationId(String locationName) async {
@@ -256,10 +247,8 @@ class FirebaseBikeRepo implements BikeRepo {
               : '',
           'createdAt': FieldValue.serverTimestamp(),
         };
-
         // Thêm vào contracts
         await newContractRef.set(contractData);
-
         print(
             'Dữ liệu từ tài liệu mới nhất đã được thêm vào contracts và bikeStatus đã được cập nhật trong HistorySearch.');
       } else {
@@ -273,148 +262,151 @@ class FirebaseBikeRepo implements BikeRepo {
   Future<void> updateBikeStatusAfterPayment(
       String userId, String sessionId) async {
     try {
-      // Lấy thông tin PaymentHistory của khách hàng sau khi thanh toán thành công
-      QuerySnapshot<Map<String, dynamic>> currentPaymentSnapshot =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userId)
-              .collection('PaymentHistory')
-              .where('sessionId', isEqualTo: sessionId)
-              .limit(1)
-              .get();
+      // Sử dụng transaction để đảm bảo tất cả các cập nhật được thực hiện đồng thời
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        // Lấy thông tin PaymentHistory của khách hàng sau khi thanh toán thành công
+        QuerySnapshot<Map<String, dynamic>> currentPaymentSnapshot =
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .collection('PaymentHistory')
+                .where('sessionId', isEqualTo: sessionId)
+                .limit(1)
+                .get(); // Thực hiện get() trước để lấy snapshot đầu tiên
 
-      if (currentPaymentSnapshot.docs.isEmpty) {
-        print('Không tìm thấy PaymentHistory cho khách hàng này.');
-        return;
-      }
-
-      // Lấy document hiện tại
-      var currentPaymentDoc = currentPaymentSnapshot.docs.first.data();
-      List<dynamic> currentBikes = currentPaymentDoc['bikes'] ?? [];
-      List currentBikeIds = currentBikes.map((bike) => bike['bikeId']).toList();
-
-      if (currentBikeIds.isEmpty) {
-        print('Không có bikeId trong PaymentHistory hiện tại.');
-        return;
-      }
-
-      var currentStartDateSearch =
-          DateTime.parse(currentPaymentDoc['dateSearch']['startDate']);
-      var currentEndDateSearch =
-          DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
-
-      var currentStartTimeSearch = TimeOfDay(
-        hour: int.parse(
-            currentPaymentDoc['timeSearch']['startTime'].split(':')[0]),
-        minute: int.parse(
-            currentPaymentDoc['timeSearch']['startTime'].split(':')[1]),
-      );
-      var currentEndTimeSearch = TimeOfDay(
-        hour:
-            int.parse(currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
-        minute:
-            int.parse(currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
-      );
-
-      // Lấy ngày hiện tại từ currentPaymentDoc 'createdAt'
-      var currentCreatedAt =
-          (currentPaymentDoc['createdAt'] as Timestamp).toDate();
-      var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-          currentCreatedAt.day, 0, 0, 0);
-      var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-          currentCreatedAt.day, 23, 59, 59);
-
-      // Lấy tất cả PaymentHistory của các User khác trong cùng ngày
-      QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
-          await FirebaseFirestore.instance
-              .collectionGroup('PaymentHistory')
-              .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
-              .where('createdAt', isLessThanOrEqualTo: endOfDay)
-              .get();
-
-      // Kiểm tra từng PaymentHistory có trùng bikeId và khoảng thời gian không
-      for (var paymentDoc in allPaymentsSnapshot.docs) {
-        var paymentData = paymentDoc.data();
-        List<dynamic> bikes = paymentData['bikes'] ?? [];
-
-        for (var bike in bikes) {
-          // Kiểm tra nếu bikeId trùng khớp
-          if (currentBikeIds.contains(bike['bikeId'])) {
-            DateTime paymentStartDate =
-                DateTime.parse(paymentData['dateSearch']['startDate']);
-            DateTime paymentEndDate =
-                DateTime.parse(paymentData['dateSearch']['endDate']);
-
-            TimeOfDay paymentStartTime = TimeOfDay(
-              hour: int.parse(
-                  paymentData['timeSearch']['startTime'].split(':')[0]),
-              minute: int.parse(
-                  paymentData['timeSearch']['startTime'].split(':')[1]),
-            );
-            TimeOfDay paymentEndTime = TimeOfDay(
-              hour:
-                  int.parse(paymentData['timeSearch']['endTime'].split(':')[0]),
-              minute:
-                  int.parse(paymentData['timeSearch']['endTime'].split(':')[1]),
-            );
-
-            // Kiểm tra sự trùng lặp về ngày
-            bool dateOverlap =
-                !(paymentEndDate.isBefore(currentStartDateSearch) ||
-                    paymentStartDate.isAfter(currentEndDateSearch));
-
-            // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
-            bool timeOverlap = true;
-            if (dateOverlap) {
-              // Trường hợp ngày bắt đầu của user trùng với ngày kết thúc của hợp đồng
-              if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                if (currentStartTimeSearch.hour > paymentEndTime.hour ||
-                    (currentStartTimeSearch.hour == paymentEndTime.hour &&
-                        currentStartTimeSearch.minute >
-                            paymentEndTime.minute)) {
-                  timeOverlap = false;
-                }
-              }
-              // Trường hợp ngày kết thúc của user trùng với ngày bắt đầu của hợp đồng
-              else if (currentEndDateSearch
-                  .isAtSameMomentAs(paymentStartDate)) {
-                if (currentEndTimeSearch.hour < paymentStartTime.hour ||
-                    (currentEndTimeSearch.hour == paymentStartTime.hour &&
-                        currentEndTimeSearch.minute <
-                            paymentStartTime.minute)) {
-                  timeOverlap = false;
-                }
-              } else if (currentStartDateSearch
-                      .isAtSameMomentAs(paymentStartDate) &&
-                  currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
-                        currentStartTimeSearch.minute ==
-                            paymentStartTime.minute) &&
-                    (currentEndTimeSearch.hour == paymentEndTime.hour &&
-                        currentEndTimeSearch.minute == paymentEndTime.minute)) {
-                  timeOverlap = true;
-                }
-              } else {
-                timeOverlap = true;
-              }
-            }
-            print(
-                "updateBikeStatusAfterPayment dateOverlap && timeOverlap: $dateOverlap $timeOverlap ");
-
-            if (dateOverlap && timeOverlap) {
-              bike['bikeStatus'] = 'Đã đặt';
-            }
-          }
+        if (currentPaymentSnapshot.docs.isEmpty) {
+          print('Không tìm thấy PaymentHistory cho khách hàng này.');
+          return;
         }
 
-        // Cập nhật lại PaymentHistory với bikeStatus mới
-        await paymentDoc.reference.update({
-          'bikes': bikes,
-        });
-      }
+        // Lấy document hiện tại
+        var currentPaymentDoc = currentPaymentSnapshot.docs.first.data();
+        List<dynamic> currentBikes = currentPaymentDoc['bikes'] ?? [];
+        List<String> currentBikeIds =
+            currentBikes.map((bike) => bike['bikeId'].toString()).toList();
 
-      print(
-          'Đã cập nhật trạng thái bike thành "Đã đặt" cho các xe trùng khớp.');
+        if (currentBikeIds.isEmpty) {
+          print('Không có bikeId trong PaymentHistory hiện tại.');
+          return;
+        }
+
+        var currentStartDateSearch =
+            DateTime.parse(currentPaymentDoc['dateSearch']['startDate']);
+        var currentEndDateSearch =
+            DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
+
+        var currentStartTimeSearch = TimeOfDay(
+          hour: int.parse(
+              currentPaymentDoc['timeSearch']['startTime'].split(':')[0]),
+          minute: int.parse(
+              currentPaymentDoc['timeSearch']['startTime'].split(':')[1]),
+        );
+        var currentEndTimeSearch = TimeOfDay(
+          hour: int.parse(
+              currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
+          minute: int.parse(
+              currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
+        );
+
+        var currentCreatedAt =
+            (currentPaymentDoc['createdAt'] as Timestamp).toDate();
+        var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
+            currentCreatedAt.day, 0, 0, 0);
+        var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
+            currentCreatedAt.day, 23, 59, 59);
+
+        // Lấy tất cả PaymentHistory của các user khác trong cùng ngày
+        QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
+            await FirebaseFirestore.instance
+                .collectionGroup('PaymentHistory')
+                .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
+                .where('createdAt', isLessThanOrEqualTo: endOfDay)
+                .get();
+
+        // Kiểm tra từng PaymentHistory có trùng bikeId và khoảng thời gian không
+        for (var paymentDoc in allPaymentsSnapshot.docs) {
+          var paymentData = paymentDoc.data();
+          List<dynamic> bikes = paymentData['bikes'] ?? [];
+
+          for (var bike in bikes) {
+            // Kiểm tra nếu bikeId trùng khớp
+            if (currentBikeIds.contains(bike['bikeId'])) {
+              DateTime paymentStartDate =
+                  DateTime.parse(paymentData['dateSearch']['startDate']);
+              DateTime paymentEndDate =
+                  DateTime.parse(paymentData['dateSearch']['endDate']);
+
+              TimeOfDay paymentStartTime = TimeOfDay(
+                hour: int.parse(
+                    paymentData['timeSearch']['startTime'].split(':')[0]),
+                minute: int.parse(
+                    paymentData['timeSearch']['startTime'].split(':')[1]),
+              );
+              TimeOfDay paymentEndTime = TimeOfDay(
+                hour: int.parse(
+                    paymentData['timeSearch']['endTime'].split(':')[0]),
+                minute: int.parse(
+                    paymentData['timeSearch']['endTime'].split(':')[1]),
+              );
+
+              // Kiểm tra sự trùng lặp về ngày
+              bool dateOverlap =
+                  !(paymentEndDate.isBefore(currentStartDateSearch) ||
+                      paymentStartDate.isAfter(currentEndDateSearch));
+
+              // Kiểm tra sự trùng lặp về thời gian
+              bool timeOverlap = true;
+              var finalTimeHour =
+                  currentStartDateSearch.hour - paymentEndTime.hour;
+              var finalTimeMinute =
+                  currentStartDateSearch.minute - paymentEndTime.minute;
+              if (dateOverlap) {
+                // Trường hợp ngày bắt đầu của user trùng với ngày kết thúc của hợp đồng
+                if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                  if (currentStartTimeSearch.hour > paymentEndTime.hour &&
+                      finalTimeHour >= 1 &&
+                      finalTimeMinute >= 29) {
+                    timeOverlap = false;
+                  }
+                }
+                // Trường hợp ngày kết thúc của user trùng với ngày bắt đầu của hợp đồng
+                else if (currentEndDateSearch
+                    .isAtSameMomentAs(paymentStartDate)) {
+                  if (currentEndTimeSearch.hour < paymentStartTime.hour &&
+                      finalTimeHour >= 1 &&
+                      finalTimeMinute >= 29) {
+                    timeOverlap = false;
+                  }
+                } else if (currentStartDateSearch
+                        .isAtSameMomentAs(paymentStartDate) &&
+                    currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                  if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
+                          currentStartTimeSearch.minute ==
+                              paymentStartTime.minute) &&
+                      (currentEndTimeSearch.hour == paymentEndTime.hour &&
+                          currentEndTimeSearch.minute ==
+                              paymentEndTime.minute)) {
+                    timeOverlap = true;
+                  }
+                } else {
+                  timeOverlap = true;
+                }
+              }
+
+              if (dateOverlap && timeOverlap) {
+                // Cập nhật trạng thái bike thành 'Đã đặt'
+                bike['bikeStatus'] = 'Đã đặt';
+              }
+            }
+          }
+
+          // Cập nhật lại PaymentHistory với bikeStatus mới
+          transaction.update(paymentDoc.reference, {'bikes': bikes});
+        }
+
+        print(
+            'Đã cập nhật trạng thái bike thành "Đã đặt" cho các xe trùng khớp.');
+      });
     } catch (e) {
       print('Lỗi khi cập nhật trạng thái xe: $e');
     }
@@ -519,23 +511,25 @@ class FirebaseBikeRepo implements BikeRepo {
 
               // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
               bool timeOverlap = true;
+              var finalTimeHour =
+                  currentStartDateSearch.hour - paymentEndTime.hour;
+              var finalTimeMinute =
+                  currentStartDateSearch.minute - paymentEndTime.minute;
               if (dateOverlap) {
                 // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
                 if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                  if (currentStartTimeSearch.hour > paymentEndTime.hour ||
-                      (currentStartTimeSearch.hour == paymentEndTime.hour &&
-                          currentStartTimeSearch.minute >
-                              paymentEndTime.minute)) {
+                  if (currentStartTimeSearch.hour > paymentEndTime.hour &&
+                      finalTimeHour >= 1 &&
+                      finalTimeMinute >= 29) {
                     timeOverlap = false;
                   }
                 }
                 // Trường hợp ngày kết thúc của người dùng trùng với ngày bắt đầu của hợp đồng
                 else if (currentEndDateSearch
                     .isAtSameMomentAs(paymentStartDate)) {
-                  if (currentEndTimeSearch.hour < paymentStartTime.hour ||
-                      (currentEndTimeSearch.hour == paymentStartTime.hour &&
-                          currentEndTimeSearch.minute <
-                              paymentStartTime.minute)) {
+                  if (currentEndTimeSearch.hour < paymentStartTime.hour &&
+                      finalTimeHour <= 1 &&
+                      finalTimeMinute <= 29) {
                     timeOverlap = false;
                   }
                 } else if (currentStartDateSearch
@@ -677,22 +671,37 @@ class FirebaseBikeRepo implements BikeRepo {
                         paymentStartDate.isAfter(currentEndDateSearch));
 
                 bool timeOverlap = true;
-
+                var finalTimeHour =
+                    currentStartDateSearch.hour - paymentEndTime.hour;
+                var finalTimeMinute =
+                    currentStartDateSearch.minute - paymentEndTime.minute;
                 if (dateOverlap) {
                   if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                    if (currentStartTimeSearch.hour > paymentEndTime.hour ||
-                        (currentStartTimeSearch.hour == paymentEndTime.hour &&
-                            currentStartTimeSearch.minute >
-                                paymentEndTime.minute)) {
+                    if ((currentStartTimeSearch.hour > paymentEndTime.hour &&
+                        finalTimeHour >= 1 &&
+                        finalTimeMinute >= 29)) {
                       timeOverlap = false;
                     }
                   } else if (currentEndDateSearch
                       .isAtSameMomentAs(paymentStartDate)) {
-                    if (currentEndTimeSearch.hour < paymentStartTime.hour ||
-                        (currentEndTimeSearch.hour == paymentStartTime.hour &&
-                            currentEndTimeSearch.minute <
-                                paymentStartTime.minute)) {
+                    if ((currentStartTimeSearch.hour < paymentEndTime.hour &&
+                        finalTimeHour <= 1 &&
+                        finalTimeMinute <= 29)) {
                       timeOverlap = false;
+                    }
+                  } else if (currentStartDateSearch
+                          .isAtSameMomentAs(paymentStartDate) &&
+                      currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                    if (((currentStartTimeSearch.hour ==
+                                    paymentStartTime.hour &&
+                                finalTimeHour == 0 &&
+                                finalTimeMinute == 0) &&
+                            currentStartTimeSearch.minute ==
+                                paymentStartTime.minute) &&
+                        (currentEndTimeSearch.hour == paymentEndTime.hour &&
+                            currentEndTimeSearch.minute ==
+                                paymentEndTime.minute)) {
+                      timeOverlap = true;
                     }
                   } else {
                     timeOverlap = true;
@@ -717,58 +726,200 @@ class FirebaseBikeRepo implements BikeRepo {
     }
   }
 
-  Future<void> printContractsData() async {
+  Future<void> createMarketHistoryForAvailableBikes(
+      String userId, String sessionId) async {
     try {
-      // Tham chiếu đến bộ sưu tập contracts
-      CollectionReference<Map<String, dynamic>> contractsRef =
-          FirebaseFirestore.instance.collection('contracts');
+      // Lấy danh sách availableBikes dựa trên userId và sessionId
+      List<Map<String, dynamic>> availableBikes =
+          await getAvailableBikes(userId, sessionId);
 
-      // Lấy tất cả các tài liệu trong bộ sưu tập contracts
-      QuerySnapshot<Map<String, dynamic>> contractsSnapshot =
-          await contractsRef.get();
-
-      // Duyệt qua từng tài liệu trong contracts
-      for (var contractDoc in contractsSnapshot.docs) {
-        print('Document ID: ${contractDoc.id}');
-        Map<String, dynamic> data = contractDoc.data();
-
-        // In ra từng trường trong tài liệu
-        data.forEach((key, value) {
-          print('$key: $value');
-        });
-
-        print('----------------------------------');
+      if (availableBikes.isEmpty) {
+        print('Không có xe có sẵn để tạo PaymentHistory');
+        return;
       }
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ contracts: $e');
-    }
-  }
 
-  Future<String?> getLatestHistorySearchId(String userId) async {
-    try {
-      // Truy vấn Firestore để lấy tài liệu gần nhất từ HistorySearch của người dùng
+      // Lấy dữ liệu từ HistorySearch dựa trên userId và sessionId
       QuerySnapshot<Map<String, dynamic>> historySearchSnapshot =
           await FirebaseFirestore.instance
               .collection('users')
               .doc(userId)
               .collection('HistorySearch')
-              .orderBy('createdAt', descending: true) // Lấy tài liệu mới nhất
-              .limit(1) // Giới hạn kết quả chỉ lấy 1 tài liệu
+              .where('sessionId', isEqualTo: sessionId)
+              .limit(1)
               .get();
 
-      // Kiểm tra xem có tài liệu nào không
-      if (historySearchSnapshot.docs.isNotEmpty) {
-        // Lấy ra ID của tài liệu
-        String historySearchId = historySearchSnapshot.docs.first.id;
-        print('Lấy được historySearchId: $historySearchId');
-        return historySearchId;
+      if (historySearchSnapshot.docs.isEmpty) {
+        print('Không tìm thấy tài liệu HistorySearch cho sessionId này.');
+        return;
+      }
+      // Lấy tài liệu đầu tiên từ HistorySearch
+      var historySearchDoc = historySearchSnapshot.docs.first.data();
+      // Kiểm tra xem dateSearch và timeSearch có tồn tại không và cung cấp giá trị mặc định nếu không
+      var dateSearch = historySearchDoc['dateSearch'] ?? 'defaultDate';
+      var timeSearch = historySearchDoc['timeSearch'] ?? 'defaultTime';
+      // Tạo danh sách bikeIds từ availableBikes
+      List<String> bikeIds = [];
+      for (var bike in availableBikes) {
+        if (bike.containsKey('bikeId')) {
+          bikeIds.add(bike['bikeId']);
+        }
+      }
+      // Kiểm tra nếu bikeIds rỗng
+      if (bikeIds.isEmpty) {
+        print('Không có bikeId trong availableBikes.');
+        return;
+      }
+      // Tạo mới document trong collection PaymentHistory
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('MarketHistory')
+          .add({
+        'sessionId': sessionId,
+        'dateSearch': dateSearch,
+        'timeSearch': timeSearch,
+        'createdAt': FieldValue.serverTimestamp(),
+        'bikes': availableBikes,
+      });
+
+      print('Đã tạo PaymentHistory thành công với dateSearch và timeSearch.');
+    } catch (e) {
+      print('Lỗi khi tạo PaymentHistory: $e');
+    }
+  }
+
+  Future<void> addBikeToMarketHistory(
+      String userId, String sessionId, Map<String, dynamic> bike) async {
+    try {
+      // Tham chiếu tới tài liệu MarketHistory của userId
+      DocumentReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('MarketHistory')
+          .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
+
+      // Lấy tài liệu MarketHistory
+      DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      if (marketHistorySnapshot.exists) {
+        // Nếu tài liệu tồn tại, thêm xe vào mảng bikes
+        await marketHistoryRef.update({
+          'bikes': FieldValue.arrayUnion([bike]), // Thêm xe vào mảng bikes
+        });
       } else {
-        print('Không tìm thấy lịch sử tìm kiếm.');
-        return null;
+        // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên
+        await marketHistoryRef.set({
+          'sessionId': sessionId,
+          'createdAt': FieldValue.serverTimestamp(),
+          'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
+        });
+      }
+
+      print('Đã thêm xe vào giỏ hàng thành công.');
+    } catch (e) {
+      print('Lỗi khi thêm xe vào giỏ hàng: $e');
+    }
+  }
+
+  Future<bool> checkBikeExistsInMarketHistory(
+      String userId, String bikeId) async {
+    try {
+      // Lấy danh sách MarketHistory
+      QuerySnapshot<Map<String, dynamic>> marketHistorySnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('MarketHistory')
+              .get();
+
+      // Kiểm tra từng tài liệu trong MarketHistory
+      for (var doc in marketHistorySnapshot.docs) {
+        var data = doc.data();
+        List<dynamic> bikesInMarketHistory = data['bikes'] ?? [];
+
+        // Kiểm tra nếu bikeId đã tồn tại
+        if (bikesInMarketHistory.any((b) => b['bikeId'] == bikeId)) {
+          return true; // Xe đã tồn tại
+        }
       }
     } catch (e) {
-      print('Lỗi khi lấy historySearchId: $e');
-      return null;
+      print('Lỗi khi kiểm tra bikeId: $e');
+    }
+    return false; // Xe chưa tồn tại
+  }
+
+  Future<void> addOneBikeToMarketHistory(
+      String userId, String sessionId, Map<String, dynamic> bike) async {
+    try {
+      // Tham chiếu tới tài liệu MarketHistory của userId
+      DocumentReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('PaymentHistoryOne')
+          .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
+
+      // Lấy tài liệu MarketHistory
+      DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      if (marketHistorySnapshot.exists) {
+        // Nếu tài liệu tồn tại, thêm xe vào mảng bikes
+        await marketHistoryRef.update({
+          'bikes': FieldValue.arrayUnion([bike]), // Thêm xe vào mảng bikes
+        });
+      } else {
+        // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên
+        await marketHistoryRef.set({
+          'sessionId': sessionId,
+          'createdAt': FieldValue.serverTimestamp(),
+          'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
+        });
+      }
+
+      print('Đã thêm xe vào giỏ hàng thành công.');
+    } catch (e) {
+      print('Lỗi khi thêm xe vào giỏ hàng: $e');
+    }
+  }
+
+  Future<void> clearMarketHistory(String userId) async {
+    try {
+      // 1. Lấy reference của MarketHistory collection
+      CollectionReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('MarketHistory');
+
+      // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
+      QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      // 3. Xoá từng tài liệu trong MarketHistory
+      for (QueryDocumentSnapshot doc in marketHistorySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('Đã xoá tất cả dữ liệu trong MarketHistory.');
+    } catch (e) {
+      print('Lỗi khi xoá và thêm dữ liệu vào MarketHistory: $e');
+    }
+  }
+
+  Future<void> clearPaymentHistoryOne(String userId) async {
+    try {
+      // 1. Lấy reference của MarketHistory collection
+      CollectionReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('PaymentHistoryOne');
+
+      // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
+      QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      // 3. Xoá từng tài liệu trong MarketHistory
+      for (QueryDocumentSnapshot doc in marketHistorySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('Đã xoá tất cả dữ liệu trong MarketHistory.');
+    } catch (e) {
+      print('Lỗi khi xoá và thêm dữ liệu vào MarketHistory: $e');
     }
   }
 
@@ -798,14 +949,10 @@ class FirebaseBikeRepo implements BikeRepo {
         print('Không tìm thấy tài liệu HistorySearch cho sessionId này.');
         return;
       }
-
       // Lấy tài liệu đầu tiên từ HistorySearch
       var historySearchDoc = historySearchSnapshot.docs.first.data();
-
-      // Kiểm tra xem dateSearch và timeSearch có tồn tại không và cung cấp giá trị mặc định nếu không
       var dateSearch = historySearchDoc['dateSearch'] ?? 'defaultDate';
       var timeSearch = historySearchDoc['timeSearch'] ?? 'defaultTime';
-
       // Tạo danh sách bikeIds từ availableBikes
       List<String> bikeIds = [];
       for (var bike in availableBikes) {
@@ -813,13 +960,11 @@ class FirebaseBikeRepo implements BikeRepo {
           bikeIds.add(bike['bikeId']);
         }
       }
-
       // Kiểm tra nếu bikeIds rỗng
       if (bikeIds.isEmpty) {
         print('Không có bikeId trong availableBikes.');
         return;
       }
-
       // Tạo mới document trong collection PaymentHistory
       await FirebaseFirestore.instance
           .collection('users')
@@ -884,7 +1029,27 @@ class FirebaseBikeRepo implements BikeRepo {
     return FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .collection('PaymentHistorySearch')
+        .collection('PaymentHistory')
+        .where('sessionId', isEqualTo: sessionId) // Truy vấn theo sessionId
+        .orderBy('createdAt', descending: true) // Sắp xếp theo thời gian tạo
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        var document = snapshot.docs.first;
+        List<Map<String, dynamic>> bikes =
+            List<Map<String, dynamic>>.from(document.data()['bikes'] ?? []);
+        return bikes;
+      }
+      return [];
+    });
+  }
+
+  Stream<List<Map<String, dynamic>>> getMarketHistoryWithSessionId(
+      String userId, String sessionId) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('MarketHistory')
         .where('sessionId', isEqualTo: sessionId) // Truy vấn theo sessionId
         .orderBy('createdAt', descending: true) // Sắp xếp theo thời gian tạo
         .snapshots()
@@ -935,7 +1100,7 @@ class FirebaseBikeRepo implements BikeRepo {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userId)
-            .collection('HistorySearch')
+            .collection('MarketHistory')
             .where('sessionId', isEqualTo: sessionId)
             .orderBy('createdAt', descending: true)
             .get();
@@ -957,7 +1122,7 @@ class FirebaseBikeRepo implements BikeRepo {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('HistorySearch')
+          .collection('MarketHistory')
           .doc(documentId)
           .update({'bikes': bikes});
 

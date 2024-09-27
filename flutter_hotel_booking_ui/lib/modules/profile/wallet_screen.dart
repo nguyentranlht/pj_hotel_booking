@@ -4,17 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/authentication_bloc/authentication_bloc.dart';
 import 'package:flutter_hotel_booking_ui/futures/my_user_bloc/my_user_bloc.dart';
-import 'package:flutter_hotel_booking_ui/futures/sign_in_bloc/sign_in_bloc.dart';
-import 'package:flutter_hotel_booking_ui/language/appLocalizations.dart';
 import 'package:flutter_hotel_booking_ui/routes/route_names.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/app_constant.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:intl/intl.dart';
-import '../../models/setting_list_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -36,7 +32,6 @@ class _WalletScreenState extends State<WalletScreen> {
     setState(() {});
   }
 
-  @override
   ontheload() async {
     await getthesharedpref();
     setState(() {});
@@ -274,75 +269,91 @@ class _WalletScreenState extends State<WalletScreen> {
 
         // ignore: use_build_context_synchronously
         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: SingleChildScrollView(
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          context: context,
+          barrierDismissible:
+              false, // Ngăn người dùng tắt dialog bằng cách nhấn bên ngoài
+          builder: (context) => WillPopScope(
+            onWillPop: () async =>
+                false, // Ngăn người dùng tắt dialog bằng nút back
+            child: AlertDialog(
+              content: SingleChildScrollView(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  NavigationServices(context)
-                                      .gotoIntroductionScreen();
-                                },
-                                child: Icon(
-                                  Icons.check_circle,
-                                  color: AppTheme.primaryColor,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 16.0,
-                              ),
-                              Center(
-                                child: Text(
-                                  "Thanh toán thành công",
-                                  style: TextStyle(
-                                    color: AppTheme.primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                              )
-                            ],
+                          GestureDetector(
+                            onTap: () {
+                              NavigationServices(context).gotoLoginApp();
+                            },
+                            child: const Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            ),
                           ),
                           const SizedBox(
-                            height: 20.0,
-                          ),
-                          const Text("Cảm ơn"),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          const SizedBox(
-                            height: 10.0,
+                            width: 16.0,
                           ),
                           Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                NavigationServices(context).gotoLoginApp();
-                              },
-                              child: Container(
-                                width: 100,
-                                padding: const EdgeInsets.all(7),
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  "Trang chủ",
-                                  style: TextStyle(color: Colors.white),
-                                )),
+                            child: Text(
+                              "Nạp tiền thành công",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.lightGreen.shade700,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
-                    ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      const Text(
+                        "Cảm ơn",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Điều hướng về trang chủ
+                            NavigationServices(context).gotoLoginApp();
+                          },
+                          child: Container(
+                            width: 100,
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF008080),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Trang chủ",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ));
+                ),
+              ),
+            ),
+          ),
+        );
+
         await getthesharedpref();
         setState(() {});
         paymentIntent = null;

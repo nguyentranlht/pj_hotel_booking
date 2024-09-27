@@ -13,6 +13,7 @@ class MotorcycleScreen extends StatefulWidget {
   const MotorcycleScreen({Key? key, required this.animationController})
       : super(key: key);
   @override
+  // ignore: library_private_types_in_public_api
   _MotorcycleScreenState createState() => _MotorcycleScreenState();
 }
 
@@ -312,6 +313,13 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                         dateSearch,
                         timeSearch,
                       );
+                      await FirebaseBikeRepo().addHistorySearchToFirebase(
+                        availableBikes,
+                        userId!,
+                        dateSearch,
+                        timeSearch,
+                      );
+                      await FirebaseBikeRepo().clearMarketHistory(userId!);
 
                       NavigationServices(context).gotoHistorySearch();
                     }
@@ -600,20 +608,25 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
 
               // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
               bool timeOverlap = true;
-
+              var finalTimeHour = startTime.hour - contractEndTime.hour;
+              var finalTimeMinute = startTime.minute - contractEndTime.minute;
+              print(
+                  "finalTimeHour: $finalTimeHour, finalTimeMinute: $finalTimeMinute");
               // Chỉ kiểm tra thời gian nếu có sự trùng lặp về ngày
               if (dateOverlap) {
                 // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
                 if (startDate.isAtSameMomentAs(contractEndDate)) {
-                  if ((startTime.hour > contractEndTime.hour) ||
-                      (startTime.hour == contractEndTime.hour &&
-                          startTime.minute > contractEndTime.minute)) {
+                  if (((startTime.hour > contractEndTime.hour &&
+                      finalTimeHour >= 1 &&
+                      finalTimeMinute >= 29))) {
                     timeOverlap = false;
                   }
                 }
                 // Trường hợp ngày kết thúc của người dùng trùng với ngày bắt đầu của hợp đồng
                 else if (endDate.isAtSameMomentAs(contractStartDate)) {
-                  if ((endTime.hour < contractStartTime.hour) ||
+                  if ((endTime.hour < contractStartTime.hour &&
+                          finalTimeHour > 1 &&
+                          finalTimeMinute == 0) ||
                       (endTime.hour == contractStartTime.hour &&
                           endTime.minute < contractStartTime.minute)) {
                     timeOverlap = false;
@@ -623,7 +636,9 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                 else if (startDate.isAtSameMomentAs(contractStartDate) &&
                     endDate.isAtSameMomentAs(contractEndDate)) {
                   if ((startTime.hour == contractStartTime.hour &&
-                          startTime.minute == contractStartTime.minute) &&
+                          startTime.minute == contractStartTime.minute &&
+                          finalTimeHour == 0 &&
+                          finalTimeMinute == 0) &&
                       (endTime.hour == contractEndTime.hour &&
                           endTime.minute == contractEndTime.minute)) {
                     timeOverlap = true;

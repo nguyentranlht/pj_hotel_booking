@@ -29,12 +29,11 @@ class RoomeBookView extends StatefulWidget {
 
 class _RoomeBookViewState extends State<RoomeBookView> {
   // DateTime _selectedDate = DateTime.now();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   DateTime? _selectedStartDate;
   DateTime? _selectedEndDate;
 
-  String? luuStart;
-  String? luuEnd;
+  String? luuStart, luuEnd, luunew, luunew2;
 
   final TimeOfDay _selectedStartTime = const TimeOfDay(hour: 14, minute: 0);
   final TimeOfDay _selectedEndTime = const TimeOfDay(hour: 12, minute: 0);
@@ -42,12 +41,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
   var pageController = PageController(initialPage: 0);
   final oCcy = NumberFormat("#,##0", "vi_VN");
   String? id;
-  List<DateTime> bookedDates = [];
-
-  String? formatDate(DateTime? date) {
-    if (date == null) return null;
-    return DateFormat('yyyy-MM-dd').format(date);
-  }
+  List<Map<String, DateTime>> bookedDates = [];
 
   getthesharedpref() async {
     id = await FirebaseUserRepository().getUserId();
@@ -68,65 +62,94 @@ class _RoomeBookViewState extends State<RoomeBookView> {
     ontheload();
   }
 
-  // Hàm truy vấn Firebase
+  // Hàm định dạng ngày (formatDate) bạn có thể viết theo format mong muốn
+  String? formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd HH:mm').format(date);
+  }
+
+// Hàm truy vấn Firebase để lấy danh sách các khoảng thời gian đã đặt
   void getBookedDates() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('rooms')
         .doc(widget.room.roomId)
         .collection('dateTime')
         .get();
-    List<DateTime> dates = [];
-    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+
+    List<Map<String, DateTime>> dates = [];
+
     for (var doc in querySnapshot.docs) {
-      // Parse và lưu trữ các ngày đã đặt từ dữ liệu Firestore
       String startDateString = doc['StartDate'];
       String endDateString = doc['EndDate'];
 
-      DateTime startDate = dateFormat.parse(startDateString);
-      DateTime endDate = dateFormat.parse(endDateString);
-      // Thêm các ngày đã đặt vào danh sách bookedDates
-      while (startDate.isBefore(endDate.add(const Duration(days: 1)))) {
-        dates.add(startDate);
-        startDate = startDate.add(const Duration(days: 1));
-      }
+      // Parse ngày giờ từ Firebase và thêm vào danh sách bookedDates
+      DateTime startDate = DateTime.parse(startDateString);
+      DateTime endDate = DateTime.parse(endDateString);
+
+      // Lưu cả startDate và endDate vào Map
+      dates.add({
+        'start': startDate,
+        'end': endDate,
+      });
     }
+
     setState(() {
       bookedDates = dates;
     });
   }
 
   bool isDateRangeBooked(DateTime start, DateTime end) {
-    for (DateTime date = start;
-        date.isBefore(end.add(const Duration(days: 1)));
-        date = date.add(const Duration(days: 1))) {
-      if (bookedDates.contains(date)) {
-        return true;
+    // Áp dụng thời gian check-in và check-out mặc định
+    DateTime checkInTime =
+        DateTime(start.year, start.month, start.day, 14); // 14:00 check-in
+    DateTime checkOutTime =
+        DateTime(end.year, end.month, end.day, 12); // 12:00 check-out
+
+    for (var bookedRange in bookedDates) {
+      DateTime bookedStart = bookedRange['start']!;
+      DateTime bookedEnd = bookedRange['end']!;
+
+      // Kiểm tra nếu khoảng thời gian người dùng chọn trùng lặp với khoảng thời gian đã đặt
+      bool overlaps =
+          checkInTime.isBefore(bookedEnd) && checkOutTime.isAfter(bookedStart);
+
+      if (overlaps) {
+        return true; // Trùng ngày giờ
       }
     }
-    return false;
+
+    return false; // Không có trùng lặp
   }
 
+  // Hiển thị thông báo nếu ngày đã được đặt
   void showBookingAlert() {
-    if (_selectedStartDate != null &&
-        _selectedEndDate != null &&
-        isDateRangeBooked(_selectedStartDate!, _selectedEndDate!)) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Thông báo'),
-          content: Text(
-              "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+    if (_selectedStartDate != null && _selectedEndDate != null) {
+      // Sử dụng ngày giờ check-in và check-out mặc định
+      DateTime checkInTime = DateTime(_selectedStartDate!.year,
+          _selectedStartDate!.month, _selectedStartDate!.day, 14);
+      DateTime checkOutTime = DateTime(_selectedEndDate!.year,
+          _selectedEndDate!.month, _selectedEndDate!.day, 12);
+
+      // Kiểm tra nếu ngày giờ đã được đặt
+      if (isDateRangeBooked(checkInTime, checkOutTime)) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Thông báo'),
+            content: Text(
+                "Phòng đã được đặt từ ${formatDate(checkInTime)} đến ${formatDate(checkOutTime)}. Vui lòng chọn ngày khác."),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
+  // Chọn khoảng thời gian cho đặt phòng
   Future<void> _selectDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
@@ -247,7 +270,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                           builder: (context) => AlertDialog(
                                             title: const Text('Thông báo'),
                                             content: Text(
-                                                "Ngày bắt đầu (${formatDate(_selectedStartDate)}) và ngày kết thúc (${formatDate(_selectedEndDate)}) đã được đặt. Vui lòng chọn ngày khác."),
+                                                "Ngày bắt đầu (${formatDate(_selectedStartDate!)}) và ngày kết thúc (${formatDate(_selectedEndDate!)}) đã được đặt. Vui lòng chọn ngày khác."),
                                             actions: <Widget>[
                                               TextButton(
                                                 onPressed: () =>
@@ -262,9 +285,15 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                           id != null &&
                                           !widget.room.isSelected) {
                                         setState(() {
-                                          luuStart =
-                                              formatDate(_selectedStartDate);
-                                          luuEnd = formatDate(_selectedEndDate);
+                                          formatDate2(DateTime date) {
+                                            return DateFormat('yyyy-MM-dd')
+                                                .format(date);
+                                          }
+
+                                          luuStart = (formatDate2(
+                                              _selectedStartDate!));
+                                          luuEnd =
+                                              formatDate2(_selectedEndDate!);
                                         });
                                         Map<String, dynamic> addPaymentToRoom2 =
                                             {

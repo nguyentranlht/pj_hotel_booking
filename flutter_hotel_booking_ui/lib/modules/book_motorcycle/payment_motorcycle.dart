@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:bike_repository/bike_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
@@ -40,14 +39,17 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
     });
   }
 
-  List<int> delayTimes = [3]; // Danh sách thời gian trễ có thể chọn
+  List<int> delayTimes = [
+    2,
+    4,
+    6,
+    8,
+  ]; // Danh sách thời gian trễ có thể chọn
   List<int> usedDelayTimes = []; // Danh sách các thời gian đã chọn
 
 // Hàm để lấy giá trị thời gian ngẫu nhiên từ danh sách
   Future<int> getRandomDelayTime() async {
     if (delayTimes.isEmpty) {
-      await Future.delayed(const Duration(seconds: 3));
-
       // Khởi động lại danh sách
       delayTimes = List.from(usedDelayTimes);
       usedDelayTimes = [];
@@ -90,7 +92,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
     });
 
     historySearchStream =
-        FirebaseBikeRepo().getHistorySearchWithSessionId(userId!, sessionId!);
+        FirebaseBikeRepo().getPaymentHistoryWithSessionId(userId!, sessionId!);
 
     setState(() {});
   }
@@ -151,7 +153,6 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
             String bikeName = bike['bikeName'] ?? "Không có tên";
             String bikeImage = bike['bikeImage'] ?? "";
             int bikeRentPricePerDay = bike['bikeRentPricePerDay'] ?? 0;
-            String bikeId = bike['bikeId'];
 
             // Only display items with 'bikeStatus' not equal to "Có Sẵn"
             return bikeStatus == "Có Sẵn"
@@ -309,77 +310,84 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
 
   Future openEdit() => showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
+        barrierDismissible:
+            false, // Ngăn người dùng tắt dialog bằng cách nhấn bên ngoài
+        builder: (context) => WillPopScope(
+          onWillPop: () async =>
+              false, // Ngăn người dùng tắt dialog bằng nút back
+          child: AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            NavigationServices(context).gotoLoginApp();
+                          },
+                          child: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 16.0,
+                        ),
+                        Center(
+                          child: Text(
+                            "Thanh toán thành công",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.lightGreen.shade700,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text(
+                      "Cảm ơn",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
                         onTap: () {
+                          // Điều hướng về trang chủ
                           NavigationServices(context).gotoLoginApp();
                         },
-                        child: const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16.0,
-                      ),
-                      Center(
-                        child: Text(
-                          "Thanh toán thành công",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.lightGreen.shade700,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
+                        child: Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF008080),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    "Cảm ơn",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationServices(context).gotoLoginApp();
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF008080),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Trang chủ",
-                            style: TextStyle(color: Colors.white),
+                          child: const Center(
+                            child: Text(
+                              "Trang chủ",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -518,8 +526,6 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                 }
 
                 if (!isBikeBooked) {
-                  await FirebaseBikeRepo()
-                      .updateBikeStatusAfterPayment(userId!, sessionId!);
                   // Nếu không có xe nào đã được đặt, tiến hành cập nhật ví và thêm vào contracts
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
@@ -530,7 +536,8 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                   // Gọi hàm thêm dữ liệu vào contracts từ PaymentSearch
                   await FirebaseBikeRepo().addLatestContractFromPaymentSearch(
                       userId!, amount2.toString());
-
+                  await FirebaseBikeRepo()
+                      .updateBikeStatusAfterPayment(userId!, sessionId!);
                   if (mounted) {
                     setState(
                         () {}); // Đảm bảo widget vẫn mounted trước khi cập nhật UI
@@ -611,77 +618,84 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
 
   Future openError() => showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          NavigationServices(context).gotoIntroductionScreen();
-                        },
-                        child: const Icon(
-                          Icons.error,
-                          color: Colors.red,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16.0,
-                      ),
-                      const Center(
-                        child: Text(
-                          "Lỗi thanh toán",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+        barrierDismissible:
+            false, // Ngăn người dùng tắt dialog bằng cách nhấn ra ngoài
+        builder: (context) => WillPopScope(
+          onWillPop: () async =>
+              false, // Ngăn người dùng tắt dialog bằng nút back
+          child: AlertDialog(
+            content: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            NavigationServices(context)
+                                .gotoIntroductionScreen();
+                          },
+                          child: const Icon(
+                            Icons.error,
                             color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  const Text(
-                    "Số dư không đủ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        NavigationServices(context).gotoLoginApp();
-                      },
-                      child: Container(
-                        width: 100,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Colors.lightGreen.shade700,
-                          borderRadius: BorderRadius.circular(10),
+                        const SizedBox(
+                          width: 16.0,
                         ),
-                        child: const Center(
+                        const Center(
                           child: Text(
-                            "Trang chủ",
-                            style: TextStyle(color: Colors.white),
+                            "Lỗi thanh toán",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Text(
+                      "Số dư không đủ",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          NavigationServices(context).gotoLoginApp();
+                        },
+                        child: Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: Colors.lightGreen.shade700,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              "Trang chủ",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
