@@ -60,6 +60,11 @@ class SettingsListData {
       iconData: FontAwesomeIcons.wallet,
     ),
     SettingsListData(
+      titleTxt: 'setting_text',
+      isSelected: false,
+      iconData: Icons.settings,
+    ),
+    SettingsListData(
       titleTxt: "Log out",
       isSelected: false,
       iconData: CupertinoIcons.square_arrow_right,

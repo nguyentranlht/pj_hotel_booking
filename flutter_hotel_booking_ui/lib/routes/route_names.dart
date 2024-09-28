@@ -32,6 +32,7 @@ import 'package:flutter_hotel_booking_ui/modules/profile/history_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/how_do_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/invite_screen.dart';
 import 'package:flutter_hotel_booking_ui/modules/profile/payment_sreen.dart';
+import 'package:flutter_hotel_booking_ui/modules/profile/settings_screen.dart';
 import 'package:flutter_hotel_booking_ui/routes/routes.dart';
 import 'package:hotel_repository/hotel_repository.dart';
 import 'package:room_repository/room_repository.dart';
@@ -172,7 +173,8 @@ class NavigationServices {
   }
 
   Future<dynamic> gotoSettingsScreen() async {
-    //return await _pushMaterialPageRoute(AdminProfileScreen());
+    return await _pushMaterialPageRoute(SettingsScreen());
+    // return await _pushMaterialPageRoute(AdminProfileScreen());
   }
 
   Future<dynamic> gotoHeplCenterScreen() async {

@@ -63,10 +63,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return InkWell(
                             onTap: () async {
                               //setting screen view
-                              if (index == 6) {
+                              if (index == 7) {
                                 context
                                     .read<SignInBloc>()
                                     .add(const SignOutRequired());
+                              }
+                              if (index == 6) {
+                                NavigationServices(context)
+                                    .gotoSettingsScreen();
                               }
                               //help center screen view
 

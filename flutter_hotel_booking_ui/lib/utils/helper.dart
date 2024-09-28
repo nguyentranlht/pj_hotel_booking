@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 
-class Helper {
+mixin class Helper {
   static String getRoomText(RoomData roomData) {
     return "${roomData.numberRoom} ${AppLocalizations(applicationcontext!).of("room_data")} ${roomData.people} ${AppLocalizations(applicationcontext!).of("people_data")}";
   }
