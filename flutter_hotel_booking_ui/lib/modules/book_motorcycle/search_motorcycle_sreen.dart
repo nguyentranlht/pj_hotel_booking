@@ -18,14 +18,9 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
   String? userId, bikeId, nameHotel, sessionId;
   Stream<List<Map<String, dynamic>>>? historySearchStream;
   final oCcy = NumberFormat("#,##0", "vi_VN");
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
-
-  void startTimer() {
-    Timer(const Duration(seconds: 2), () {
-      setState(() {});
-    });
-  }
 
   getthesharedpref() async {
     userId = await FirebaseUserRepository().getUserId();
@@ -43,7 +38,6 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
   @override
   void initState() {
     ontheload();
-    startTimer();
     super.initState();
   }
 
@@ -96,36 +90,36 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
                           ),
                           SlidableAction(
                             onPressed: (context) async {
-                              // Kiểm tra bikeId tồn tại trong MarketHistory
-                              bool exists = await FirebaseBikeRepo()
-                                  .checkBikeExistsInMarketHistory(
-                                      userId!, bike['bikeId']);
+                              try {
+                                // Kiểm tra xe có tồn tại trong MarketHistory không
+                                bool exists = await FirebaseBikeRepo()
+                                    .checkBikeExistsInMarketHistory(
+                                        userId!, bike['bikeId']);
 
-                              if (exists) {
-                                // Hiển thị thông báo nếu xe đã tồn tại
-                                _scaffoldMessengerKey.currentState
-                                    ?.showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'Xe đã tồn tại trong giỏ hàng!',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white,
+                                if (exists) {
+                                  // Hiển thị thông báo nếu xe đã tồn tại
+                                  _scaffoldMessengerKey.currentState
+                                      ?.showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Xe đã tồn tại trong giỏ hàng!',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.red.shade400,
+                                      duration: const Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    backgroundColor: Colors.red.shade400,
-                                    duration: const Duration(seconds: 2),
-                                    behavior: SnackBarBehavior.floating,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                );
-                                return; // Kết thúc hàm nếu xe đã tồn tại
-                              }
+                                  );
+                                  return; // Kết thúc hàm nếu xe đã tồn tại
+                                }
 
-                              try {
                                 // Thêm xe vào giỏ hàng
                                 await FirebaseBikeRepo().addBikeToMarketHistory(
                                     userId!, sessionId!, bike);
@@ -187,25 +181,39 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
                           SlidableAction(
                             onPressed: (context) async {
                               try {
+                                // Sử dụng `context` của `StatefulWidget` thay vì `context` của callback
+                                final BuildContext safeContext = this.context;
+
+                                // Xóa dữ liệu trong MarketHistory trước khi thêm xe vào MarketHistory
                                 await FirebaseBikeRepo()
-                                    .clearPaymentHistoryOne(userId!);
-                               
+                                    .clearMarketHistory(userId!);
                                 await FirebaseBikeRepo()
-                                    .addOneBikeToMarketHistory(
+                                    .addBikeAndDateTimeToMarketHistory(
                                         userId!, sessionId!, bike);
-                              
-                                NavigationServices(context)
-                                    .gotoPaymentMotorcycle();
+
+                                // Thêm một khoảng trễ để đảm bảo UI ổn định
+                                await Future.delayed(
+                                    const Duration(milliseconds: 180));
+
+                                // Kiểm tra widget còn mounted không trước khi điều hướng
+                                if (mounted) {
+                                  // Sử dụng context an toàn từ StatefulWidget
+                                  NavigationServices(safeContext)
+                                      .gotoPaymentMotorcycle();
+                                }
                               } catch (e) {
                                 // Hiển thị thông báo lỗi nếu có lỗi xảy ra
-                                _scaffoldMessengerKey.currentState
-                                    ?.showSnackBar(
-                                  SnackBar(
-                                    content: Text('Lỗi khi đặt xe: $e'),
-                                    backgroundColor: Colors.red,
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
+                                if (mounted) {
+                                  _scaffoldMessengerKey.currentState
+                                      ?.showSnackBar(
+                                    SnackBar(
+                                      content: Text('Lỗi khi đặt xe: $e'),
+                                      backgroundColor: Colors.red,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                  print('Lỗi khi đặt xe: $e');
+                                }
                               }
                             },
                             backgroundColor: Colors.green,
@@ -346,6 +354,9 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
               const SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () async {
+                  await FirebaseBikeRepo()
+                      .addBikeAndDateTimeToMarketHistory2(userId!, sessionId!);
+
                   NavigationServices(context).gotoMarketMotorcycle();
                 },
                 child: Container(

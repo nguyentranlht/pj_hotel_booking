@@ -38,6 +38,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
   List<String> dsLocations = [];
   List<String> typebikes = [];
   Map<String, List<String>> cityLocationMap = {};
+  bool isButtonClicked = false; // Cờ để theo dõi trạng thái click
 
   String? locationName, locationNhanXe, locationType;
 
@@ -313,12 +314,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                         dateSearch,
                         timeSearch,
                       );
-                      await FirebaseBikeRepo().addHistorySearchToFirebase(
-                        availableBikes,
-                        userId!,
-                        dateSearch,
-                        timeSearch,
-                      );
+
                       await FirebaseBikeRepo().clearMarketHistory(userId!);
 
                       NavigationServices(context).gotoHistorySearch();

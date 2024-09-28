@@ -112,44 +112,6 @@ class FirebaseBikeRepo implements BikeRepo {
     }
   }
 
-  Future<void> addHistorySearchToFirebase(
-    List<Map<String, dynamic>> availableBikes, // List<Map<String, dynamic>>
-    String userId,
-    Map dateSearch,
-    Map timeSearch,
-  ) async {
-    String sessionId = const Uuid().v4(); // Tạo sessionId mới
-    try {
-      // Lấy giá trị từ Map dateSearch và timeSearch
-
-      List<String> bikeIds = [];
-      for (var bike in availableBikes) {
-        if (bike.containsKey('bikeId')) {
-          bikeIds.add(bike['bikeId']);
-        }
-      }
-
-      CollectionReference paymentsCollectionRef =
-          FirebaseFirestore.instance.collection('HistorySearch');
-
-      DocumentReference newHistoryRef = paymentsCollectionRef.doc();
-      String historySearchId = newHistoryRef.id; // Lấy ID tự sinh
-
-      // Thêm document với dữ liệu và ID tự sinh
-      await newHistoryRef.set({
-        'bikes': availableBikes, // Dùng danh sách dữ liệu xe trực tiếp
-        'historySearchId':
-            historySearchId, // Lưu trữ historySearchId trong document
-        'dateSearch': dateSearch,
-        'timeSearch': timeSearch,
-        'sessionId': sessionId,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      print('Lỗi khi thêm lịch sử tìm kiếm: $e');
-    }
-  }
-
   Future<String?> getLocationId(String locationName) async {
     try {
       // Truy vấn Firestore để tìm tài liệu trong collection 'locations' với trường 'name' bằng locationName
@@ -177,7 +139,7 @@ class FirebaseBikeRepo implements BikeRepo {
   }
 
   Future<void> addLatestContractFromPaymentSearch(
-      String userId, String amount) async {
+      String userId, String amount, String sessionId) async {
     try {
       // Lấy dữ liệu từ HistorySearch, sắp xếp theo createdAt và giới hạn lấy 1 tài liệu mới nhất
       CollectionReference<Map<String, dynamic>> historySearchRef =
@@ -193,9 +155,9 @@ class FirebaseBikeRepo implements BikeRepo {
       QuerySnapshot<Map<String, dynamic>> historySearchSnapshot =
           await historySearchRef
               .orderBy('createdAt', descending: true)
+              .where('sessionId', isEqualTo: sessionId)
               .limit(1)
               .get();
-
       // Kiểm tra xem có tài liệu nào không
       if (historySearchSnapshot.docs.isNotEmpty) {
         // Lấy dữ liệu từ tài liệu mới nhất
@@ -743,7 +705,7 @@ class FirebaseBikeRepo implements BikeRepo {
           await FirebaseFirestore.instance
               .collection('users')
               .doc(userId)
-              .collection('HistorySearch')
+              .collection('MarketHistory')
               .where('sessionId', isEqualTo: sessionId)
               .limit(1)
               .get();
@@ -773,7 +735,7 @@ class FirebaseBikeRepo implements BikeRepo {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('MarketHistory')
+          .collection('PaymentHistory')
           .add({
         'sessionId': sessionId,
         'dateSearch': dateSearch,
@@ -821,6 +783,189 @@ class FirebaseBikeRepo implements BikeRepo {
     }
   }
 
+  Future<void> addDateTimeToMarketHistory(
+      String userId, String sessionId) async {
+    try {
+      // Tham chiếu tới tài liệu HistorySearch của userId
+      DocumentReference historySearchRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('HistorySearch')
+          .doc();
+
+      // Lấy tài liệu HistorySearch
+      DocumentSnapshot historySnapshot = await historySearchRef.get();
+
+      if (historySnapshot.exists) {
+        // Nếu tài liệu tồn tại, lấy dateSearch và timeSearch
+        Map<String, dynamic>? historyData =
+            historySnapshot.data() as Map<String, dynamic>?;
+        Map? dateSearch = historyData?['dateSearch'];
+        Map? timeSearch = historyData?['timeSearch'];
+
+        // Tham chiếu tới tài liệu MarketHistory của userId
+        DocumentReference marketHistoryRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('MarketHistory')
+            .doc(sessionId); // Sử dụng cùng sessionId cho MarketHistory
+
+        // Cập nhật MarketHistory với dateSearch và timeSearch
+        await marketHistoryRef.set(
+            {
+              'dateSearch': dateSearch, // Lưu dateSearch
+              'timeSearch': timeSearch, // Lưu timeSearch
+              'createdAt': FieldValue.serverTimestamp(), // Thêm thời gian tạo
+            },
+            SetOptions(
+                merge: true)); // Sử dụng merge để không ghi đè dữ liệu hiện có
+
+        print('Đã thêm dateSearch và timeSearch vào MarketHistory thành công.');
+      } else {
+        print(
+            'Không tìm thấy tài liệu HistorySearch với sessionId: $sessionId.');
+      }
+    } catch (e) {
+      print('Lỗi khi thêm dateSearch và timeSearch vào MarketHistory: $e');
+    }
+  }
+
+  Future<void> addBikeAndDateTimeToMarketHistory(
+      String userId, String sessionId, Map<String, dynamic> bike) async {
+    try {
+      // Tham chiếu tới tài liệu HistorySearch của userId
+      CollectionReference historySearchRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('HistorySearch');
+
+      // Lấy tài liệu HistorySearch mới nhất dựa trên createdAt
+      QuerySnapshot historySearchSnapshot = await historySearchRef
+          .orderBy('createdAt', descending: true)
+          .where('sessionId', isEqualTo: sessionId)
+          .limit(1)
+          .get();
+
+      if (historySearchSnapshot.docs.isNotEmpty) {
+        // Lấy tài liệu đầu tiên từ kết quả truy vấn
+        DocumentSnapshot historyDoc = historySearchSnapshot.docs.first;
+
+        // Lấy dateSearch và timeSearch từ HistorySearch
+        Map<String, dynamic>? historyData =
+            historyDoc.data() as Map<String, dynamic>?;
+        Map? dateSearch = historyData?['dateSearch'];
+        Map? timeSearch = historyData?['timeSearch'];
+
+        if (dateSearch != null && timeSearch != null) {
+          // Tham chiếu tới tài liệu MarketHistory của userId
+          DocumentReference marketHistoryRef = FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('MarketHistory')
+              .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
+
+          // Lấy tài liệu MarketHistory
+          DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+          if (marketHistorySnapshot.exists) {
+            // Nếu tài liệu tồn tại, thêm xe vào mảng bikes và cập nhật dateSearch, timeSearch
+            await marketHistoryRef.update({
+              'bikes': FieldValue.arrayUnion([bike]), // Thêm xe vào mảng bikes
+              'dateSearch': dateSearch, // Thêm hoặc cập nhật dateSearch
+              'timeSearch': timeSearch, // Thêm hoặc cập nhật timeSearch
+            });
+          } else {
+            // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên và thêm dateSearch, timeSearch
+            await marketHistoryRef.set({
+              'sessionId': sessionId,
+              'createdAt': FieldValue.serverTimestamp(),
+              'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
+              'dateSearch': dateSearch, // Lưu dateSearch
+              'timeSearch': timeSearch, // Lưu timeSearch
+            });
+          }
+
+          print(
+              'Đã thêm xe vào giỏ hàng thành công cùng với dateSearch và timeSearch.');
+        } else {
+          print(
+              'Không tìm thấy dateSearch hoặc timeSearch trong HistorySearch.');
+        }
+      } else {
+        print('Không tìm thấy tài liệu HistorySearch.');
+      }
+    } catch (e) {
+      print('Lỗi khi thêm xe vào giỏ hàng: $e');
+    }
+  }
+
+  Future<void> addBikeAndDateTimeToMarketHistory2(
+      String userId, String sessionId) async {
+    try {
+      // Tham chiếu tới tài liệu HistorySearch của userId
+      CollectionReference historySearchRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('HistorySearch');
+
+      // Lấy tài liệu HistorySearch mới nhất dựa trên createdAt
+      QuerySnapshot historySearchSnapshot = await historySearchRef
+          .orderBy('createdAt', descending: true)
+          .where('sessionId', isEqualTo: sessionId)
+          .limit(1)
+          .get();
+
+      if (historySearchSnapshot.docs.isNotEmpty) {
+        // Lấy tài liệu đầu tiên từ kết quả truy vấn
+        DocumentSnapshot historyDoc = historySearchSnapshot.docs.first;
+
+        // Lấy dateSearch và timeSearch từ HistorySearch
+        Map<String, dynamic>? historyData =
+            historyDoc.data() as Map<String, dynamic>?;
+        Map? dateSearch = historyData?['dateSearch'];
+        Map? timeSearch = historyData?['timeSearch'];
+
+        if (dateSearch != null && timeSearch != null) {
+          // Tham chiếu tới tài liệu MarketHistory của userId
+          DocumentReference marketHistoryRef = FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('MarketHistory')
+              .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
+
+          // Lấy tài liệu MarketHistory
+          DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+          if (marketHistorySnapshot.exists) {
+            // Nếu tài liệu tồn tại, thêm xe vào mảng bikes và cập nhật dateSearch, timeSearch
+            await marketHistoryRef.update({
+              'dateSearch': dateSearch, // Thêm hoặc cập nhật dateSearch
+              'timeSearch': timeSearch, // Thêm hoặc cập nhật timeSearch
+            });
+          } else {
+            // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên và thêm dateSearch, timeSearch
+            await marketHistoryRef.set({
+              'sessionId': sessionId,
+              'createdAt': FieldValue.serverTimestamp(),
+              'dateSearch': dateSearch, // Lưu dateSearch
+              'timeSearch': timeSearch, // Lưu timeSearch
+            });
+          }
+
+          print(
+              'Đã thêm xe vào giỏ hàng thành công cùng với dateSearch và timeSearch.');
+        } else {
+          print(
+              'Không tìm thấy dateSearch hoặc timeSearch trong HistorySearch.');
+        }
+      } else {
+        print('Không tìm thấy tài liệu HistorySearch.');
+      }
+    } catch (e) {
+      print('Lỗi khi thêm xe vào giỏ hàng: $e');
+    }
+  }
+
   Future<bool> checkBikeExistsInMarketHistory(
       String userId, String bikeId) async {
     try {
@@ -848,39 +993,6 @@ class FirebaseBikeRepo implements BikeRepo {
     return false; // Xe chưa tồn tại
   }
 
-  Future<void> addOneBikeToMarketHistory(
-      String userId, String sessionId, Map<String, dynamic> bike) async {
-    try {
-      // Tham chiếu tới tài liệu MarketHistory của userId
-      DocumentReference marketHistoryRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('PaymentHistoryOne')
-          .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
-
-      // Lấy tài liệu MarketHistory
-      DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
-
-      if (marketHistorySnapshot.exists) {
-        // Nếu tài liệu tồn tại, thêm xe vào mảng bikes
-        await marketHistoryRef.update({
-          'bikes': FieldValue.arrayUnion([bike]), // Thêm xe vào mảng bikes
-        });
-      } else {
-        // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên
-        await marketHistoryRef.set({
-          'sessionId': sessionId,
-          'createdAt': FieldValue.serverTimestamp(),
-          'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
-        });
-      }
-
-      print('Đã thêm xe vào giỏ hàng thành công.');
-    } catch (e) {
-      print('Lỗi khi thêm xe vào giỏ hàng: $e');
-    }
-  }
-
   Future<void> clearMarketHistory(String userId) async {
     try {
       // 1. Lấy reference của MarketHistory collection
@@ -888,27 +1000,6 @@ class FirebaseBikeRepo implements BikeRepo {
           .collection('users')
           .doc(userId)
           .collection('MarketHistory');
-
-      // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
-      QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();
-
-      // 3. Xoá từng tài liệu trong MarketHistory
-      for (QueryDocumentSnapshot doc in marketHistorySnapshot.docs) {
-        await doc.reference.delete();
-      }
-      print('Đã xoá tất cả dữ liệu trong MarketHistory.');
-    } catch (e) {
-      print('Lỗi khi xoá và thêm dữ liệu vào MarketHistory: $e');
-    }
-  }
-
-  Future<void> clearPaymentHistoryOne(String userId) async {
-    try {
-      // 1. Lấy reference của MarketHistory collection
-      CollectionReference marketHistoryRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('PaymentHistoryOne');
 
       // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
       QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();

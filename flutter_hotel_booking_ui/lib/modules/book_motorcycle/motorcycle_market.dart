@@ -89,7 +89,8 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
       stream: historySearchStream,
       builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
+          ;
         }
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -100,7 +101,7 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
         List<Map<String, dynamic>> bikes = snapshot.data!;
 
         if (bikes.isEmpty) {
-          return const Center(child: Text("No bikes found in history"));
+          return const Center(child: Text("No bikes found in shopping cart"));
         }
 
         return ListView.builder(
@@ -314,8 +315,6 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                await FirebaseBikeRepo()
-                    .createMarketHistoryForAvailableBikes(userId!, sessionId!);
                 NavigationServices(context).gotoPaymentMotorcycle();
               },
               child: Container(

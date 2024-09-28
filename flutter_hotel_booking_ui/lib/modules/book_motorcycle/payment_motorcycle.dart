@@ -92,7 +92,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
     });
 
     historySearchStream =
-        FirebaseBikeRepo().getPaymentHistoryWithSessionId(userId!, sessionId!);
+        FirebaseBikeRepo().getMarketHistoryWithSessionId(userId!, sessionId!);
 
     setState(() {});
   }
@@ -122,7 +122,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
       stream: historySearchStream,
       builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -133,7 +133,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
         List<Map<String, dynamic>> bikes = snapshot.data!;
 
         if (bikes.isEmpty) {
-          return const Center(child: Text("No bikes found in history"));
+          return const Center(child: Text("No bikes found in Market"));
         }
 
         return ListView.builder(
@@ -474,7 +474,10 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                       child: const Text("Huỷ"),
                     ),
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await FirebaseBikeRepo()
+                            .createMarketHistoryForAvailableBikes(
+                                userId!, sessionId!);
                         Navigator.of(context).pop(true); // Xác nhận thanh toán
                       },
                       child: const Text("Xác nhận"),
@@ -530,12 +533,12 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
-                  await FirebaseUserRepository()
-                      .saveUserWallet(amount.toString());
+                  // await FirebaseUserRepository()
+                  //     .saveUserWallet(amount.toString());
 
                   // Gọi hàm thêm dữ liệu vào contracts từ PaymentSearch
                   await FirebaseBikeRepo().addLatestContractFromPaymentSearch(
-                      userId!, amount2.toString());
+                      userId!, amount2.toString(), sessionId!);
                   await FirebaseBikeRepo()
                       .updateBikeStatusAfterPayment(userId!, sessionId!);
                   if (mounted) {
@@ -705,8 +708,9 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
   _appBar() {
     return AppBar(
       leading: GestureDetector(
-        onTap: () {
+        onTap: () async {
           Navigator.pop(context);
+          await FirebaseBikeRepo().clearMarketHistory(userId!);
         },
         child: const Icon(
           Icons.arrow_back_ios_new_outlined,
