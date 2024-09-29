@@ -493,19 +493,50 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                 showDialog(
                   // ignore: use_build_context_synchronously
                   context: Navigator.of(context, rootNavigator: true)
-                      .context, // Sử dụng rootNavigator để đảm bảo lấy đúng context
-                  barrierDismissible: false,
+                      .context, // Đảm bảo lấy đúng context
+                  barrierDismissible: false, // Ngăn người dùng đóng dialog
                   builder: (BuildContext dialogContext) {
-                    // ignore: deprecated_member_use
                     return WillPopScope(
                       onWillPop: () async =>
-                          false, // Ngăn người dùng đóng dialog bằng nút back
-                      child: const AlertDialog(
-                        content: Row(
+                          false, // Ngăn người dùng thoát khỏi dialog bằng nút back
+                      child: AlertDialog(
+                        backgroundColor:
+                            Colors.white, // Màu nền trắng cho dialog
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(15), // Bo góc dialog
+                        ),
+                        content: const Column(
+                          mainAxisSize: MainAxisSize
+                              .min, // Đảm bảo dialog không chiếm hết màn hình
                           children: [
-                            CircularProgressIndicator(),
-                            SizedBox(width: 20),
-                            Text("Đang xử lý thanh toán..."),
+                            // Thêm biểu tượng loading
+                            const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blueAccent), // Màu cho loading
+                              strokeWidth: 3.0, // Độ dày của vòng xoay loading
+                            ),
+                            const SizedBox(
+                                height: 20), // Khoảng cách giữa loading và text
+                            Text(
+                              "Đang xử lý thanh toán...",
+                              style: TextStyle(
+                                fontSize: 18, // Tăng kích thước chữ
+                                fontWeight: FontWeight.w600, // Độ đậm của chữ
+                                color: Colors.black87, // Màu chữ
+                              ),
+                            ),
+                            const SizedBox(
+                                height:
+                                    15), // Khoảng cách giữa text và khoảng dưới
+                            // Thêm một thông báo hoặc animation nhẹ nhàng ở dưới nếu muốn
+                            Text(
+                              "Vui lòng đợi trong giây lát",
+                              style: TextStyle(
+                                fontSize: 14, // Kích thước chữ nhỏ hơn
+                                color: Colors.grey, // Màu chữ xám nhẹ
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -533,19 +564,17 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
-                  // await FirebaseUserRepository()
-                  //     .saveUserWallet(amount.toString());
-
+                  openEdit();
                   // Gọi hàm thêm dữ liệu vào contracts từ PaymentSearch
                   await FirebaseBikeRepo().addLatestContractFromPaymentSearch(
                       userId!, amount2.toString(), sessionId!);
                   await FirebaseBikeRepo()
                       .updateBikeStatusAfterPayment(userId!, sessionId!);
+                  await FirebaseBikeRepo().clearMarketHistory(userId!);
                   if (mounted) {
                     setState(
                         () {}); // Đảm bảo widget vẫn mounted trước khi cập nhật UI
                   }
-                  openEdit();
                 } else {
                   // Nếu xe đã được đặt, hiển thị dialog thông báo
                   List<Map<String, dynamic>> bookedBikes =
@@ -710,7 +739,6 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
       leading: GestureDetector(
         onTap: () async {
           Navigator.pop(context);
-          await FirebaseBikeRepo().clearMarketHistory(userId!);
         },
         child: const Icon(
           Icons.arrow_back_ios_new_outlined,

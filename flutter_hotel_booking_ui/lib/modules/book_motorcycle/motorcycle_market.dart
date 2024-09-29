@@ -30,6 +30,7 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
   String? customerEmail;
   String? customerName, nameHotel, paymentIds;
 
+  bool flag = false;
   void startTimer() {
     Timer(const Duration(seconds: 3), () {
       amount2 = int.parse(total.toString());
@@ -101,6 +102,7 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
         List<Map<String, dynamic>> bikes = snapshot.data!;
 
         if (bikes.isEmpty) {
+          flag = false;
           return const Center(child: Text("No bikes found in shopping cart"));
         }
 
@@ -113,154 +115,158 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
             Map<String, dynamic> bike = bikes[index];
             // Ensure the bike data is not null
             if (bike.isEmpty) {
+              flag = false;
               return Container(); // Fallback UI if bike data is null
-            }
-            String bikeStatus =
-                bike['bikeStatus'] ?? "Trạng thái không xác định";
-            String bikeName = bike['bikeName'] ?? "Không có tên";
-            String bikeImage = bike['bikeImage'] ?? "";
-            int bikeRentPricePerDay = bike['bikeRentPricePerDay'] ?? 0;
-            String bikeId = bike['bikeId'];
-
-            // Only display items with 'bikeStatus' not equal to "Có Sẵn"
-            return bikeStatus == "Có Sẵn"
-                ? Container()
-                : Slidable(
-                    key: Key(bikeName), // Use bikeName as a unique key
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) async {
-                            bool confirmDelete = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text("Xác nhận xóa"),
-                                  content: const Text("Bạn có chắc muốn xoá?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(false);
-                                      },
-                                      child: const Text("Huỷ"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(true);
-                                      },
-                                      child: const Text("Xoá"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                            if (confirmDelete == true) {
-                              try {
-                                if (userId!.isNotEmpty && bikeName.isNotEmpty) {
-                                  await FirebaseBikeRepo()
-                                      .removeBikeFromHistorySearch(
-                                          userId!, sessionId!, bikeId);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Đã xóa khỏi tìm kiếm thành công'),
-                                    ),
+            } else {
+              String bikeStatus =
+                  bike['bikeStatus'] ?? "Trạng thái không xác định";
+              String bikeName = bike['bikeName'] ?? "Không có tên";
+              String bikeImage = bike['bikeImage'] ?? "";
+              int bikeRentPricePerDay = bike['bikeRentPricePerDay'] ?? 0;
+              String bikeId = bike['bikeId'];
+              flag = true;
+              // Only display items with 'bikeStatus' not equal to "Có Sẵn"
+              return bikeStatus == "Có Sẵn"
+                  ? Container()
+                  : Slidable(
+                      key: Key(bikeName), // Use bikeName as a unique key
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) async {
+                              bool confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Xác nhận xóa"),
+                                    content:
+                                        const Text("Bạn có chắc muốn xoá?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                        child: const Text("Huỷ"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                        child: const Text("Xoá"),
+                                      ),
+                                    ],
                                   );
-                                } else {
+                                },
+                              );
+                              if (confirmDelete == true) {
+                                try {
+                                  if (userId!.isNotEmpty &&
+                                      bikeName.isNotEmpty) {
+                                    await FirebaseBikeRepo()
+                                        .removeBikeFromHistorySearch(
+                                            userId!, sessionId!, bikeId);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Đã xóa khỏi tìm kiếm thành công'),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'User ID or Payment ID is null'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                } catch (error) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('User ID or Payment ID is null'),
+                                    SnackBar(
+                                      content: Text(
+                                          'Failed to delete payment: $error'),
                                       backgroundColor: Colors.red,
                                     ),
                                   );
                                 }
-                              } catch (error) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        'Failed to delete payment: $error'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
                               }
-                            }
-                          },
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Xóa',
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          left: 20.0, right: 20.0, bottom: 10.0),
-                      child: Material(
-                        elevation: 10.0,
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Xóa',
                           ),
-                          padding: const EdgeInsets.all(30),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: SizedBox(
-                                  height: 120,
-                                  width: 120,
-                                  child: bikeImage.isNotEmpty
-                                      ? PageView(
-                                          controller: PageController(),
-                                          pageSnapping: true,
-                                          scrollDirection: Axis.horizontal,
-                                          children: <Widget>[
-                                            for (var image
-                                                in bikeImage.split(" "))
-                                              Image.network(
-                                                image,
-                                                fit: BoxFit.cover,
-                                              ),
-                                          ],
-                                        )
-                                      : const Icon(
-                                          Icons.image_not_supported,
-                                          size: 50,
-                                          color: Colors.grey,
-                                        ),
+                        ],
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 20.0, right: 20.0, bottom: 10.0),
+                        child: Material(
+                          elevation: 10.0,
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(30),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: SizedBox(
+                                    height: 120,
+                                    width: 120,
+                                    child: bikeImage.isNotEmpty
+                                        ? PageView(
+                                            controller: PageController(),
+                                            pageSnapping: true,
+                                            scrollDirection: Axis.horizontal,
+                                            children: <Widget>[
+                                              for (var image
+                                                  in bikeImage.split(" "))
+                                                Image.network(
+                                                  image,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                            ],
+                                          )
+                                        : const Icon(
+                                            Icons.image_not_supported,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          ),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 50.0),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(bikeName,
-                                      style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppTheme.fontcolor,
-                                      )),
-                                  Text(
-                                      bikeRentPricePerDay > 0
-                                          ? "${oCcy.format(bikeRentPricePerDay)} ₫"
-                                          : "Price not available",
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppTheme.fontcolor,
-                                      )),
-                                ],
-                              ),
-                            ],
+                                const SizedBox(width: 50.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(bikeName,
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppTheme.fontcolor,
+                                        )),
+                                    Text(
+                                        bikeRentPricePerDay > 0
+                                            ? "${oCcy.format(bikeRentPricePerDay)} ₫"
+                                            : "Price not available",
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppTheme.fontcolor,
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+            }
           },
         );
       },
@@ -315,7 +321,87 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
             ),
             GestureDetector(
               onTap: () async {
-                NavigationServices(context).gotoPaymentMotorcycle();
+                showDialog(
+                  context: context,
+                  barrierDismissible:
+                      false, // Ngăn người dùng đóng dialog khi đang load
+                  builder: (BuildContext dialogContext) {
+                    return WillPopScope(
+                      onWillPop: () async => false, // Ngăn nút back đóng dialog
+                      child: const Center(
+                        // Đặt vòng tròn loading ở giữa màn hình
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.lightGreen), // Màu sắc giống hình
+                        ),
+                      ),
+                    );
+                  },
+                );
+                if (flag == true) {
+                  // Chuyển đến trang thanh toán nếu điều kiện đúng
+                  NavigationServices(context).gotoPaymentMotorcycle();
+                  if (mounted) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context, rootNavigator: true)
+                        .pop(); // Tắt dialog loading
+                  }
+                } else {
+                  // Hiển thị dialog nhắc người dùng thêm xe vào giỏ hàng
+                  if (mounted) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context, rootNavigator: true)
+                        .pop(); // Tắt dialog loading
+                  }
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        title: const Text(
+                          'Chưa thêm xe vào giỏ hàng!',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        content: const Text(
+                          'Bạn cần thêm xe vào giỏ hàng trước khi tiếp tục thanh toán.',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text(
+                              'Thêm xe',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(dialogContext).pop(); // Đóng dialog
+                              Navigator.pop(context);
+                            },
+                          ),
+                          TextButton(
+                            child: const Text(
+                              'Hủy',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(dialogContext).pop(); // Đóng dialog
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),

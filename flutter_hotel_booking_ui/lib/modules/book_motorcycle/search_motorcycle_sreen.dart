@@ -354,10 +354,33 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
               const SizedBox(height: 20.0),
               GestureDetector(
                 onTap: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Ngăn người dùng đóng dialog khi đang load
+                    builder: (BuildContext dialogContext) {
+                      return WillPopScope(
+                        onWillPop: () async =>
+                            false, // Ngăn nút back đóng dialog
+                        child: const Center(
+                          // Đặt vòng tròn loading ở giữa màn hình
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.lightGreen), // Màu sắc giống hình
+                          ),
+                        ),
+                      );
+                    },
+                  );
                   await FirebaseBikeRepo()
                       .addBikeAndDateTimeToMarketHistory2(userId!, sessionId!);
 
                   NavigationServices(context).gotoMarketMotorcycle();
+                  if (mounted) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context, rootNavigator: true)
+                        .pop(); // Tắt dialog loading
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),

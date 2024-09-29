@@ -942,14 +942,6 @@ class FirebaseBikeRepo implements BikeRepo {
               'dateSearch': dateSearch, // Thêm hoặc cập nhật dateSearch
               'timeSearch': timeSearch, // Thêm hoặc cập nhật timeSearch
             });
-          } else {
-            // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên và thêm dateSearch, timeSearch
-            await marketHistoryRef.set({
-              'sessionId': sessionId,
-              'createdAt': FieldValue.serverTimestamp(),
-              'dateSearch': dateSearch, // Lưu dateSearch
-              'timeSearch': timeSearch, // Lưu timeSearch
-            });
           }
 
           print(
@@ -1000,6 +992,27 @@ class FirebaseBikeRepo implements BikeRepo {
           .collection('users')
           .doc(userId)
           .collection('MarketHistory');
+
+      // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
+      QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      // 3. Xoá từng tài liệu trong MarketHistory
+      for (QueryDocumentSnapshot doc in marketHistorySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('Đã xoá tất cả dữ liệu trong MarketHistory.');
+    } catch (e) {
+      print('Lỗi khi xoá và thêm dữ liệu vào MarketHistory: $e');
+    }
+  }
+
+  Future<void> clearPaymentHistoryOne(String userId) async {
+    try {
+      // 1. Lấy reference của MarketHistory collection
+      CollectionReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('PaymentHistoryOne');
 
       // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
       QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();

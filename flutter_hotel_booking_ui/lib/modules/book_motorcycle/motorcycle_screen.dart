@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bike_repository/bike_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -260,6 +262,24 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Ngăn người dùng đóng dialog khi đang load
+                    builder: (BuildContext dialogContext) {
+                      return WillPopScope(
+                        onWillPop: () async =>
+                            false, // Ngăn nút back đóng dialog
+                        child: const Center(
+                          // Đặt vòng tròn loading ở giữa màn hình
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.lightGreen), // Màu sắc giống hình
+                          ),
+                        ),
+                      );
+                    },
+                  );
                   if ([
                     locationName,
                     locationNhanXe,
@@ -321,6 +341,12 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                     }
                   } catch (e) {
                     debugPrint('Lỗi khi tìm kiếm xe: $e');
+                  }
+
+                  if (mounted) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context, rootNavigator: true)
+                        .pop(); // Tắt dialog loading
                   }
                 },
                 style: ElevatedButton.styleFrom(

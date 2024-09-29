@@ -35,15 +35,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? customerName, nameHotel, paymentIds;
   int? roomNumber;
 
-  List<int> delayTimes = [3, 6]; // Danh sách thời gian trễ có thể chọn
+  List<int> delayTimes = [2, 4, 6]; // Danh sách thời gian trễ có thể chọn
   List<int> usedDelayTimes = []; // Danh sách các thời gian đã chọn
 
 // Hàm để lấy giá trị thời gian ngẫu nhiên từ danh sách
   Future<int> getRandomDelayTime() async {
     if (delayTimes.isEmpty) {
-      // Nếu đã chọn hết tất cả các số, đợi 3 giây trước khi khởi động lại danh sách
-      await Future.delayed(const Duration(seconds: 3));
-
       // Khởi động lại danh sách
       delayTimes = List.from(usedDelayTimes);
       usedDelayTimes = [];
@@ -643,7 +640,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         .updateIsSelectedForDatime(roomId!);
                     await FirebaseUserRepository()
                         .updateIsSelectedForUserPayments(userId!);
-
+                    setState(() {});
+                    openEdit();
                     if (paymentIds != null) {
                       Map<String, dynamic> latestPaymentDetails =
                           await FirebaseUserRepository()
@@ -667,8 +665,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         luu2?.toString() ?? 'N/A',
                         "${oCcy.format(perNight)} ₫".toString(),
                       );
-                      setState(() {});
-                      openEdit();
                     } else {
                       print('No paymentIds found.');
                     }
