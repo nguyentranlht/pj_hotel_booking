@@ -564,16 +564,20 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
-                  openEdit();
                   // Gọi hàm thêm dữ liệu vào contracts từ PaymentSearch
                   await FirebaseBikeRepo().addLatestContractFromPaymentSearch(
                       userId!, amount2.toString(), sessionId!);
                   await FirebaseBikeRepo()
                       .updateBikeStatusAfterPayment(userId!, sessionId!);
-                  await FirebaseBikeRepo().clearMarketHistory(userId!);
+                  openEdit();
+
                   if (mounted) {
                     setState(
                         () {}); // Đảm bảo widget vẫn mounted trước khi cập nhật UI
+                  }
+                  if (mounted) {
+                    Navigator.of(context, rootNavigator: true)
+                        .pop(); // Tắt dialog loading nếu có lỗi
                   }
                 } else {
                   // Nếu xe đã được đặt, hiển thị dialog thông báo
@@ -707,8 +711,9 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                     ),
                     Center(
                       child: GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           NavigationServices(context).gotoLoginApp();
+                          await FirebaseBikeRepo().clearMarketHistory(userId!);
                         },
                         child: Container(
                           width: 100,

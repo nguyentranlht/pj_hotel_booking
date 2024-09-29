@@ -239,11 +239,41 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                   height: 38,
                                   child: CommonButton(
                                     onTap: () async {
+                                      // Hiển thị dialog loading
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible:
+                                            false, // Ngăn người dùng đóng dialog khi đang load
+                                        builder: (BuildContext dialogContext) {
+                                          return WillPopScope(
+                                            onWillPop: () async =>
+                                                false, // Ngăn nút back đóng dialog
+                                            child: const Center(
+                                              // Đặt vòng tròn loading ở giữa màn hình
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                            Color>(
+                                                        Colors.lightGreen),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+
+                                      // Thực hiện các thao tác bất đồng bộ
                                       await FirebaseUserRepository()
                                           .deleteDateTimeWithIsSelectedFalse(
                                               widget.room.roomId);
+
                                       if (_selectedStartDate == null &&
                                           _selectedEndDate == null) {
+                                        // Tắt dialog loading trước khi hiển thị thông báo
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+
+                                        // Hiển thị thông báo nếu không có ngày bắt đầu và kết thúc
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
@@ -265,6 +295,12 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                       } else if (isDateRangeBooked(
                                           _selectedStartDate!,
                                           _selectedEndDate!)) {
+                                        // Tắt dialog loading trước khi hiển thị thông báo
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+
+                                        // Hiển thị thông báo nếu khoảng thời gian đã được đặt
                                         showDialog(
                                           context: context,
                                           builder: (context) => AlertDialog(
@@ -284,17 +320,19 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                           _selectedEndDate != null &&
                                           id != null &&
                                           !widget.room.isSelected) {
+                                        // Cập nhật dữ liệu trước khi tiếp tục
                                         setState(() {
                                           formatDate2(DateTime date) {
                                             return DateFormat('yyyy-MM-dd')
                                                 .format(date);
                                           }
 
-                                          luuStart = (formatDate2(
-                                              _selectedStartDate!));
+                                          luuStart =
+                                              formatDate2(_selectedStartDate!);
                                           luuEnd =
                                               formatDate2(_selectedEndDate!);
                                         });
+
                                         Map<String, dynamic> addPaymentToRoom2 =
                                             {
                                           "Name": widget.room.titleTxt,
@@ -308,10 +346,16 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                           "ImagePath": widget.room.imagePath,
                                           "StartDate": luuStart,
                                           "EndDate": luuEnd,
+                                          "StartTime":
+                                              _selectedStartTime.toString(),
+                                          "EndTime":
+                                              _selectedEndTime.toString(),
                                           "userId": id,
                                         };
+
                                         print(
                                             "StartDate: $luuStart, EndDate: $luuEnd, UserId: $id");
+
                                         await FirebaseRoomRepo()
                                             .clearUserPayments(id!);
                                         await FirebaseUserRepository()
@@ -322,6 +366,13 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                         await FirebaseUserRepository()
                                             .updateUserRoomId(
                                                 id!, widget.room.roomId);
+
+                                        // Tắt dialog loading trước khi chuyển trang
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop();
+
+                                        // Điều hướng đến trang thanh toán
                                         NavigationServices(context)
                                             .gotoPayment();
                                       }

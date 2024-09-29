@@ -295,6 +295,11 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                         content: Text('Vui lòng chọn đầy đủ thông tin'),
                       ),
                     );
+                    if (mounted) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.of(context, rootNavigator: true)
+                          .pop(); // Tắt dialog loading
+                    }
                     return;
                   }
 
@@ -630,27 +635,24 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
 
               // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
               bool timeOverlap = true;
-              var finalTimeHour = startTime.hour - contractEndTime.hour;
-              var finalTimeMinute = startTime.minute - contractEndTime.minute;
-              print(
-                  "finalTimeHour: $finalTimeHour, finalTimeMinute: $finalTimeMinute");
+
               // Chỉ kiểm tra thời gian nếu có sự trùng lặp về ngày
               if (dateOverlap) {
                 // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
                 if (startDate.isAtSameMomentAs(contractEndDate)) {
-                  if (((startTime.hour > contractEndTime.hour &&
-                      finalTimeHour >= 1 &&
-                      finalTimeMinute >= 29))) {
+                  var finalTimeHour = startTime.hour - contractEndTime.hour;
+                  print("finalTimeHour: $finalTimeHour");
+                  if ((finalTimeHour >= 1 &&
+                      startTime.hour >= contractEndTime.hour)) {
                     timeOverlap = false;
                   }
                 }
                 // Trường hợp ngày kết thúc của người dùng trùng với ngày bắt đầu của hợp đồng
                 else if (endDate.isAtSameMomentAs(contractStartDate)) {
-                  if ((endTime.hour < contractStartTime.hour &&
-                          finalTimeHour > 1 &&
-                          finalTimeMinute == 0) ||
-                      (endTime.hour == contractStartTime.hour &&
-                          endTime.minute < contractStartTime.minute)) {
+                  var finalEndTimeHour = endTime.hour - contractStartTime.hour;
+                  print("finalEndTimeHour: $finalEndTimeHour");
+                  if (finalEndTimeHour <= -1 &&
+                      endTime.hour <= contractStartTime.hour) {
                     timeOverlap = false;
                   }
                 }
@@ -658,9 +660,7 @@ class _MotorcycleScreenState extends State<MotorcycleScreen> {
                 else if (startDate.isAtSameMomentAs(contractStartDate) &&
                     endDate.isAtSameMomentAs(contractEndDate)) {
                   if ((startTime.hour == contractStartTime.hour &&
-                          startTime.minute == contractStartTime.minute &&
-                          finalTimeHour == 0 &&
-                          finalTimeMinute == 0) &&
+                          startTime.minute == contractStartTime.minute) &&
                       (endTime.hour == contractEndTime.hour &&
                           endTime.minute == contractEndTime.minute)) {
                     timeOverlap = true;

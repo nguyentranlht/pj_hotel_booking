@@ -320,6 +320,7 @@ class FirebaseUserRepository implements UserRepository {
         .collection("users")
         .doc(id)
         .collection("PaymentRoom")
+        .where('isSelected', isEqualTo: false)
         .snapshots();
   }
 
@@ -529,19 +530,6 @@ class FirebaseUserRepository implements UserRepository {
       }
     } catch (e) {
       print('Error deleting DateTime: $e');
-    }
-  }
-
-  Future<void> updateIsSelectedForDatime(String roomId) async {
-    var userDoc = FirebaseFirestore.instance.collection('rooms').doc(roomId);
-
-    var paymentCollection = userDoc.collection('dateTime');
-
-    var querySnapshot =
-        await paymentCollection.where('isSelected', isEqualTo: false).get();
-
-    for (var doc in querySnapshot.docs) {
-      await doc.reference.update({'isSelected': true});
     }
   }
 }

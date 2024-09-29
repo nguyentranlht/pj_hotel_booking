@@ -224,151 +224,134 @@ class FirebaseBikeRepo implements BikeRepo {
   Future<void> updateBikeStatusAfterPayment(
       String userId, String sessionId) async {
     try {
-      // Sử dụng transaction để đảm bảo tất cả các cập nhật được thực hiện đồng thời
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        // Lấy thông tin PaymentHistory của khách hàng sau khi thanh toán thành công
-        QuerySnapshot<Map<String, dynamic>> currentPaymentSnapshot =
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(userId)
-                .collection('PaymentHistory')
-                .where('sessionId', isEqualTo: sessionId)
-                .limit(1)
-                .get(); // Thực hiện get() trước để lấy snapshot đầu tiên
+      // Lấy thông tin PaymentHistory của khách hàng sau khi thanh toán thành công
+      QuerySnapshot<Map<String, dynamic>> currentPaymentSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('PaymentHistory')
+              .where('sessionId', isEqualTo: sessionId)
+              .limit(1)
+              .get();
+      if (currentPaymentSnapshot.docs.isEmpty) {
+        print('Không tìm thấy PaymentHistory cho khách hàng này.');
+        return;
+      }
+      // Lấy document hiện tại
+      var currentPaymentDoc = currentPaymentSnapshot.docs.first.data();
+      List<dynamic> currentBikes = currentPaymentDoc['bikes'] ?? [];
+      List currentBikeIds = currentBikes.map((bike) => bike['bikeId']).toList();
+      if (currentBikeIds.isEmpty) {
+        print('Không có bikeId trong PaymentHistory hiện tại.');
+        return;
+      }
+      var currentStartDateSearch =
+          DateTime.parse(currentPaymentDoc['dateSearch']['startDate']);
+      var currentEndDateSearch =
+          DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
+      var currentStartTimeSearch = TimeOfDay(
+        hour: int.parse(
+            currentPaymentDoc['timeSearch']['startTime'].split(':')[0]),
+        minute: int.parse(
+            currentPaymentDoc['timeSearch']['startTime'].split(':')[1]),
+      );
+      var currentEndTimeSearch = TimeOfDay(
+        hour:
+            int.parse(currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
+        minute:
+            int.parse(currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
+      );
+      // Lấy ngày hiện tại từ currentPaymentDoc 'createdAt'
+      var currentCreatedAt =
+          (currentPaymentDoc['createdAt'] as Timestamp).toDate();
+      var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
+          currentCreatedAt.day, 0, 0, 0);
+      var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
+          currentCreatedAt.day, 23, 59, 59);
+      // Lấy tất cả PaymentHistory của các User khác trong cùng ngày
+      QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
+          await FirebaseFirestore.instance
+              .collectionGroup('PaymentHistory')
+              .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
+              .where('createdAt', isLessThanOrEqualTo: endOfDay)
+              .get();
+      // Kiểm tra từng PaymentHistory có trùng bikeId và khoảng thời gian không
+      for (var paymentDoc in allPaymentsSnapshot.docs) {
+        var paymentData = paymentDoc.data();
+        List<dynamic> bikes = paymentData['bikes'] ?? [];
+        for (var bike in bikes) {
+          // Kiểm tra nếu bikeId trùng khớp
+          if (currentBikeIds.contains(bike['bikeId']) &&
+              bike['bikeStatus'] == 'Có sẵn') {
+            DateTime paymentStartDate =
+                DateTime.parse(paymentData['dateSearch']['startDate']);
+            DateTime paymentEndDate =
+                DateTime.parse(paymentData['dateSearch']['endDate']);
+            TimeOfDay paymentStartTime = TimeOfDay(
+              hour: int.parse(
+                  paymentData['timeSearch']['startTime'].split(':')[0]),
+              minute: int.parse(
+                  paymentData['timeSearch']['startTime'].split(':')[1]),
+            );
+            TimeOfDay paymentEndTime = TimeOfDay(
+              hour:
+                  int.parse(paymentData['timeSearch']['endTime'].split(':')[0]),
+              minute:
+                  int.parse(paymentData['timeSearch']['endTime'].split(':')[1]),
+            );
+            // Kiểm tra sự trùng lặp về ngày
 
-        if (currentPaymentSnapshot.docs.isEmpty) {
-          print('Không tìm thấy PaymentHistory cho khách hàng này.');
-          return;
-        }
-
-        // Lấy document hiện tại
-        var currentPaymentDoc = currentPaymentSnapshot.docs.first.data();
-        List<dynamic> currentBikes = currentPaymentDoc['bikes'] ?? [];
-        List<String> currentBikeIds =
-            currentBikes.map((bike) => bike['bikeId'].toString()).toList();
-
-        if (currentBikeIds.isEmpty) {
-          print('Không có bikeId trong PaymentHistory hiện tại.');
-          return;
-        }
-
-        var currentStartDateSearch =
-            DateTime.parse(currentPaymentDoc['dateSearch']['startDate']);
-        var currentEndDateSearch =
-            DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
-
-        var currentStartTimeSearch = TimeOfDay(
-          hour: int.parse(
-              currentPaymentDoc['timeSearch']['startTime'].split(':')[0]),
-          minute: int.parse(
-              currentPaymentDoc['timeSearch']['startTime'].split(':')[1]),
-        );
-        var currentEndTimeSearch = TimeOfDay(
-          hour: int.parse(
-              currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
-          minute: int.parse(
-              currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
-        );
-
-        var currentCreatedAt =
-            (currentPaymentDoc['createdAt'] as Timestamp).toDate();
-        var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-            currentCreatedAt.day, 0, 0, 0);
-        var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-            currentCreatedAt.day, 23, 59, 59);
-
-        // Lấy tất cả PaymentHistory của các user khác trong cùng ngày
-        QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
-            await FirebaseFirestore.instance
-                .collectionGroup('PaymentHistory')
-                .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
-                .where('createdAt', isLessThanOrEqualTo: endOfDay)
-                .get();
-
-        // Kiểm tra từng PaymentHistory có trùng bikeId và khoảng thời gian không
-        for (var paymentDoc in allPaymentsSnapshot.docs) {
-          var paymentData = paymentDoc.data();
-          List<dynamic> bikes = paymentData['bikes'] ?? [];
-
-          for (var bike in bikes) {
-            // Kiểm tra nếu bikeId trùng khớp
-            if (currentBikeIds.contains(bike['bikeId'])) {
-              DateTime paymentStartDate =
-                  DateTime.parse(paymentData['dateSearch']['startDate']);
-              DateTime paymentEndDate =
-                  DateTime.parse(paymentData['dateSearch']['endDate']);
-
-              TimeOfDay paymentStartTime = TimeOfDay(
-                hour: int.parse(
-                    paymentData['timeSearch']['startTime'].split(':')[0]),
-                minute: int.parse(
-                    paymentData['timeSearch']['startTime'].split(':')[1]),
-              );
-              TimeOfDay paymentEndTime = TimeOfDay(
-                hour: int.parse(
-                    paymentData['timeSearch']['endTime'].split(':')[0]),
-                minute: int.parse(
-                    paymentData['timeSearch']['endTime'].split(':')[1]),
-              );
-
-              // Kiểm tra sự trùng lặp về ngày
-              bool dateOverlap =
-                  !(paymentEndDate.isBefore(currentStartDateSearch) ||
-                      paymentStartDate.isAfter(currentEndDateSearch));
-
-              // Kiểm tra sự trùng lặp về thời gian
-              bool timeOverlap = true;
-              var finalTimeHour =
-                  currentStartDateSearch.hour - paymentEndTime.hour;
-              var finalTimeMinute =
-                  currentStartDateSearch.minute - paymentEndTime.minute;
-              if (dateOverlap) {
-                // Trường hợp ngày bắt đầu của user trùng với ngày kết thúc của hợp đồng
-                if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                  if (currentStartTimeSearch.hour > paymentEndTime.hour &&
-                      finalTimeHour >= 1 &&
-                      finalTimeMinute >= 29) {
-                    timeOverlap = false;
-                  }
-                }
-                // Trường hợp ngày kết thúc của user trùng với ngày bắt đầu của hợp đồng
-                else if (currentEndDateSearch
-                    .isAtSameMomentAs(paymentStartDate)) {
-                  if (currentEndTimeSearch.hour < paymentStartTime.hour &&
-                      finalTimeHour >= 1 &&
-                      finalTimeMinute >= 29) {
-                    timeOverlap = false;
-                  }
-                } else if (currentStartDateSearch
-                        .isAtSameMomentAs(paymentStartDate) &&
-                    currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                  if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
-                          currentStartTimeSearch.minute ==
-                              paymentStartTime.minute) &&
-                      (currentEndTimeSearch.hour == paymentEndTime.hour &&
-                          currentEndTimeSearch.minute ==
-                              paymentEndTime.minute)) {
-                    timeOverlap = true;
-                  }
-                } else {
-                  timeOverlap = true;
+            bool dateOverlap =
+                !(paymentEndDate.isBefore(currentStartDateSearch) ||
+                    paymentStartDate.isAfter(currentEndDateSearch));
+            // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
+            bool timeOverlap = true;
+            if (dateOverlap) {
+              // Trường hợp ngày bắt đầu của user trùng với ngày kết thúc của hợp đồng
+              if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                var finalTimeHour =
+                    currentStartTimeSearch.hour - paymentEndTime.hour;
+                if (finalTimeHour >= 1 &&
+                    currentStartTimeSearch.hour > paymentEndTime.hour) {
+                  timeOverlap = false;
                 }
               }
-
-              if (dateOverlap && timeOverlap) {
-                // Cập nhật trạng thái bike thành 'Đã đặt'
-                bike['bikeStatus'] = 'Đã đặt';
+              // Trường hợp ngày kết thúc của user trùng với ngày bắt đầu của hợp đồng
+              else if (currentEndDateSearch
+                  .isAtSameMomentAs(paymentStartDate)) {
+                var finalEndTimeHour =
+                    currentEndTimeSearch.hour - paymentStartTime.hour;
+                if (finalEndTimeHour <= -1) {
+                  timeOverlap = false;
+                }
+              } else if (currentStartDateSearch
+                      .isAtSameMomentAs(paymentStartDate) &&
+                  currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
+                        currentStartTimeSearch.minute ==
+                            paymentStartTime.minute) &&
+                    (currentEndTimeSearch.hour == paymentEndTime.hour &&
+                        currentEndTimeSearch.minute == paymentEndTime.minute)) {
+                  timeOverlap = false;
+                }
+              } else {
+                timeOverlap = false;
               }
             }
+            print(
+                "updateBikeStatusAfterPayment dateOverlap && timeOverlap: $dateOverlap $timeOverlap ");
+            if (dateOverlap && timeOverlap) {
+              bike['bikeStatus'] = 'Đã đặt';
+            }
           }
-
-          // Cập nhật lại PaymentHistory với bikeStatus mới
-          transaction.update(paymentDoc.reference, {'bikes': bikes});
         }
-
-        print(
-            'Đã cập nhật trạng thái bike thành "Đã đặt" cho các xe trùng khớp.');
-      });
+        // Cập nhật lại PaymentHistory với bikeStatus mới
+        await paymentDoc.reference.update({
+          'bikes': bikes,
+        });
+      }
+      print(
+          'Đã cập nhật trạng thái bike thành "Đã đặt" cho các xe trùng khớp.');
     } catch (e) {
       print('Lỗi khi cập nhật trạng thái xe: $e');
     }
@@ -445,79 +428,75 @@ class FirebaseBikeRepo implements BikeRepo {
         // Kiểm tra từng bike trong PaymentHistory
         for (var bike in bikes) {
           // Kiểm tra nếu bikeId trùng khớp
-          if (currentBikeIds.contains(bike['bikeId'])) {
-            // Kiểm tra nếu xe có trạng thái 'Đã đặt'
-            if (bike['bikeStatus'] == 'Đã đặt') {
-              DateTime paymentStartDate =
-                  DateTime.parse(paymentData['dateSearch']['startDate']);
-              DateTime paymentEndDate =
-                  DateTime.parse(paymentData['dateSearch']['endDate']);
+          if (currentBikeIds.contains(bike['bikeId']) &&
+              bike['bikeStatus'] == 'Đã đặt') {
+            DateTime paymentStartDate =
+                DateTime.parse(paymentData['dateSearch']['startDate']);
+            DateTime paymentEndDate =
+                DateTime.parse(paymentData['dateSearch']['endDate']);
 
-              TimeOfDay paymentStartTime = TimeOfDay(
-                hour: int.parse(
-                    paymentData['timeSearch']['startTime'].split(':')[0]),
-                minute: int.parse(
-                    paymentData['timeSearch']['startTime'].split(':')[1]),
-              );
-              TimeOfDay paymentEndTime = TimeOfDay(
-                hour: int.parse(
-                    paymentData['timeSearch']['endTime'].split(':')[0]),
-                minute: int.parse(
-                    paymentData['timeSearch']['endTime'].split(':')[1]),
-              );
+            TimeOfDay paymentStartTime = TimeOfDay(
+              hour: int.parse(
+                  paymentData['timeSearch']['startTime'].split(':')[0]),
+              minute: int.parse(
+                  paymentData['timeSearch']['startTime'].split(':')[1]),
+            );
+            TimeOfDay paymentEndTime = TimeOfDay(
+              hour:
+                  int.parse(paymentData['timeSearch']['endTime'].split(':')[0]),
+              minute:
+                  int.parse(paymentData['timeSearch']['endTime'].split(':')[1]),
+            );
 
-              // Kiểm tra sự trùng lặp về ngày
-              bool dateOverlap =
-                  !(paymentEndDate.isBefore(currentStartDateSearch) ||
-                      paymentStartDate.isAfter(currentEndDateSearch));
+            // Kiểm tra sự trùng lặp về ngày
+            bool dateOverlap =
+                !(paymentEndDate.isBefore(currentStartDateSearch) ||
+                    paymentStartDate.isAfter(currentEndDateSearch));
 
-              // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
-              bool timeOverlap = true;
-              var finalTimeHour =
-                  currentStartDateSearch.hour - paymentEndTime.hour;
-              var finalTimeMinute =
-                  currentStartDateSearch.minute - paymentEndTime.minute;
-              if (dateOverlap) {
-                // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
-                if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                  if (currentStartTimeSearch.hour > paymentEndTime.hour &&
-                      finalTimeHour >= 1 &&
-                      finalTimeMinute >= 29) {
-                    timeOverlap = false;
-                  }
-                }
-                // Trường hợp ngày kết thúc của người dùng trùng với ngày bắt đầu của hợp đồng
-                else if (currentEndDateSearch
-                    .isAtSameMomentAs(paymentStartDate)) {
-                  if (currentEndTimeSearch.hour < paymentStartTime.hour &&
-                      finalTimeHour <= 1 &&
-                      finalTimeMinute <= 29) {
-                    timeOverlap = false;
-                  }
-                } else if (currentStartDateSearch
-                        .isAtSameMomentAs(paymentStartDate) &&
-                    currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                  if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
-                          currentStartTimeSearch.minute ==
-                              paymentStartTime.minute) &&
-                      (currentEndTimeSearch.hour == paymentEndTime.hour &&
-                          currentEndTimeSearch.minute ==
-                              paymentEndTime.minute)) {
-                    timeOverlap = true;
-                  }
-                } else {
-                  timeOverlap = true;
+            // Kiểm tra sự trùng lặp về thời gian trong ngày trùng lặp
+            bool timeOverlap = true;
+
+            if (dateOverlap) {
+              // Trường hợp ngày bắt đầu của người dùng trùng với ngày kết thúc của hợp đồng
+              if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                var finalTimeHour =
+                    currentStartTimeSearch.hour - paymentEndTime.hour;
+                if (finalTimeHour >= 1 &&
+                    currentStartTimeSearch.hour >= paymentEndTime.hour) {
+                  timeOverlap = false;
                 }
               }
-              print(
-                  'getBookdedBikes: dateOverlap, timeOverlap: $dateOverlap, $timeOverlap');
-              // Nếu cả dateOverlap và timeOverlap đều trùng thì thêm vào danh sách bookedBikes
-              if (dateOverlap && timeOverlap) {
-                bool bikeExists =
-                    bookedBikes.any((b) => b['bikeId'] == bike['bikeId']);
-                if (!bikeExists) {
-                  bookedBikes.add(bike); // Thêm bike nếu chưa tồn tại
+              // Trường hợp ngày kết thúc của người dùng trùng với ngày bắt đầu của hợp đồng
+              else if (currentEndDateSearch
+                  .isAtSameMomentAs(paymentStartDate)) {
+                var finalEndTimeHour =
+                    currentEndTimeSearch.hour - paymentStartTime.hour;
+                if (finalEndTimeHour <= 1 &&
+                    currentEndTimeSearch.hour <= paymentStartTime.hour) {
+                  timeOverlap = false;
                 }
+              } else if (currentStartDateSearch
+                      .isAtSameMomentAs(paymentStartDate) &&
+                  currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                if ((currentStartTimeSearch.hour == paymentStartTime.hour &&
+                        currentStartTimeSearch.minute ==
+                            paymentStartTime.minute) &&
+                    (currentEndTimeSearch.hour == paymentEndTime.hour &&
+                        currentEndTimeSearch.minute == paymentEndTime.minute)) {
+                  timeOverlap = true;
+                }
+              } else {
+                timeOverlap = true;
+              }
+            }
+            print(
+                'getBookdedBikes: dateOverlap, timeOverlap: $dateOverlap, $timeOverlap');
+            // Nếu cả dateOverlap và timeOverlap đều trùng thì thêm vào danh sách bookedBikes
+            if (dateOverlap && timeOverlap) {
+              bool bikeExists =
+                  bookedBikes.any((b) => b['bikeId'] == bike['bikeId']);
+              if (!bikeExists) {
+                bookedBikes.add(bike); // Thêm bike nếu chưa tồn tại
               }
             }
           }
@@ -589,92 +568,87 @@ class FirebaseBikeRepo implements BikeRepo {
 
           for (var bike in bikes) {
             // Kiểm tra nếu bikeId trùng khớp
-            if (currentBikeIds.contains(bike['bikeId'])) {
-              if (bike['bikeStatus'] == 'Đã đặt') {
-                DateTime currentStartDateSearch = DateTime.parse(
-                    currentPaymentDoc['dateSearch']['startDate']);
-                DateTime currentEndDateSearch =
-                    DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
+            if (currentBikeIds.contains(bike['bikeId']) &&
+                bike['bikeStatus'] == 'Đã đặt') {
+              DateTime currentStartDateSearch =
+                  DateTime.parse(currentPaymentDoc['dateSearch']['startDate']);
+              DateTime currentEndDateSearch =
+                  DateTime.parse(currentPaymentDoc['dateSearch']['endDate']);
 
-                TimeOfDay currentStartTimeSearch = TimeOfDay(
-                  hour: int.parse(currentPaymentDoc['timeSearch']['startTime']
-                      .split(':')[0]),
-                  minute: int.parse(currentPaymentDoc['timeSearch']['startTime']
-                      .split(':')[1]),
-                );
-                TimeOfDay currentEndTimeSearch = TimeOfDay(
-                  hour: int.parse(
-                      currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
-                  minute: int.parse(
-                      currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
-                );
+              TimeOfDay currentStartTimeSearch = TimeOfDay(
+                hour: int.parse(
+                    currentPaymentDoc['timeSearch']['startTime'].split(':')[0]),
+                minute: int.parse(
+                    currentPaymentDoc['timeSearch']['startTime'].split(':')[1]),
+              );
+              TimeOfDay currentEndTimeSearch = TimeOfDay(
+                hour: int.parse(
+                    currentPaymentDoc['timeSearch']['endTime'].split(':')[0]),
+                minute: int.parse(
+                    currentPaymentDoc['timeSearch']['endTime'].split(':')[1]),
+              );
 
-                DateTime paymentStartDate =
-                    DateTime.parse(paymentData['dateSearch']['startDate']);
-                DateTime paymentEndDate =
-                    DateTime.parse(paymentData['dateSearch']['endDate']);
+              DateTime paymentStartDate =
+                  DateTime.parse(paymentData['dateSearch']['startDate']);
+              DateTime paymentEndDate =
+                  DateTime.parse(paymentData['dateSearch']['endDate']);
 
-                TimeOfDay paymentStartTime = TimeOfDay(
-                  hour: int.parse(
-                      paymentData['timeSearch']['startTime'].split(':')[0]),
-                  minute: int.parse(
-                      paymentData['timeSearch']['startTime'].split(':')[1]),
-                );
-                TimeOfDay paymentEndTime = TimeOfDay(
-                  hour: int.parse(
-                      paymentData['timeSearch']['endTime'].split(':')[0]),
-                  minute: int.parse(
-                      paymentData['timeSearch']['endTime'].split(':')[1]),
-                );
+              TimeOfDay paymentStartTime = TimeOfDay(
+                hour: int.parse(
+                    paymentData['timeSearch']['startTime'].split(':')[0]),
+                minute: int.parse(
+                    paymentData['timeSearch']['startTime'].split(':')[1]),
+              );
+              TimeOfDay paymentEndTime = TimeOfDay(
+                hour: int.parse(
+                    paymentData['timeSearch']['endTime'].split(':')[0]),
+                minute: int.parse(
+                    paymentData['timeSearch']['endTime'].split(':')[1]),
+              );
 
-                // Kiểm tra sự trùng lặp về ngày
-                bool dateOverlap =
-                    !(paymentEndDate.isBefore(currentStartDateSearch) ||
-                        paymentStartDate.isAfter(currentEndDateSearch));
+              // Kiểm tra sự trùng lặp về ngày
+              bool dateOverlap =
+                  !(paymentEndDate.isBefore(currentStartDateSearch) ||
+                      paymentStartDate.isAfter(currentEndDateSearch));
 
-                bool timeOverlap = true;
-                var finalTimeHour =
-                    currentStartDateSearch.hour - paymentEndTime.hour;
-                var finalTimeMinute =
-                    currentStartDateSearch.minute - paymentEndTime.minute;
-                if (dateOverlap) {
-                  if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                    if ((currentStartTimeSearch.hour > paymentEndTime.hour &&
-                        finalTimeHour >= 1 &&
-                        finalTimeMinute >= 29)) {
-                      timeOverlap = false;
-                    }
-                  } else if (currentEndDateSearch
-                      .isAtSameMomentAs(paymentStartDate)) {
-                    if ((currentStartTimeSearch.hour < paymentEndTime.hour &&
-                        finalTimeHour <= 1 &&
-                        finalTimeMinute <= 29)) {
-                      timeOverlap = false;
-                    }
-                  } else if (currentStartDateSearch
-                          .isAtSameMomentAs(paymentStartDate) &&
-                      currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
-                    if (((currentStartTimeSearch.hour ==
-                                    paymentStartTime.hour &&
-                                finalTimeHour == 0 &&
-                                finalTimeMinute == 0) &&
-                            currentStartTimeSearch.minute ==
-                                paymentStartTime.minute) &&
-                        (currentEndTimeSearch.hour == paymentEndTime.hour &&
-                            currentEndTimeSearch.minute ==
-                                paymentEndTime.minute)) {
-                      timeOverlap = true;
-                    }
-                  } else {
+              bool timeOverlap = true;
+
+              if (dateOverlap) {
+                if (currentStartDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                  var finalTimeHour =
+                      currentStartTimeSearch.hour - paymentEndTime.hour;
+                  if (finalTimeHour >= 1 &&
+                      currentStartTimeSearch.hour >= paymentEndTime.hour) {
+                    timeOverlap = false;
+                  }
+                } else if (currentEndDateSearch
+                    .isAtSameMomentAs(paymentStartDate)) {
+                  var finalEndTimeHour =
+                      currentEndTimeSearch.hour - paymentStartTime.hour;
+                  if (finalEndTimeHour <= -1 &&
+                      currentStartTimeSearch.hour <= paymentEndTime.hour) {
+                    timeOverlap = false;
+                  }
+                } else if (currentStartDateSearch
+                        .isAtSameMomentAs(paymentStartDate) &&
+                    currentEndDateSearch.isAtSameMomentAs(paymentEndDate)) {
+                  if (((currentStartTimeSearch.hour == paymentStartTime.hour) &&
+                          currentStartTimeSearch.minute ==
+                              paymentStartTime.minute) &&
+                      (currentEndTimeSearch.hour == paymentEndTime.hour &&
+                          currentEndTimeSearch.minute ==
+                              paymentEndTime.minute)) {
                     timeOverlap = true;
                   }
+                } else {
+                  timeOverlap = true;
                 }
+              }
 
-                print(
-                    'checkIfAnyBikeIsBooked: dateOverlap, timeOverlap: $dateOverlap, $timeOverlap');
-                if (dateOverlap && timeOverlap) {
-                  return true;
-                }
+              print(
+                  'checkIfAnyBikeIsBooked: dateOverlap, timeOverlap: $dateOverlap, $timeOverlap');
+              if (dateOverlap && timeOverlap) {
+                return true;
               }
             }
           }
@@ -693,7 +667,7 @@ class FirebaseBikeRepo implements BikeRepo {
     try {
       // Lấy danh sách availableBikes dựa trên userId và sessionId
       List<Map<String, dynamic>> availableBikes =
-          await getAvailableBikes(userId, sessionId);
+          await getAvailableBikesInMartket(userId, sessionId);
 
       if (availableBikes.isEmpty) {
         print('Không có xe có sẵn để tạo PaymentHistory');
@@ -1177,6 +1151,35 @@ class FirebaseBikeRepo implements BikeRepo {
               .collection('users')
               .doc(userId)
               .collection('HistorySearch')
+              .where('sessionId', isEqualTo: sessionId)
+              .limit(1)
+              .get();
+
+      // Nếu tìm thấy tài liệu
+      if (historySearchSnapshot.docs.isNotEmpty) {
+        var document = historySearchSnapshot.docs.first;
+        List<Map<String, dynamic>> bikes =
+            List<Map<String, dynamic>>.from(document.data()['bikes'] ?? []);
+        return bikes; // Trả về danh sách availableBikes
+      } else {
+        print('Không tìm thấy dữ liệu cho sessionId: $sessionId');
+        return [];
+      }
+    } catch (e) {
+      print('Lỗi khi lấy availableBikes: $e');
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAvailableBikesInMartket(
+      String userId, String sessionId) async {
+    try {
+      // Tham chiếu đến collection HistorySearch của user với sessionId cụ thể
+      QuerySnapshot<Map<String, dynamic>> historySearchSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('MarketHistory')
               .where('sessionId', isEqualTo: sessionId)
               .limit(1)
               .get();

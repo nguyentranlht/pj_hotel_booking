@@ -625,23 +625,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 }
                 bool isBikeBooked = false;
                 if (!isBikeBooked) {
-                  print("userId: $userId");
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
-                  await FirebaseUserRepository()
-                      .saveUserWallet(amount.toString());
-
                   roomId = await FirebaseRoomRepo().getRoomId(userId!);
                   if (roomId != null) {
                     await updateRoomDataWithPayment(userId!, roomId!);
+                    openEdit();
 
                     await FirebaseUserRepository()
-                        .updateIsSelectedForDatime(roomId!);
-                    await FirebaseUserRepository()
                         .updateIsSelectedForUserPayments(userId!);
-                    setState(() {});
-                    openEdit();
+
                     if (paymentIds != null) {
                       Map<String, dynamic> latestPaymentDetails =
                           await FirebaseUserRepository()
@@ -790,13 +784,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
     try {
       var paymentData = await FirebaseUserRepository().getPaymentData(userId);
-
       if (paymentData != null) {
         Map<String, dynamic> addDateToRoom = {
           "StartDate": paymentData['StartDate'],
           "EndDate": paymentData['EndDate'],
           "paymentId": paymentData['paymentId'],
-          "isSelected": paymentData['isSelected'],
+          "isSelected": true,
+          "StartTime": paymentData['StartTime'],
+          "EndTime": paymentData['EndTime'],
           "userId": paymentData['userId'],
         };
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
