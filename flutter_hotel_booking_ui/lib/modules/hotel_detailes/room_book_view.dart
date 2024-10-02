@@ -346,6 +346,7 @@ class _RoomeBookViewState extends State<RoomeBookView> {
                                           "ImagePath": widget.room.imagePath,
                                           "StartDate": luuStart,
                                           "EndDate": luuEnd,
+                                          "TitleTxt": widget.room.titleTxt,
                                           "StartTime":
                                               _selectedStartTime.toString(),
                                           "EndTime":

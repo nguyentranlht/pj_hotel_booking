@@ -12,6 +12,7 @@ import 'entities/entities.dart';
 import 'user_repo.dart';
 import 'models/input_textfield.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseUserRepository implements UserRepository {
   final TextEditingController _fnameController = TextEditingController();
@@ -315,26 +316,24 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<Stream<QuerySnapshot>> getRoomPayment(String id) async {
+  Future<Stream<QuerySnapshot>> getRoomPayment(
+      String id, String sessionId) async {
     return FirebaseFirestore.instance
         .collection("users")
         .doc(id)
         .collection("PaymentRoom")
-        .where('isSelected', isEqualTo: false)
+        .where('sessionId', isEqualTo: sessionId)
+        .orderBy('createdAt', descending: true)
+        .limit(1)
         .snapshots();
   }
 
-  Future<void> updateIsSelectedForUserPayments(String userId) async {
-    var userDoc = FirebaseFirestore.instance.collection('users').doc(userId);
-
-    var paymentCollection = userDoc.collection('PaymentRoom');
-
-    var querySnapshot =
-        await paymentCollection.where('isSelected', isEqualTo: false).get();
-
-    for (var doc in querySnapshot.docs) {
-      await doc.reference.update({'isSelected': true});
-    }
+  Future<Stream<QuerySnapshot>> getRoomPaymentHistory(String id) async {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .collection("PaymentRoom")
+        .snapshots();
   }
 
   @override
@@ -364,6 +363,7 @@ class FirebaseUserRepository implements UserRepository {
   @override
   Future<void> addPaymentToUser(
       Map<String, dynamic> paymentData, String userId) async {
+    String sessionId = const Uuid().v4(); // Tạo sessionId mới
     try {
       CollectionReference paymentsCollectionRef =
           _firestore.collection('users').doc(userId).collection('PaymentRoom');
@@ -375,6 +375,7 @@ class FirebaseUserRepository implements UserRepository {
       await newPaymentRef.set({
         ...paymentData,
         'paymentId': paymentId, // Lưu trữ paymentId trong document (nếu cần)
+        'sessionId': sessionId,
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
@@ -420,8 +421,8 @@ class FirebaseUserRepository implements UserRepository {
       var paymentQuerySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('PaymentRoom')
-          .where('isSelected', isEqualTo: false)
+          .collection('PaymentProcessing')
+          .where('isSelected', isEqualTo: true)
           .limit(1)
           .get();
 
@@ -530,6 +531,99 @@ class FirebaseUserRepository implements UserRepository {
       }
     } catch (e) {
       print('Error deleting DateTime: $e');
+    }
+  }
+
+  Future<String?> getLatestSessionId(String userId) async {
+    // Lấy tài liệu tìm kiếm mới nhất dựa vào thời gian
+    QuerySnapshot<Map<String, dynamic>> snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('PaymentRoom')
+            .orderBy('createdAt', descending: true)
+            .limit(1) // Giới hạn chỉ lấy 1 tài liệu mới nhất
+            .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      // Lấy sessionId từ tài liệu mới nhất
+      var document = snapshot.docs.first;
+      return document.data()['sessionId'] as String?;
+    }
+
+    return null; // Trường hợp không có tài liệu nào
+  }
+
+  Future<Map<String, dynamic>?> getAvailableInPaymentRoom(
+      String userId, String sessionId) async {
+    try {
+      // Tham chiếu đến collection PaymentRoom của user với sessionId cụ thể
+      QuerySnapshot<Map<String, dynamic>> paymentRoomSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('PaymentRoom')
+              .where('sessionId', isEqualTo: sessionId)
+              .limit(1)
+              .get();
+
+      // Nếu tìm thấy tài liệu
+      if (paymentRoomSnapshot.docs.isNotEmpty) {
+        var document = paymentRoomSnapshot.docs.first;
+        Map<String, dynamic> paymentRoomData =
+            Map<String, dynamic>.from(document.data());
+        return paymentRoomData; // Trả về toàn bộ dữ liệu từ PaymentRoom
+      } else {
+        print('Không tìm thấy dữ liệu cho sessionId: $sessionId');
+        return null; // Trả về null nếu không tìm thấy dữ liệu
+      }
+    } catch (e) {
+      print('Lỗi khi lấy dữ liệu từ PaymentRoom: $e');
+      return null; // Trả về null nếu có lỗi xảy ra
+    }
+  }
+
+  Future<void> createPaymentProcessingForAvailableBikes(
+      String userId, String sessionId) async {
+    try {
+      // Lấy dữ liệu từ PaymentRoom dựa trên userId và sessionId
+      QuerySnapshot<Map<String, dynamic>> paymentRoomSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userId)
+              .collection('PaymentRoom')
+              .where('sessionId', isEqualTo: sessionId)
+              .limit(1)
+              .get();
+
+      if (paymentRoomSnapshot.docs.isEmpty) {
+        print('Không tìm thấy tài liệu PaymentRoom cho sessionId này.');
+        return;
+      }
+      var paymentRoomDoc = paymentRoomSnapshot.docs.first.data();
+      // Tạo mới document trong collection PaymentProcessing
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('PaymentProcessing')
+          .add({
+        'sessionId': sessionId,
+        'StartDate': paymentRoomDoc['StartDate'],
+        'EndDate': paymentRoomDoc['EndDate'],
+        'StartTime': paymentRoomDoc['StartTime'],
+        'EndTime': paymentRoomDoc['EndTime'],
+        'HotelId': paymentRoomDoc['HotelId'],
+        'RoomId': paymentRoomDoc['RoomId'],
+        'isSelected': paymentRoomDoc['isSelected'],
+        'TitleTxt': paymentRoomDoc['TitleTxt'],
+        'NumberRoom': paymentRoomDoc['NumberRoom'],
+        'PerNight': paymentRoomDoc['PerNight'],
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      print('Đã tạo PaymentProcessing thành công');
+    } catch (e) {
+      print('Lỗi khi tạo PaymentProcessing: $e');
     }
   }
 }

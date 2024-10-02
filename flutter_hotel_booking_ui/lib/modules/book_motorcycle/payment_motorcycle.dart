@@ -40,10 +40,9 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
   }
 
   List<int> delayTimes = [
-    2,
-    4,
+    3,
     6,
-    8,
+    9,
   ]; // Danh sách thời gian trễ có thể chọn
   List<int> usedDelayTimes = []; // Danh sách các thời gian đã chọn
 
@@ -280,6 +279,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
             GestureDetector(
               onTap: () async {
                 _showPaymentMethodSheet(context);
+                await FirebaseBikeRepo().clearPaymentHistory(userId!);
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -575,10 +575,6 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
                     setState(
                         () {}); // Đảm bảo widget vẫn mounted trước khi cập nhật UI
                   }
-                  if (mounted) {
-                    Navigator.of(context, rootNavigator: true)
-                        .pop(); // Tắt dialog loading nếu có lỗi
-                  }
                 } else {
                   // Nếu xe đã được đặt, hiển thị dialog thông báo
                   List<Map<String, dynamic>> bookedBikes =
@@ -744,6 +740,7 @@ class _PaymentMotorcycleScreenState extends State<PaymentMotorcycleScreen> {
       leading: GestureDetector(
         onTap: () async {
           Navigator.pop(context);
+          await FirebaseBikeRepo().clearPaymentHistory(userId!);
         },
         child: const Icon(
           Icons.arrow_back_ios_new_outlined,

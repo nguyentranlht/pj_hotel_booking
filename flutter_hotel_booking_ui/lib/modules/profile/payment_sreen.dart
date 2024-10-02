@@ -34,6 +34,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   String? customerEmail;
   String? customerName, nameHotel, paymentIds;
   int? roomNumber;
+  String? sessionId;
 
   List<int> delayTimes = [2, 4, 6]; // Danh sách thời gian trễ có thể chọn
   List<int> usedDelayTimes = []; // Danh sách các thời gian đã chọn
@@ -57,7 +58,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void startTimer() {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 2), () {
       amount2 = int.parse(total.toString());
       setState(() {});
     });
@@ -67,6 +68,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     userId = await FirebaseUserRepository().getUserId();
     wallet = await FirebaseUserRepository().getUserWallet();
     amount3 = int.parse(wallet!);
+    sessionId = await FirebaseUserRepository().getLatestSessionId(userId!);
+    roomId = await FirebaseRoomRepo().getRoomId(userId!);
     setState(() {});
   }
 
@@ -85,7 +88,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       paymentIds = paymentIdsluu;
     });
 
-    roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
+    roomStream =
+        await FirebaseUserRepository().getRoomPayment(userId!, sessionId!);
 
     setState(() {});
   }
@@ -113,7 +117,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       stream: roomStream,
       builder: (context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           calculateTotal(snapshot);
@@ -575,7 +579,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       child: const Text("Huỷ"),
                     ),
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        print("sessionId: $sessionId");
+                        await FirebaseUserRepository()
+                            .createPaymentProcessingForAvailableBikes(
+                                userId!, sessionId!);
                         Navigator.of(context).pop(true); // Xác nhận thanh toán
                       },
                       child: const Text("Xác nhận"),
@@ -584,108 +592,110 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 );
               },
             );
-
             if (confirmPayment == true) {
               try {
                 // Hiển thị loading indicator trước khi thực hiện các hành động async
-                showDialog(
-                  // ignore: use_build_context_synchronously
-                  context: Navigator.of(context, rootNavigator: true)
-                      .context, // Sử dụng rootNavigator để đảm bảo lấy đúng context
-                  barrierDismissible: false,
-                  builder: (BuildContext dialogContext) {
-                    // ignore: deprecated_member_use
-                    return WillPopScope(
-                      onWillPop: () async =>
-                          false, // Ngăn người dùng đóng dialog bằng nút back
-                      child: const AlertDialog(
-                        content: Row(
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(width: 20),
-                            Text("Đang xử lý thanh toán..."),
-                          ],
+                if (mounted) {
+                  showDialog(
+                    context: context, // Sử dụng context hiện tại
+                    barrierDismissible: false,
+                    builder: (BuildContext dialogContext) {
+                      return WillPopScope(
+                        onWillPop: () async =>
+                            false, // Ngăn người dùng đóng dialog bằng nút back
+                        child: const AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 20),
+                              Text("Đang xử lý thanh toán..."),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    },
+                  );
+                }
+
                 // Lấy thời gian delay ngẫu nhiên từ hàm getRandomDelayTime
                 int randomDelay = await getRandomDelayTime();
-
-                // Đợi thời gian ngẫu nhiên để giả lập quá trình thanh toán
                 await Future.delayed(Duration(seconds: randomDelay));
                 print("randomDelay: $randomDelay");
 
-                // Kiểm tra nếu widget vẫn mounted trước khi tắt dialog
+                // Kiểm tra nếu widget vẫn mounted trước khi tiếp tục xử lý
+                if (!mounted) return;
+
+                // Kiểm tra xem phòng đã được đặt chưa
+                bool isBikeBooked = await FirebaseRoomRepo()
+                    .checkIfAnyRoomIsBookedTransaction(userId!, sessionId!);
+
+                // Tắt dialog loading
                 if (mounted) {
-                  // ignore: use_build_context_synchronously
-                  Navigator.of(context, rootNavigator: true)
-                      .pop(); // Tắt dialog loading
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
-                bool isBikeBooked = false;
+
                 if (!isBikeBooked) {
                   int amount = int.parse(wallet!) - amount2;
                   await FirebaseUserRepository()
                       .updateUserWallet(userId!, amount.toString());
-                  roomId = await FirebaseRoomRepo().getRoomId(userId!);
-                  if (roomId != null) {
-                    await updateRoomDataWithPayment(userId!, roomId!);
-                    openEdit();
+                  openEdit();
+                  await FirebaseRoomRepo()
+                      .updateIsSelectedForUserPayments(userId!, sessionId!);
+                  await updateContractRooms(userId!, roomId!);
+                  if (paymentIds != null) {
+                    Map<String, dynamic> latestPaymentDetails =
+                        await FirebaseUserRepository()
+                            .getPaymentDetails(userId!, paymentIds!);
 
-                    await FirebaseUserRepository()
-                        .updateIsSelectedForUserPayments(userId!);
+                    perNight = latestPaymentDetails['PerNight'];
+                    roomNumber = latestPaymentDetails['NumberRoom'];
+                    _selectedStartDate = latestPaymentDetails['StartDate'];
+                    _selectedEndDate = latestPaymentDetails['EndDate'];
+                    nameHotel = latestPaymentDetails['Name'];
+                    luu = _selectedStartDate;
+                    luu2 = _selectedEndDate;
 
-                    if (paymentIds != null) {
-                      Map<String, dynamic> latestPaymentDetails =
-                          await FirebaseUserRepository()
-                              .getPaymentDetails(userId!, paymentIds!);
-                      perNight = latestPaymentDetails['PerNight'];
-                      roomNumber = latestPaymentDetails['NumberRoom'];
-                      _selectedStartDate = latestPaymentDetails['StartDate'];
-                      _selectedEndDate = latestPaymentDetails['EndDate'];
-                      nameHotel = latestPaymentDetails['Name'];
-                      luu = _selectedStartDate;
-                      luu2 = _selectedEndDate;
+                    if (mounted) {
                       setState(() {});
-
-                      await FirebaseUserRepository().removeUserRoomId(userId!);
-                      await sendConfirmationEmail(
-                        customerEmail ?? 'khachhang@example.com',
-                        customerName ?? 'Tên Khách Hàng',
-                        nameHotel ?? 'Khách sạn của bạn',
-                        roomNumber?.toString() ?? 'Số phòng của bạn',
-                        luu?.toString() ?? 'N/A',
-                        luu2?.toString() ?? 'N/A',
-                        "${oCcy.format(perNight)} ₫".toString(),
-                      );
-                    } else {
-                      print('No paymentIds found.');
                     }
-                  } else {
-                    // Nếu xe đã được đặt, hiển thị dialog thông báo
-                    // List<Map<String, dynamic>> bookedBikes =
-                    //     await FirebaseBikeRepo()
-                    //         .getBookedBikes(userId!, sessionId!);
 
-                    // if (bookedBikes.isNotEmpty && mounted) {
-                    //   String bikeDetails = '';
-                    //   for (var bike in bookedBikes) {
-                    //     String bikeName = bike['bikeName'] ?? 'Không có tên';
-                    //     String bikeLicensePlate =
-                    //         bike['bikeLicensePlate'] ?? 'Không có biển số';
-                    //     bikeDetails +=
-                    //         'Tên xe: $bikeName\nBiển số: $bikeLicensePlate\n';
-                    //   }
+                    await FirebaseUserRepository().removeUserRoomId(userId!);
+                    await sendConfirmationEmail(
+                      customerEmail ?? 'khachhang@example.com',
+                      customerName ?? 'Tên Khách Hàng',
+                      nameHotel ?? 'Khách sạn của bạn',
+                      roomNumber?.toString() ?? 'Số phòng của bạn',
+                      luu?.toString() ?? 'N/A',
+                      luu2?.toString() ?? 'N/A',
+                      "${oCcy.format(perNight)} ₫".toString(),
+                    );
+                  }
+
+                  if (mounted) {
+                    setState(() {});
+                  }
+                } else {
+                  // Nếu phòng đã được đặt, hiển thị dialog thông báo
+                  List<Map<String, dynamic>> bookedRooms =
+                      await FirebaseRoomRepo()
+                          .getBookedRooms(userId!, sessionId!);
+
+                  if (bookedRooms.isNotEmpty && mounted) {
+                    String roomDetails = '';
+                    for (var room in bookedRooms) {
+                      String roomName = room['TitleTxt'] ?? 'Không có tên';
+                      String numberRoom = (room['NumberRoom'].toString());
+                      roomDetails +=
+                          'Tên phòng: $roomName\nSố phòng: $numberRoom\n';
+                    }
 
                     if (mounted) {
                       showDialog(
-                        context: Navigator.of(context, rootNavigator: true)
-                            .context, // Sử dụng rootNavigator
+                        context: context, // Sử dụng context hiện tại
                         builder: (BuildContext dialogContext) {
                           return AlertDialog(
                             title: const Text('Thông báo'),
-                            content: Text('Xe đã được đặt:\n'),
+                            content: Text('Phòng đã được đặt:\n$roomDetails'),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () {
@@ -705,8 +715,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                 // Đảm bảo dialog được đóng nếu có lỗi
                 if (mounted) {
-                  Navigator.of(context, rootNavigator: true)
-                      .pop(); // Tắt dialog loading nếu có lỗi
+                  Navigator.of(context, rootNavigator: true).pop();
                 }
               }
             }
@@ -781,21 +790,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Future<void> updateRoomDataWithPayment(String userId, String roomId) async {
+  Future<void> updateContractRooms(String userId, String roomId) async {
     try {
       var paymentData = await FirebaseUserRepository().getPaymentData(userId);
       if (paymentData != null) {
         Map<String, dynamic> addDateToRoom = {
           "StartDate": paymentData['StartDate'],
           "EndDate": paymentData['EndDate'],
-          "paymentId": paymentData['paymentId'],
           "isSelected": true,
           "StartTime": paymentData['StartTime'],
           "EndTime": paymentData['EndTime'],
-          "userId": paymentData['userId'],
+          "userId": userId,
+          "RoomId": paymentData['RoomId'],
+          "HotelId": paymentData['HotelId']
         };
+        await FirebaseRoomRepo().addDateToContractRooms(addDateToRoom);
         await FirebaseRoomRepo().addDateToRoom(addDateToRoom, roomId);
       }
+      print("updateContractRooms");
     } catch (e) {
       print('Error updating room data with payment: $e');
       rethrow;

@@ -34,7 +34,7 @@ abstract class UserRepository {
 
   Future<String?> updateUserWallet(String userId, String amount);
 
-  Future<Stream<QuerySnapshot>> getRoomPayment(String id);
+  Future<Stream<QuerySnapshot>> getRoomPayment(String id, String sessionId);
 
   Future<Map<String, dynamic>?> getPaymentForUser(String userId, String roomId);
 

@@ -190,10 +190,8 @@ class _SearchMotorcycleScreenState extends State<SearchMotorcycleScreen> {
                                 await FirebaseBikeRepo()
                                     .addBikeAndDateTimeToMarketHistory(
                                         userId!, sessionId!, bike);
-
-                                // Thêm một khoảng trễ để đảm bảo UI ổn định
-                                await Future.delayed(
-                                    const Duration(milliseconds: 180));
+                                await FirebaseBikeRepo()
+                                    .clearPaymentHistory(userId!);
 
                                 // Kiểm tra widget còn mounted không trước khi điều hướng
                                 if (mounted) {

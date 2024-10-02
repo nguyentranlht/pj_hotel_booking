@@ -42,7 +42,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     String? email = userInfo['email'];
     String? name = userInfo['firstname'];
 
-    roomStream = await FirebaseUserRepository().getRoomPayment(userId!);
+    roomStream = await FirebaseUserRepository().getRoomPaymentHistory(userId!);
     setState(() {
       customerEmail = email;
       customerName = name;

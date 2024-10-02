@@ -339,6 +339,7 @@ class _MotorcycleMarketScreenState extends State<MotorcycleMarketScreen> {
                   },
                 );
                 if (flag == true) {
+                  await FirebaseBikeRepo().clearPaymentHistory(userId!);
                   // Chuyển đến trang thanh toán nếu điều kiện đúng
                   NavigationServices(context).gotoPaymentMotorcycle();
                   if (mounted) {

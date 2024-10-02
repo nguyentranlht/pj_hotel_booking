@@ -267,7 +267,7 @@ class FirebaseBikeRepo implements BikeRepo {
       var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
           currentCreatedAt.day, 0, 0, 0);
       var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-          currentCreatedAt.day, 23, 59, 59);
+          currentCreatedAt.day, 10, 0, 0);
       // Lấy tất cả PaymentHistory của các User khác trong cùng ngày
       QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
           await FirebaseFirestore.instance
@@ -332,10 +332,10 @@ class FirebaseBikeRepo implements BikeRepo {
                             paymentStartTime.minute) &&
                     (currentEndTimeSearch.hour == paymentEndTime.hour &&
                         currentEndTimeSearch.minute == paymentEndTime.minute)) {
-                  timeOverlap = false;
+                  timeOverlap = true;
                 }
               } else {
-                timeOverlap = false;
+                timeOverlap = true;
               }
             }
             print(
@@ -551,7 +551,7 @@ class FirebaseBikeRepo implements BikeRepo {
         var startOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
             currentCreatedAt.day, 0, 0, 0);
         var endOfDay = DateTime(currentCreatedAt.year, currentCreatedAt.month,
-            currentCreatedAt.day, 23, 59, 59);
+            currentCreatedAt.day, 10, 0, 0);
 
         // Bước 2: Lấy tất cả PaymentHistory của các user khác trong giao dịch
         QuerySnapshot<Map<String, dynamic>> allPaymentsSnapshot =
@@ -838,26 +838,14 @@ class FirebaseBikeRepo implements BikeRepo {
               .collection('MarketHistory')
               .doc(sessionId); // Mỗi session có một giỏ hàng duy nhất
 
-          // Lấy tài liệu MarketHistory
-          DocumentSnapshot marketHistorySnapshot = await marketHistoryRef.get();
-
-          if (marketHistorySnapshot.exists) {
-            // Nếu tài liệu tồn tại, thêm xe vào mảng bikes và cập nhật dateSearch, timeSearch
-            await marketHistoryRef.update({
-              'bikes': FieldValue.arrayUnion([bike]), // Thêm xe vào mảng bikes
-              'dateSearch': dateSearch, // Thêm hoặc cập nhật dateSearch
-              'timeSearch': timeSearch, // Thêm hoặc cập nhật timeSearch
-            });
-          } else {
-            // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên và thêm dateSearch, timeSearch
-            await marketHistoryRef.set({
-              'sessionId': sessionId,
-              'createdAt': FieldValue.serverTimestamp(),
-              'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
-              'dateSearch': dateSearch, // Lưu dateSearch
-              'timeSearch': timeSearch, // Lưu timeSearch
-            });
-          }
+          // Nếu tài liệu không tồn tại, tạo mới tài liệu với xe đầu tiên và thêm dateSearch, timeSearch
+          await marketHistoryRef.set({
+            'sessionId': sessionId,
+            'createdAt': FieldValue.serverTimestamp(),
+            'bikes': [bike], // Tạo mảng bikes với xe đầu tiên
+            'dateSearch': dateSearch, // Lưu dateSearch
+            'timeSearch': timeSearch, // Lưu timeSearch
+          });
 
           print(
               'Đã thêm xe vào giỏ hàng thành công cùng với dateSearch và timeSearch.');
@@ -977,6 +965,27 @@ class FirebaseBikeRepo implements BikeRepo {
       print('Đã xoá tất cả dữ liệu trong MarketHistory.');
     } catch (e) {
       print('Lỗi khi xoá và thêm dữ liệu vào MarketHistory: $e');
+    }
+  }
+
+  Future<void> clearPaymentHistory(String userId) async {
+    try {
+      // 1. Lấy reference của MarketHistory collection
+      CollectionReference marketHistoryRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('PaymentHistory');
+
+      // 2. Truy vấn để lấy tất cả các tài liệu trong MarketHistory
+      QuerySnapshot marketHistorySnapshot = await marketHistoryRef.get();
+
+      // 3. Xoá từng tài liệu trong MarketHistory
+      for (QueryDocumentSnapshot doc in marketHistorySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('Đã xoá tất cả dữ liệu trong PaymentHistory.');
+    } catch (e) {
+      print('Lỗi khi xoá và thêm dữ liệu vào PaymentHistory: $e');
     }
   }
 
