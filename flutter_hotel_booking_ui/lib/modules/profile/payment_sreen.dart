@@ -4,7 +4,7 @@ import 'package:bike_repository/bike_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/utils/themes.dart';
-import 'package:flutter_hotel_booking_ui/widgets/sendGridApi.dart';
+// import 'package:flutter_hotel_booking_ui/widgets/sendGridApi.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -660,15 +660,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     }
 
                     await FirebaseUserRepository().removeUserRoomId(userId!);
-                    await sendConfirmationEmail(
-                      customerEmail ?? 'khachhang@example.com',
-                      customerName ?? 'Tên Khách Hàng',
-                      nameHotel ?? 'Khách sạn của bạn',
-                      roomNumber?.toString() ?? 'Số phòng của bạn',
-                      luu?.toString() ?? 'N/A',
-                      luu2?.toString() ?? 'N/A',
-                      "${oCcy.format(perNight)} ₫".toString(),
-                    );
+                    // await sendConfirmationEmail(
+                    //   customerEmail ?? 'khachhang@example.com',
+                    //   customerName ?? 'Tên Khách Hàng',
+                    //   nameHotel ?? 'Khách sạn của bạn',
+                    //   roomNumber?.toString() ?? 'Số phòng của bạn',
+                    //   luu?.toString() ?? 'N/A',
+                    //   luu2?.toString() ?? 'N/A',
+                    //   "${oCcy.format(perNight)} ₫".toString(),
+                    // );
                   }
 
                   if (mounted) {

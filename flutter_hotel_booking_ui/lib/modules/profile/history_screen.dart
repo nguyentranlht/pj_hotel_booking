@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hotel_booking_ui/models/my_user.dart';
-import 'package:flutter_hotel_booking_ui/widgets/sendGridApiCancel.dart';
+// import 'package:flutter_hotel_booking_ui/widgets/sendGridApiCancel.dart';
 import 'package:flutter_hotel_booking_ui/widgets/widget_support.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -179,15 +179,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               luu = formatDate(_selectedStartDate);
                               luu2 = formatDate(_selectedEndDate);
                               setState(() {});
-                              await sendConfirmationEmailCancel(
-                                customerEmail ?? 'khachhang@example.com',
-                                customerName ?? 'Tên Khách Hàng',
-                                nameHotel ?? 'Khách sạn của bạn',
-                                roomNumber?.toString() ?? 'Số phòng của bạn',
-                                luu?.toString() ?? 'N/A',
-                                luu2?.toString() ?? 'N/A',
-                                "${oCcy.format(perNight)} ₫".toString(),
-                              );
+                              // await sendConfirmationEmailCancel(
+                              //   customerEmail ?? 'khachhang@example.com',
+                              //   customerName ?? 'Tên Khách Hàng',
+                              //   nameHotel ?? 'Khách sạn của bạn',
+                              //   roomNumber?.toString() ?? 'Số phòng của bạn',
+                              //   luu?.toString() ?? 'N/A',
+                              //   luu2?.toString() ?? 'N/A',
+                              //   "${oCcy.format(perNight)} ₫".toString(),
+                              // );
                               setState(() {});
                             }
                           },
